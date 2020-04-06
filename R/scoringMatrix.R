@@ -71,7 +71,7 @@ scoringMatrix <- function(productive_table, mode="Bhattacharyya") {
 #' bhattacharyyaCoefficient(sample_list)
 #' @seealso \code{\link{scoringMatrix}}
 #' @export
-calculateRelatedness <- function(sample_list) {
+bhattacharyyaCoefficient <- function(sample_list) {
     sample1 <- sample_list[[1]]
     sample2 <- sample_list[[2]]
     sample_merged <- full_join(sample1, sample2, by="aminoAcid", suffix = c("_p", "_q")) %>% 
