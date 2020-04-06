@@ -50,10 +50,10 @@
 #' @importFrom phangorn NJ
 phyloTree <- function(study_table, sample, type = "nucleotide", layout = "rectangular", label = TRUE) {
     sample_table <- study_table %>% filter(sample == sample)
-    if(length(grep(pattern = "vFamilyName|dFamilyName|jFamilyName|count", names(file))) != 4){
+    if(length(grep(pattern = "vFamilyName|dFamilyName|jFamilyName|count", names(study_table))) != 4){
         stop("vFamilyName, dFamilyName, jFamilyName, nucleotide, and count are required columns.  Try aggregating the sequences by 'nucleotide' usng the function productiveSeq.", call. = FALSE)
     }
-    if(nrow(file) < 3){
+    if(nrow(study_table) < 3){
         stop("Cannot draw phlogenetic tree with less than 3 sequences.", call. = FALSE)
     }
     sample_table <- sample_table %>% mutate_all(funs(str_replace(., "", "unresolved")))
