@@ -5,20 +5,20 @@
 #' 
 #' @param list A tibble consisting of antigen receptor sequences 
 #' imported by the LymphoSeq function readImmunoSeq.
-#' @param sample1 A character vector indicating the name of the first sample in the list
+#' @param sample1 A character vector indicating the name of the first repertoire_id in the list
 #' to be compared.
-#' @param sample2 A character vector indicating the name of the second sample in the list
+#' @param sample2 A character vector indicating the name of the second repertoire_id in the list
 #' to be compared.
-#' @param type A character vector indicating whether "aminoAcid" or "nucleotide" sequences
-#' should be used.  If "aminoAcid" is specified, then run productiveSeqs first.
+#' @param type A character vector indicating whether "junction_aa" or "junction" sequences
+#' should be used.  If "junction_aa" is specified, then run productiveSeqs first.
 #' @param q A numeric value between 0.0 and 1.0 indicating the threshold Holms adjusted 
 #' P value (also knowns as the false discovery rate or q value) to subset the results with.  
 #' Any sequences with a q value greater than this value will not be shown.
 #' @param zero A numeric value to set all zero values to when calculating the log2
 #' transformed fold change between samples 1 and 2.  This does not apply to the 
 #' p and q value calculations.
-#' @param abundance The input value for the Fisher exact test.  "estimatedNumberGenomes"
-#' is recommend but "count" may also be used.
+#' @param abundance The input value for the Fisher exact test.  "duplicate_count"
+#' is recommend but "duplicate_count" may also be used.
 #' @param parallel A boolean indicating wheter parallel processing should be used or not.
 #' @return Returns a data frame with columns corresponding to the frequency of the abudance
 #' measure in samples 1 and 2, the P value, Q value (Holms adjusted P value, also knowns as 
@@ -28,19 +28,19 @@
 #' 
 #' file.list <- readImmunoSeq(path = file.path)
 #' 
-#' productive.aa <- productiveSeq(file.list = file.list, aggregate = "aminoAcid")
+#' productive.aa <- productiveSeq(file.list = file.list, aggregate = "junction_aa")
 #' 
 #' differentialAbundance(list = productive.aa, sample1 = "TRB_Unsorted_949", 
-#'                       sample2 = "TRB_Unsorted_1320", type = "aminoAcid", q = 0.01, 
+#'                       sample2 = "TRB_Unsorted_1320", type = "junction_aa", q = 0.01, 
 #'                       zero = 0.001)
 #' @export
 #' @importFrom stats p.adjust
 #' @importFrom stats fisher.test
 #' @import tidyverse
-differentialAbundance <- function(sample1, sample2, study_table, abundance = "estimatedNumberGenomes", 
-                                  type = "aminoAcid", q = 1, zero = 0.001, parallel = FALSE) {
-    x <- study_table %>% filter(sample == sample1)
-    y <- study_table %>% filter(sample == sample2)
+differentialAbundance <- function(sample1, sample2, study_table, abundance = "duplicate_count", 
+                                  type = "junction_aa", q = 1, zero = 1, parallel = FALSE) {
+    x <- study_table %>% filter(repertoire_id == sample1)
+    y <- study_table %>% filter(repertoire_id == sample2)
     sequences <- union(x[, type], y[, type])
     fisherFunction <- function(sequences) {
         p.value <- as.numeric()
@@ -69,7 +69,7 @@ differentialAbundance <- function(sample1, sample2, study_table, abundance = "es
         p.value <- c(p.value, fisher$p.value)
         sample1.freq <- c(sample1.freq, x.freq)
         sample2.freq <- c(sample2.freq, y.freq)
-        results <- data.frame(aminoAcid = sequences, 
+        results <- data.frame(junction_aa = sequences, 
                               x = sample1.freq, 
                               y = sample2.freq, 
                               p = p.value)

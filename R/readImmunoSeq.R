@@ -1,190 +1,140 @@
 #' Read ImmunoSeq files
 #'
-#' \code{readImmunoSeq}
-#'
 #' Imports tab-separated value (.tsv) files exported by the Adaptive 
-#' Biotechnologies ImmunoSEQ analyzer and stores them as a list of data frames.
+#' Biotechnologies ImmunoSEQ analyzer, BGI IR-SEQ, MiXCR and stores 
+#' them as MiAIRR compliant tibble. 
 #' 
+#' @details May import tab-delimited files containing antigen receptor 
+#' sequencing from with the following header set.  
+#' 
+#' | MiAIRR field ID | Type1           | Type2                       | Type3               | Type4                          | Type5                               | Type6             |
+#' | --------------- | --------------- | --------------------------- | ------------------- | ------------------------------ | ----------------------------------- | ----------------- |
+#' | junction        | nucleotide      | nucleotide                  | nucleotide          | nucleotide.CDR3.in.lowercase . | nucleotide( CDR3   in   lowercase ) | nSeqCDR3          |
+#' | junction_aa     | aminoAcid       | aminoAcid                   | aminoAcid           | aminoAcid.CDR3.in.lowercase .  | aminoAcid( CDR3   in   lowercase )  | aaSeqCDR3         |
+#' | duplicate_count | count ( reads ) | count ( templates / reads ) | count ( templates ) | cloneCount                     | cloneCount                          | cloneCount        |
+#' | v_call          | vGeneName       | vGeneName                   | vGeneName           | vGene                          | vGene                               | allVHitsWithScore |
+#' | d_call          | dGeneName       | dGeneName                   | dGeneName           | dGene                          | dGene                               | allDHitsWithScore |
+#' | j_call          | jGeneName       | jGeneName                   | jGeneName           | jGene                          | jGene                               | allJHitsWithScore |
+#'
+#' @md
+#' @name readImmunoSeq
+NULL
+#' @describeIn readImmunoSeq Read a set of files 
 #' @param path Path to the directory containing tab-delimited files.  Only 
 #' files with the extension .tsv are imported.  The names of the data frames are 
 #' the same as names of the files.
-#' @details May import tab-delimited files containing antigen receptor 
-#' sequencing from other sources (e.g. miTCR or miXCR) as long as the column 
-#' names are the same as used by ImmunoSEQ files.  Available column headings in 
-#' ImmunoSEQ files are:  
-#'     
-#'     adaptiveV1:
-#'     
-#'     column list:
-#'     nucleotide,aminoAcid,count (reads),frequencyCount (%),cdr3Length,vMaxResolved,vFamilyName,
-#' vGeneName,vGeneAllele,vFamilyTies,vGeneNameTies,vGeneAlleleTies,dMaxResolved,dFamilyName,
-#' dGeneName,dGeneAllele,dFamilyTies,dGeneNameTies,dGeneAlleleTies,jMaxResolved,jFamilyName,
-#' jGeneName,jGeneAllele,jFamilyTies,jGeneNameTies,jGeneAlleleTies,vDeletion,n1Insertion,
-#' d5Deletion,d3Deletion,n2Insertion,jDeletion,vIndex,n1Index,dIndex,n2Index,jIndex,
-#' estimatedNumberGenomes,sequenceStatus,cloneResolved,vOrphon,dOrphon,jOrphon,vFunction,
-#' dFunction,jFunction,fractionNucleated,vAlignLength,vAlignSubstitutionCount,
-#' vAlignSubstitutionIndexes,vAlignSubstitutionGeneThreePrimeIndexes,vSeqWithMutations
 #' 
-#' minimum required columns:
-#'     nucleotide,aminoAcid,count (reads),frequencyCount (%), vFamilyName, vGeneName,
-#' dFamilyName, dGeneName, jGeneName, jFamilyName, estimatedNumberGenomes, sequenceStatus
-#' 
-#' adaptiveV2:
-#'     
-#'     column list:
-#'     nucleotide,aminoAcid,count (templates/reads),frequencyCount (%),cdr3Length,vMaxResolved,
-#' vFamilyName,vGeneName,vGeneAllele,vFamilyTies,vGeneNameTies,vGeneAlleleTies,dMaxResolved,
-#' dFamilyName,dGeneName,dGeneAllele,dFamilyTies,dGeneNameTies,dGeneAlleleTies,jMaxResolved,
-#' jFamilyName,jGeneName,jGeneAllele,jFamilyTies,jGeneNameTies,jGeneAlleleTies,vDeletion,
-#' n1Insertion,d5Deletion,d3Deletion,n2Insertion,jDeletion,vIndex,n1Index,dIndex,n2Index,
-#' jIndex,estimatedNumberGenomes,sequenceStatus,cloneResolved,vOrphon,dOrphon,jOrphon,vFunction,
-#' dFunction,jFunction,fractionNucleated,vAlignLength,vAlignSubstitutionCount,vAlignSubstitutionIndexes,
-#' vAlignSubstitutionGeneThreePrimeIndexes,vSeqWithMutations
-#' 
-#' minimum required columns:
-#'     nucleotide,aminoAcid,count (templates/reads),frequencyCount (%), vFamilyName, vGeneName,
-#' dFamilyName, dGeneName, jGeneName, jFamilyName, estimatedNumberGenomes, sequenceStatus
-#' 
-#' 
-#' adaptiveV3:
-#'     
-#'     column list:
-#'     nucleotide,aminoAcid,count,(templates),frequencyCount,(%),cdr3Length,vMaxResolved,vFamilyName,
-#' vGeneName,vGeneAllele,vFamilyTies,vGeneNameTies,vGeneAlleleTies,dMaxResolved,dFamilyName,dGeneName,
-#' dGeneAllele,dFamilyTies,dGeneNameTies,dGeneAlleleTies,jMaxResolved,jFamilyName,jGeneName,
-#' jGeneAllele,jFamilyTies,jGeneNameTies,jGeneAlleleTies,vDeletion,n1Insertion,d5Deletion,d3Deletion,
-#' n2Insertion,jDeletion,vIndex,n1Index,dIndex,n2Index,jIndex,estimatedNumberGenomes,sequenceStatus,
-#' cloneResolved,vOrphon,dOrphon,jOrphon,vFunction,dFunction,jFunction,fractionNucleated
-#' 
-#' minimum required columns:
-#'     nucleotide,aminoAcid,count (templates),frequencyCount (%), vFamilyName, vGeneName,
-#' dFamilyName, dGeneName, jGeneName, jFamilyName, estimatedNumberGenomes, sequenceStatus
-#' 
-#' 
-#' adaptiveV4:
-#'     
-#'     column list:
-#'     nucleotide.CDR3.in.lowercase.,aminoAcid.CDR3.in.lowercase.,cloneCount,clonefrequency....,
-#' CDR3Length,vGene,dGene,jGene,vDeletion,d5Deletion,d3Deletion,jDeletion,vdInsertion,
-#' djInsertion,vjInsertion,fuction,CDR3.stripped.x.a
-#' 
-#' minimum required columns:
-#'     nucleotide.CDR3.in.lowercase.,aminoAcid.CDR3.in.lowercase.,cloneCount,clonefrequency....,
-#' vGene,dGene,jGene,fuction
-#' 
-#' bgiClone:
-#'     
-#'     column list:
-#'     nucleotide(CDR3 in lowercase),aminoAcid(CDR3 in lowercase),cloneCount,clonefrequency (%),
-#' CDR3Length,vGene,dGene,jGene,vDeletion,d5Deletion,d3Deletion,jDeletion,vdInsertion,
-#' djInsertion,vjInsertion,fuction
-#' 
-#' minimum required columns:
-#'     nucleotide(CDR3 in lowercase),aminoAcid(CDR3 in lowercase),cloneCount,clonefrequency (%),
-#' vGene,dGene, fuction
-#' @rdname readImmunoSeq
-#' @return Returns a list of data frames.  The names of each data frame are
-#' assigned according to the original ImmunoSEQ file names.
+#' @return Returns a tibble with MiAIRR headers and repertoire_id
+#'
 #' @examples
 #' file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
 #' 
 #' study_table <- readImmunoSeq(path = file.path, 
-#'                            recursive = FALSE)
+#'                              recursive = FALSE)
 #' @export
 #' @import tidyverse dplyr
+#' @rdname readImmunoSeq
 readImmunoSeq <- function(path, recursive = FALSE) {
-    file.paths <- list.files(path, full.names = TRUE, all.files = FALSE, 
+    file_paths <- list.files(path, full.names = TRUE, all.files = FALSE, 
                              recursive = recursive, pattern = ".tsv|.txt|.tsv.gz", 
                              include.dirs = FALSE)
-    file_num <- length(file.paths)
-    file.info <- file.info(file.paths)
-    file.paths <- rownames(file.info)[file.info$size > 0]
-    if(file_num != length(file.paths)){
-        warning("One or more of the files you are trying to import has no sequences and will be ignored.", call. = FALSE)
+    file_num <- length(file_paths)
+    file_info <- file.info(file_paths)
+    file_paths <- rownames(file_info)[file_info$size > 0]
+    if(file_num != length(file_paths)){
+        warning("One or more of the files you are trying to import has no sequences and will be ignored.", 
+                call. = FALSE)
     }
-    progress <- dplyr::progress_estimated(length(file.paths))
-    file.list <- file.paths %>% map(~ readFiles(.x, progress)) %>% bind_rows()
+    progress <- dplyr::progress_estimated(length(file_paths))
+    file_list <- file_paths %>% purrr::map(~ readFiles(.x, progress)) %>% 
+                 bind_rows()
     progress$stop()
-    if(length(unique(plyr::llply(file.list, ncol))) > 1){
-        warning("One or more of the files you are trying to import do not contain all the columns you specified.", call. = FALSE)
-    }
-    #file.names <- gsub(".tsv", "", basename(file.paths2))
-    #names(file.list) <- file.names
-    return(file.list)
+    return(file_list)
 }
 
-#' Identify file type
+#' @section Identify file type:
 #'
+#' AIRRSeq results have various formats, this functions identifies six formats 
+#' 
 #' @param clone_file .tsv file containing results from AIRRSeq pipeline
 #'
 #' @return List containing file type and standardized header names 
 #'
 #' @import tidyverse
 #' @export
+#' @rdname readImmunoSeq
 getFileType <- function(clone_file) {
-    adaptiveV1 <- c("nucleotide", "aminoAcid", "count (reads)", "frequencyCount (%)", "vGeneName", 
+    type1 <- c("nucleotide", "aminoAcid", "count (reads)", "frequencyCount (%)", "vGeneName", 
         "dGeneName", "jGeneName", "vFamilyName", "dFamilyName", "jFamilyName", "sequenceStatus", 
         "estimatedNumberGenomes")
         
-    adaptiveV2 <- c("nucleotide", "aminoAcid", "count (templates/reads)", "frequencyCount (%)", "vGeneName", 
+    type2 <- c("nucleotide", "aminoAcid", "count (templates/reads)", "frequencyCount (%)", "vGeneName", 
         "dGeneName", "jGeneName", "vFamilyName", "dFamilyName", "jFamilyName", "sequenceStatus", 
         "estimatedNumberGenomes")
     
-    adaptiveV3 <- c("nucleotide", "aminoAcid", "count (templates)", "frequencyCount (%)", "vGeneName", 
+    type3 <- c("nucleotide", "aminoAcid", "count (templates)", "frequencyCount (%)", "vGeneName", 
+        "dGeneName", "jGeneName", "vFamilyName", "dFamilyName", "jFamilyName", "sequenceStatus", 
+        "estimatedNumberGenomes")
+
+    type4 <- c("nucleotide", "aminoAcid", "count", "frequencyCount", "vGeneName", 
         "dGeneName", "jGeneName", "vFamilyName", "dFamilyName", "jFamilyName", "sequenceStatus", 
         "estimatedNumberGenomes")
     
-    adaptiveV4 <- c("nucleotide.CDR3.in.lowercase.", "aminoAcid.CDR3.in.lowercase.", "cloneCount", 
+    type5 <- c("nucleotide.CDR3.in.lowercase.", "aminoAcid.CDR3.in.lowercase.", "cloneCount", 
         "clonefrequency....", "vGene", "dGene", "jGene", "fuction")
 
-    bgiClone <- c("nucleotide(CDR3 in lowercase)", "aminoAcid(CDR3 in lowercase)", "cloneCount",
+    type6 <- c("nucleotide(CDR3 in lowercase)", "aminoAcid(CDR3 in lowercase)", "cloneCount",
         "clonefrequency (%)", "vGene", "dGene", "jGene", "fuction")
     
-    miXCR <- c("cloneCount", "cloneFraction", "allVHitsWithScore", "allDHitsWithScore",
+    type7 <- c("cloneCount", "cloneFraction", "allVHitsWithScore", "allDHitsWithScore",
         "allJHitsWithScore", "nSeqCDR3", "aaSeqCDR3")
 
+    type8 <- c("duplicate_count", "v_call", "d_call", "j_call", "junction", "junction_aa")
+
     columns <- invisible(colnames(readr::read_tsv(clone_file, n_max=1, col_types = cols())))
-    if (all(adaptiveV1 %in% columns)) {
-        file_type <- "adaptiveV1"
-        header_list <- cols_only(nucleotide = "c", aminoAcid = "c", `count (reads)` = "i", 
-                `frequencyCount (%)` = "d", vGeneName = "c", dGeneName = "c", 
-                jGeneName = "c", vFamilyName = "c", dFamilyName = "c", 
-                jFamilyName = "c", sequenceStatus = "c", estimatedNumberGenomes = "i")
-    } else if (all(adaptiveV2 %in% columns)) {
-        file_type <- "adaptiveV2"
-        header_list <- cols_only(nucleotide = "c", aminoAcid = "c", `count (templates/reads)` = "i", 
-                `frequencyCount (%)` = "d", vGeneName = "c", dGeneName = "c", 
-                jGeneName = "c", vFamilyName = "c", dFamilyName = "c", 
-                jFamilyName = "c", sequenceStatus = "c", estimatedNumberGenomes = "i")
-    } else if (all(adaptiveV3 %in% columns)) {
-        file_type <- "adaptiveV3"
-        header_list <- cols_only(nucleotide = "c", aminoAcid = "c", `count (templates)` = "i", 
-                `frequencyCount (%)` = "d", vGeneName = "c", dGeneName = "c", 
-                jGeneName = "c", vFamilyName = "c", dFamilyName = "c", 
-                jFamilyName = "c", sequenceStatus = "c", estimatedNumberGenomes = "i")
-    } else if (all(adaptiveV4 %in% columns)) {
-        file_type <- "adaptiveV4"
-        header_list <- cols_only(`nucleotide.CDR3.in.lowercase.` = col_character(), 
-                `aminoAcid.CDR3.in.lowercase.` = col_character(), cloneCount = col_integer(), 
-                `clonefrequency....` = col_double(), vGene = col_character(), dGene = col_character(), 
-                jGene = col_character(), fuction = col_character())
-    } else if (all(bgiClone %in% columns)) {
-        file_type <- "bgiClone"
-        header_list <- cols_only(`nucleotide(CDR3 in lowercase)` = col_character(), 
-                `aminoAcid(CDR3 in lowercase)` = col_character(), cloneCount = col_integer(), 
-                `clonefrequency (%)` = col_double(), vGene = col_character(), 
-                dGene = col_character(), jGene = col_character(), fuction = col_character())
-    } else if (all(miXCR %in% columns)) {
-        file_type <- "MiXCR"
-        header_list <- cols_only(cloneCount = 'd', cloneFraction = 'd', 
+    if (all(type1 %in% columns)) {
+        file_type <- "type1"
+        header_list <- readr::cols_only(nucleotide = "c", aminoAcid = "c", `count (reads)` = "i", 
+                vGeneName = "c", dGeneName = "c", jGeneName = "c")
+    } else if (all(type2 %in% columns)) {
+        file_type <- "type2"
+        header_list <- readr::cols_only(nucleotide = "c", aminoAcid = "c", `count (templates/reads)` = "i", 
+                vGeneName = "c", dGeneName = "c", jGeneName = "c")
+    } else if (all(type3 %in% columns)) {
+        file_type <- "type3"
+        header_list <- readr::cols_only(nucleotide = "c", aminoAcid = "c", `count (templates)` = "i", 
+                vGeneName = "c", dGeneName = "c", jGeneName = "c")
+    } else if (all(type4 %in% columns)) {
+        file_type <- "type4"
+        header_list <- readr::cols_only(nucleotide = "c", aminoAcid = "c", `count` = "i", 
+                vGeneName = "c", dGeneName = "c", jGeneName = "c")
+    } else if (all(type5 %in% columns)) {
+        file_type <- "type5"
+        header_list <- readr::cols_only(`nucleotide.CDR3.in.lowercase.` = "c", 
+                `aminoAcid.CDR3.in.lowercase.` = "c", cloneCount = "i", `clonefrequency....` = "d",
+                vGene = "c", dGene = "c", jGene = "c")
+    } else if (all(type6 %in% columns)) {
+        file_type <- "type6"
+        header_list <- readr::cols_only(`nucleotide(CDR3 in lowercase)` = "c", 
+                `aminoAcid(CDR3 in lowercase)` = "c", cloneCount = "i", 
+                `clonefrequency (%)` = "d", vGene = "c", dGene = "c", jGene = "c")
+    } else if (all(type7 %in% columns)) {
+        file_type <- "type7"
+        header_list <- readr::cols_only(cloneCount = 'd', cloneFraction = 'd', 
                 allVHitsWithScore = 'c', allDHitsWithScore = 'c', 
                 allJHitsWithScore = 'c', nSeqCDR3 = 'c', aaSeqCDR3 = 'c')
+    } else if (all(type8 %in% columns)) {
+        file_type <- "type8"
+        header_list <- readr::cols_only(duplicate_count = 'd', 
+                v_call = 'c', d_call = 'c', j_call = 'c', junction = 'c', junction_aa = 'c')
     }
     ret_val <- list(file_type, header_list)
     return(ret_val)
 }
 
-#' Get standard headers
+#' @section Get standard headers:
+#'
+#' Retrives MiAIRR standard compliant fields from the clone files
 #'
 #' @param file_type file type from getFileType method
 #'
@@ -192,38 +142,52 @@ getFileType <- function(clone_file) {
 #'
 #' @import tidyverse
 #' @export
+#' @rdname readImmunoSeq
 getStandard <- function(file_type) {
-    adaptiveV1 <- c(count = "count (reads)", frequencyCount = "frequencyCount (%)",
-            `function` = "sequenceStatus")
+    type1 <- c(junction = "nucleotide", junction_aa = "aminoAcid", 
+               duplicate_count = "count (reads)", v_call = "vGeneName", 
+               d_call = "dGeneName", j_call = "jGeneName")
 
-    adaptiveV2 <- c(count = "count (templates/reads)", frequencyCount = "frequencyCount (%)",
-            `function` = "sequenceStatus")
+    type2 <- c(junction = "nucleotide", junction_aa = "aminoAcid", 
+               duplicate_count = "count (templates/reads)",
+               v_call = "vGeneName", d_call = "dGeneName", j_call = "jGeneName")
 
-    adaptiveV3 <- c(count = "count (templates)", frequencyCount = "frequencyCount (%)",
-            `function` = "sequenceStatus")
+    type3 <- c(junction = "nucleotide", junction_aa = "aminoAcid", 
+               duplicate_count = "count (templates)", 
+               v_call = "vGeneName", d_call = "dGeneName", j_call = "jGeneName")
 
-    adaptiveV4 <- c(nucleotide = "nucleotide.CDR3.in.lowercase.", aminoAcid = "aminoAcid.CDR3.in.lowercase.", 
-            count = "cloneCount", frequencyCount = "clonefrequency....", vGeneName = "vGene", dGeneName = "dGene", 
-            jGeneName = "jGene", `function` = "fuction")   
+    type4 <- c(junction = "nucleotide", junction_aa = "aminoAcid", 
+               duplicate_count = "count", v_call = "vGeneName", d_call = "dGeneName", 
+               j_call = "jGeneName")
+
+    type5 <- c(junction = "nucleotide.CDR3.in.lowercase.", junction_aa = "aminoAcid.CDR3.in.lowercase.", 
+               duplicate_count = "cloneCount", v_call = "vGene", d_call = "dGene", j_call = "jGene")   
     
-    bgiClone <- c(nucleotide = "nucleotide(CDR3 in lowercase)", aminoAcid = "aminoAcid(CDR3 in lowercase)", 
-            count = "cloneCount", frequencyCount = "clonefrequency (%)", vGeneName = "vGene", dGeneName = "dGene", 
-            jGeneName = "jGene", `function` = "fuction")
+    type6 <- c(junction = "nucleotide(CDR3 in lowercase)", junction_aa = "aminoAcid(CDR3 in lowercase)", 
+               duplicate_count = "cloneCount", v_call = "vGene", d_call = "dGene", j_call = "jGene")   
     
-    miXCR <- c(nucleotide = "nSeqCDR3", aminoAcid = "aaSeqCDR3", count = "cloneCount", frequencyCount = "cloneFraction",
-            vGeneName = "allVHitsWithScore", jGeneName = "allJHitsWithScore", dGeneName = "allDHitsWithScore")
+    type7 <- c(junction = "nSeqCDR3", junction_aa = "aaSeqCDR3", duplicate_count = "cloneCount",
+               v_call = "allVHitsWithScore", j_call = "allJHitsWithScore", d_call = "allDHitsWithScore")
 
-    type_hash <- list("adaptiveV1"=adaptiveV1, "adaptiveV2"=adaptiveV2, "adaptiveV3"=adaptiveV3, "adaptiveV4"=adaptiveV4,
-            "bgiClone"=bgiClone, "MiXCR"=miXCR)
+    type8 <- c(junction = "junction", junction_aa = "junction_aa", duplicate_count = "duplicate_count",
+               v_call = "v_call", j_call = "j_call", d_call = "d_call")
+
+    type_hash <- list("type1"=type1, "type2"=type2, "type3"=type3, "type4"=type4,
+                      "type5"=type5, "type6"=type6, "type7"=type7, "type8"=type8)
     return(type_hash[[file_type]])
 }
 
-
-#' Read clone file from path
+#' @section Read clone file from path:
+#' 
+#' Given the path to a single AIRRSeq clone file, generate MiAIRR compliant tibble.
+#'
 #' @param clone_file .tsv file containing results from AIRRSeq pipeline
-#' @return Tibble in standardized format 
+#'
+#' @return Tibble in MiAIRR format 
+#'
 #' @import tidyverse
 #' @export
+#' @rdname readImmunoSeq
 readFiles <- function(clone_file, progress) {
     progress$tick()$print()
     file_info <- getFileType(clone_file)
@@ -235,41 +199,36 @@ readFiles <- function(clone_file, progress) {
     options(readr.show_progress = FALSE)
     clone_frame <- readr::read_tsv(clone_file, col_types = col_old,
                                     na = c("", "NA", "Nan", "NaN"), trim_ws = TRUE)
-    if ((file_type == "adaptiveV1") | (file_type == "adaptiveV2") | (file_type == "adaptiveV3")){
-        clone_frame <- clone_frame %>% dplyr::rename(!!!col_std)
-        clone_frame <- clone_frame %>% mutate(`function`= str_replace(`function`, "In", "in-frame"))
-        clone_frame <- clone_frame %>% add_column(sample=file_names)
-    } else if ((file_type == "adaptiveV4") | (file_type == "bgiClone")) {
-        clone_frame <- clone_frame %>% dplyr::rename(!!!col_std)
-        clone_frame <- clone_frame %>% extract(nucleotide, c("nucleotide"), regex = "([acgt]+)")
-        clone_frame <- clone_frame %>% mutate(nucleotide  = toupper(nucleotide))
-        clone_frame <- clone_frame %>% extract(aminoAcid, c("aminoAcid"), regex = "([acdefghiklmnpqrstvwy]+)")
-        clone_frame <- clone_frame %>% mutate(aminoAcid = toupper(aminoAcid))
-        clone_frame <- clone_frame %>% mutate(vFamilyName = if_else(str_detect(vGeneName, "(TRB)V"), str_extract(vGeneName, "(TRB)V\\d+"), "unrecognized"),
-                                              dFamilyName = if_else(str_detect(dGeneName, "(TRB)D"), str_extract(dGeneName, "(TRB)D\\d+"), "unrecognized"),
-                                              jFamilyName = if_else(str_detect(jGeneName, "(TRB)J"), str_extract(jGeneName, "(TRB)J\\d+"), "unrecognized"))
-
-        clone_frame <- clone_frame %>% 
-                       group_by(nucleotide, aminoAcid, vGeneName, `function`, jGeneName, dGeneName, vFamilyName, dFamilyName, jFamilyName) %>% 
-                       summarize(`count` = sum(`count`)) %>% mutate(frequencyCount = `count` / sum(`count`)) %>% ungroup()
-        clone_frame <- clone_frame %>% add_column(sample=file_names)
-        clone_frame <- clone_frame %>% mutate(estimatedNumberGenomes=`count`)        
-    } else if ((file_type == "MiXCR")) {
-        clone_frame <- clone_frame %>% dplyr::rename(!!!col_std)
-        clone_frame <- clone_frame %>% filter(!str_detect(aminoAcid, '\\*|_'))
-        clone_frame <- clone_frame %>% add_column(sample=file_names, `function` = "in-frame")
-        clone_frame <- clone_frame %>% mutate(vGeneName = str_extract(vGeneName, "(TRB)V\\d+-\\d+\\*\\d+"),
-                                              dGeneName = str_extract(dGeneName, "(TRB)D\\d+\\*\\d+"),
-                                              jGeneName = str_extract(jGeneName, "(TRB)J\\d+-\\d+\\*\\d+"))
-        clone_frame <- clone_frame %>% mutate(vFamilyName = if_else(str_detect(vGeneName, "(TRB)V"), str_extract(vGeneName, "(TRB)V\\d+"), "unrecognized"),
-                                              dFamilyName = if_else(str_detect(dGeneName, "(TRB)D"), str_extract(dGeneName, "(TRB)D\\d+"), "unrecognized"),
-                                              jFamilyName = if_else(str_detect(jGeneName, "(TRB)J"), str_extract(jGeneName, "(TRB)J\\d+"), "unrecognized"))
-        clone_frame <- clone_frame %>% 
-                       group_by(nucleotide, aminoAcid, vGeneName, `function`, jGeneName, dGeneName, vFamilyName, dFamilyName, jFamilyName) %>% 
-                       summarize(`count` = sum(`count`)) %>% mutate(frequencyCount = `count` / sum(`count`)) %>% ungroup()
-        clone_frame <- clone_frame %>% add_column(sample=file_names)
-        clone_frame <- clone_frame %>% mutate(estimatedNumberGenomes=`count`)        
-    }
+    clone_frame <- clone_frame %>% 
+                   dplyr::rename(!!!col_std)
+    clone_frame <- clone_frame %>% 
+                   dplyr::mutate(reading_frame = dplyr::if_else(stringr::str_detect(junction_aa, "\\*"), 
+                                                                "out-of-frame", "in-frame"),
+                                 junction = dplyr::if_else(stringr::str_detect(junction, "[acgt]+"), 
+                                             toupper(stringr::str_extract(junction, "[acgt]+")), junction),
+                                 junction_aa = dplyr::if_else(stringr::str_detect(junction_aa, "[acdefghiklmnpqrstvwy]+"),
+                                                toupper(stringr::str_extract(junction_aa, "[acdefghiklmnpqrstvwy]+")), junction_aa))
+    clone_frame <- clone_frame %>%
+                   dplyr::mutate(v_call = dplyr::if_else(stringr::str_detect(v_call, "(TRB|TCRB)V\\d+-\\d+\\*\\d+"),
+                                           stringr::str_extract(v_call, "(TRB|TCRB)V\\d+-\\d+\\*\\d+"), v_call),
+                                 j_call = dplyr::if_else(stringr::str_detect(j_call, "(TRB|TCRB)J\\d+-\\d+\\*\\d+"),
+                                           stringr::str_extract(j_call, "(TRB|TCRB)J\\d+-\\d+\\*\\d+"), j_call),
+                                 d_call = dplyr::if_else(stringr::str_detect(d_call, "(TRB|TCRB)D\\d+\\*\\d+"),
+                                           stringr::str_extract(d_call, "(TRB|TCRB)D\\d+\\*\\d+"), d_call))
+    clone_frame <- clone_frame %>%
+                   dplyr::mutate(v_family = dplyr::if_else(stringr::str_detect(v_call, "(TRB|TCRB)V"),
+                                             stringr::str_extract(v_call, "(TRB|TCRB)V\\d+"), "unrecognized"),
+                                 j_family = dplyr::if_else(stringr::str_detect(j_call, "(TRB|TCRB)J"),
+                                             stringr::str_extract(j_call, "(TRB|TCRB)J\\d+"), "unrecognized"),
+                                 d_family = dplyr::if_else(stringr::str_detect(d_call, "(TRB|TCRB)D"),
+                                             stringr::str_extract(d_call, "(TRB|TCRB)D\\d+"), "unrecognized"))
+    clone_frame <- clone_frame %>% 
+                   dplyr::group_by(junction, junction_aa, v_call, j_call, d_call, v_family, j_family, d_family, reading_frame) %>% 
+                   dplyr::summarize(duplicate_count = sum(duplicate_count)) %>% 
+                   dplyr::mutate(duplicate_frequency = duplicate_count / sum(duplicate_count)) %>% 
+                   dplyr::ungroup() %>%
+                   dplyr::mutate(repertoire_id = file_names) %>%
+                   dplyr::select(repertoire_id, everything())
     return(clone_frame)
 }
 

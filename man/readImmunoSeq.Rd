@@ -2,104 +2,79 @@
 % Please edit documentation in R/readImmunoSeq.R
 \name{readImmunoSeq}
 \alias{readImmunoSeq}
+\alias{getFileType}
+\alias{getStandard}
+\alias{readFiles}
 \title{Read ImmunoSeq files}
 \usage{
 readImmunoSeq(path, recursive = FALSE)
+
+getFileType(clone_file)
+
+getStandard(file_type)
+
+readFiles(clone_file, progress = NULL)
 }
 \arguments{
-\item{path}{Path to the directory containing tab-delimited files.  Only 
-files with the extension .tsv are imported.  The names of the data frames are 
+\item{path}{Path to the directory containing tab-delimited files.  Only
+files with the extension .tsv are imported.  The names of the data frames are
 the same as names of the files.}
+
+\item{clone_file}{.tsv file containing results from AIRRSeq pipeline}
+
+\item{file_type}{file type from getFileType method}
 }
 \value{
-Returns a list of data frames.  The names of each data frame are
-assigned according to the original ImmunoSEQ file names.
+Returns a tibble with MiAIRR headers and repertoire_id
+
+List containing file type and standardized header names
+
+List of standard header names
+
+Tibble in MiAIRR format
 }
 \description{
-\code{readImmunoSeq}
+Imports tab-separated value (.tsv) files exported by the Adaptive
+Biotechnologies ImmunoSEQ analyzer and stores them as MiAIRR compliant
+tibble.
 }
 \details{
-Imports tab-separated value (.tsv) files exported by the Adaptive 
-Biotechnologies ImmunoSEQ analyzer and stores them as a list of data frames.
-
-May import tab-delimited files containing antigen receptor 
-sequencing from other sources (e.g. miTCR or miXCR) as long as the column 
-names are the same as used by ImmunoSEQ files.  Available column headings in 
-ImmunoSEQ files are:  
-    
-    adaptiveV1:
-    
-    column list:
-    nucleotide,aminoAcid,count (reads),frequencyCount (%),cdr3Length,vMaxResolved,vFamilyName,
-vGeneName,vGeneAllele,vFamilyTies,vGeneNameTies,vGeneAlleleTies,dMaxResolved,dFamilyName,
-dGeneName,dGeneAllele,dFamilyTies,dGeneNameTies,dGeneAlleleTies,jMaxResolved,jFamilyName,
-jGeneName,jGeneAllele,jFamilyTies,jGeneNameTies,jGeneAlleleTies,vDeletion,n1Insertion,
-d5Deletion,d3Deletion,n2Insertion,jDeletion,vIndex,n1Index,dIndex,n2Index,jIndex,
-estimatedNumberGenomes,sequenceStatus,cloneResolved,vOrphon,dOrphon,jOrphon,vFunction,
-dFunction,jFunction,fractionNucleated,vAlignLength,vAlignSubstitutionCount,
-vAlignSubstitutionIndexes,vAlignSubstitutionGeneThreePrimeIndexes,vSeqWithMutations
-
-minimum required columns:
-    nucleotide,aminoAcid,count (reads),frequencyCount (%), vFamilyName, vGeneName,
-dFamilyName, dGeneName, jGeneName, jFamilyName, estimatedNumberGenomes, sequenceStatus
-
-adaptiveV2:
-    
-    column list:
-    nucleotide,aminoAcid,count (templates/reads),frequencyCount (%),cdr3Length,vMaxResolved,
-vFamilyName,vGeneName,vGeneAllele,vFamilyTies,vGeneNameTies,vGeneAlleleTies,dMaxResolved,
-dFamilyName,dGeneName,dGeneAllele,dFamilyTies,dGeneNameTies,dGeneAlleleTies,jMaxResolved,
-jFamilyName,jGeneName,jGeneAllele,jFamilyTies,jGeneNameTies,jGeneAlleleTies,vDeletion,
-n1Insertion,d5Deletion,d3Deletion,n2Insertion,jDeletion,vIndex,n1Index,dIndex,n2Index,
-jIndex,estimatedNumberGenomes,sequenceStatus,cloneResolved,vOrphon,dOrphon,jOrphon,vFunction,
-dFunction,jFunction,fractionNucleated,vAlignLength,vAlignSubstitutionCount,vAlignSubstitutionIndexes,
-vAlignSubstitutionGeneThreePrimeIndexes,vSeqWithMutations
-
-minimum required columns:
-    nucleotide,aminoAcid,count (templates/reads),frequencyCount (%), vFamilyName, vGeneName,
-dFamilyName, dGeneName, jGeneName, jFamilyName, estimatedNumberGenomes, sequenceStatus
-
-
-adaptiveV3:
-    
-    column list:
-    nucleotide,aminoAcid,count,(templates),frequencyCount,(%),cdr3Length,vMaxResolved,vFamilyName,
-vGeneName,vGeneAllele,vFamilyTies,vGeneNameTies,vGeneAlleleTies,dMaxResolved,dFamilyName,dGeneName,
-dGeneAllele,dFamilyTies,dGeneNameTies,dGeneAlleleTies,jMaxResolved,jFamilyName,jGeneName,
-jGeneAllele,jFamilyTies,jGeneNameTies,jGeneAlleleTies,vDeletion,n1Insertion,d5Deletion,d3Deletion,
-n2Insertion,jDeletion,vIndex,n1Index,dIndex,n2Index,jIndex,estimatedNumberGenomes,sequenceStatus,
-cloneResolved,vOrphon,dOrphon,jOrphon,vFunction,dFunction,jFunction,fractionNucleated
-
-minimum required columns:
-    nucleotide,aminoAcid,count (templates),frequencyCount (%), vFamilyName, vGeneName,
-dFamilyName, dGeneName, jGeneName, jFamilyName, estimatedNumberGenomes, sequenceStatus
-
-
-adaptiveV4:
-    
-    column list:
-    nucleotide.CDR3.in.lowercase.,aminoAcid.CDR3.in.lowercase.,cloneCount,clonefrequency....,
-CDR3Length,vGene,dGene,jGene,vDeletion,d5Deletion,d3Deletion,jDeletion,vdInsertion,
-djInsertion,vjInsertion,fuction,CDR3.stripped.x.a
-
-minimum required columns:
-    nucleotide.CDR3.in.lowercase.,aminoAcid.CDR3.in.lowercase.,cloneCount,clonefrequency....,
-vGene,dGene,jGene,fuction
-
-bgiClone:
-    
-    column list:
-    nucleotide(CDR3 in lowercase),aminoAcid(CDR3 in lowercase),cloneCount,clonefrequency (%),
-CDR3Length,vGene,dGene,jGene,vDeletion,d5Deletion,d3Deletion,jDeletion,vdInsertion,
-djInsertion,vjInsertion,fuction
-
-minimum required columns:
-    nucleotide(CDR3 in lowercase),aminoAcid(CDR3 in lowercase),cloneCount,clonefrequency (%),
-vGene,dGene, fuction
+May import tab-delimited files containing antigen receptor
+sequencing from with the following header set.\tabular{lllllll}{
+   MiAIRR field ID \tab Type1 \tab Type2 \tab Type3 \tab Type4 \tab Type5 \tab Type6 \cr
+   junction \tab nucleotide \tab nucleotide \tab nucleotide \tab nucleotide.CDR3.in.lowercase . \tab nucleotide( CDR3   in   lowercase ) \tab nSeqCDR3 \cr
+   junction_aa \tab aminoAcid \tab aminoAcid \tab aminoAcid \tab aminoAcid.CDR3.in.lowercase . \tab aminoAcid( CDR3   in   lowercase ) \tab aaSeqCDR3 \cr
+   duplicate_count \tab count ( reads ) \tab count ( templates / reads ) \tab count ( templates ) \tab cloneCount \tab cloneCount \tab cloneCount \cr
+   v_call \tab vGeneName \tab vGeneName \tab vGeneName \tab vGene \tab vGene \tab allVHitsWithScore \cr
+   d_call \tab dGeneName \tab dGeneName \tab dGeneName \tab dGene \tab dGene \tab allDHitsWithScore \cr
+   j_call \tab jGeneName \tab jGeneName \tab jGeneName \tab jGene \tab jGene \tab allJHitsWithScore \cr
 }
+}
+\section{Creating a study table from path containing AIRRSeq files}{
+
+}
+
+\section{Identify file type}{
+
+
+AIRRSeq results have various formats, this functions identifies six formats
+}
+
+\section{Get standard headers}{
+
+
+Retrives MiAIRR standard compliant fields from the clone files
+}
+
+\section{Read clone file from path}{
+
+
+Given the path to a single AIRRSeq clone file, generate MiAIRR compliant tibble.
+}
+
 \examples{
 file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
 
 study_table <- readImmunoSeq(path = file.path, 
-                           recursive = FALSE)
+                             recursive = FALSE)
 }

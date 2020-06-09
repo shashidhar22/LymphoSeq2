@@ -22,17 +22,23 @@
 #' @import purrr
 
 rarefactionCurve <- function(study_table) {
-    progress <- progress_estimated(length(unique(study_table$sample)))
-    rarefaction_tables <- study_table %>% group_by(sample) %>% group_split() %>% map(~runINext(.x, progress)) %>% bind_rows()
+    progress <- dplyr::progress_estimated(length(unique(study_table$sample)))
+    rarefaction_tables <- study_table %>% 
+                          dplyr::group_by(sample) %>% 
+                          dplyr::group_split() %>% 
+                          dplyr::map(~runINext(.x, progress)) %>% 
+                          dplyr::bind_rows()
     rarefaction_tables <- rarefaction_tables %>% 
-                          mutate(method = recode(method, observed = "Interpolated", interpolated = "Interpolated", extrapolated = "Extrapolated")) 
-    rarefaction_curves <- ggplot(rarefaction_tables, aes(x=m, y=qD, fill=sample)) + 
-                          geom_line(aes(linetype=method, color=sample), size=1.5) +  
-                          geom_ribbon(aes(ymin = qD.LCL, ymax = qD.UCL), alpha=0.5) +
-                          scale_linetype_manual(values=c("dashed", "solid")) + 
-                          theme_classic() +
-                          xlab("Total number of sequences") +
-                          ylab("TCR diversity") + 
-                          labs(fill = "Sample", color="Sample", linetype="Method") 
+                          dplyr::mutate(method = recode(method, observed = "Interpolated", 
+                                        interpolated = "Interpolated", extrapolated = "Extrapolated")) 
+    rarefaction_curves <- ggplot2::ggplot(rarefaction_tables, aes(x=m, y=qD, fill=sample)) + 
+                          ggplot2::geom_line(aes(linetype=method, color=sample), size=1.5) +  
+                          ggplot2::geom_ribbon(aes(ymin = qD.LCL, ymax = qD.UCL), alpha=0.5) +
+                          ggplot2::scale_linetype_manual(values=c("dashed", "solid"),  
+                                                         labels=c("Extrapolated", "Intrapolated")) + 
+                          ggplot2::theme_classic() +
+                          ggplot2::xlab("Total number of sequences") +
+                          ggplot2::ylab("TCR diversity") + 
+                          ggplot2::labs(fill = "Sample", color="Sample", linetype="Method") 
     return(rarefaction_curves)
 }

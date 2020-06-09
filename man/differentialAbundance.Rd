@@ -11,7 +11,7 @@ differentialAbundance(
   abundance = "estimatedNumberGenomes",
   type = "aminoAcid",
   q = 1,
-  zero = 0.001,
+  zero = 1,
   parallel = FALSE
 )
 }

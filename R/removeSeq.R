@@ -24,9 +24,9 @@
 #' @import  tidyverse
 removeSeq <- function(file.list, sequence) {
     study_table <- study_table %>% 
-                   filter(!aminoAcid %in% sequence) %>% 
-                   group_by(sample) %>%
-                   mutate(frequencyCount = `count` / sum(`count`)) %>% 
-                   ungroup()
+                   dplyr::filter(!aminoAcid %in% sequence) %>% 
+                   dplyr::group_by(sample) %>%
+                   dplyr::mutate(frequencyCount = `count` / sum(`count`)) %>% 
+                   dplyr::ungroup()
     return(study_table)
 }

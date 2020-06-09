@@ -17,7 +17,7 @@
 #' 
 #' study_table <- readImmunoSeq(path = file.path)
 #' 
-#' productive_aa <- productiveSeq(study_table = study_table, aggregate = "aminoAcid")
+#' productive_aa <- productiveSeq(study_table = study_table, aggregate = "junction_aa")
 #' 
 #' topSeqsPlot(study_table = productive_aa, top = 10)
 #' 
@@ -35,33 +35,43 @@
 #' @importFrom plyr llply
 topSeqsPlot <- function(study_table, top = 10) {
     dominant <- study_table %>% 
-                group_by(sample) %>% 
-                arrange(desc(frequencyCount)) %>% 
-                top_n(top, wt=frequencyCount) %>%
-                select(sample, aminoAcid, frequencyCount) %>%
-                ungroup()
+                dplyr::group_by(repertoire_id) %>% 
+                dplyr::arrange(desc(duplicate_frequency)) %>% 
+                dplyr::top_n(top, wt=duplicate_frequency) %>%
+                dplyr::select(repertoire_id, junction_aa, duplicate_frequency) %>%
+                dplyr::ungroup()
                 
     
     subdominant <- dominant %>% 
-                   group_by(sample) %>% 
-                   summarize(frequencyCount = 100 - sum(frequencyCount), aminoAcid = "All other sequences") %>%
-                   select(sample, aminoAcid, frequencyCount)
-    topfreq <- bind_rows(dominant,subdominant) %>% 
-               rename(Sample=sample, aminoAcid= aminoAcid, Frequency=frequencyCount) %>%
-               group_by(Sample) %>% 
-               mutate(Sequence = 1:n()) %>%
-               mutate(Sequence = as.factor(Sequence)) %>%
-               ungroup() %>%
-               arrange(Sample, Sequence, desc(Frequency))
+                   dplyr::group_by(repertoire_id) %>% 
+                   dplyr::summarize(duplicate_frequency = 100 - sum(duplicate_frequency), 
+                                    junction_aa = "All other sequences") %>%
+                   dplyr::select(repertoire_id, junction_aa, duplicate_frequency)
+    topfreq <- dplyr::bind_rows(dominant,subdominant) %>% 
+               dplyr::rename(repertoire_id=repertoire_id, 
+                             junction_aa= junction_aa, 
+                             Frequency=duplicate_frequency) %>%
+               dplyr::group_by(repertoire_id) %>% 
+               dplyr::mutate(Sequence = 1:n()) %>%
+               dplyr::mutate(Sequence = as.factor(Sequence)) %>%
+               dplyr::ungroup() %>%
+               dplyr::arrange(repertoire_id, Sequence, desc(Frequency))
     getPalette <- grDevices::colorRampPalette(RColorBrewer::brewer.pal(11, "Spectral"))
-    sample_order <- subdominant %>% arrange(frequencyCount) %>% select(sample) %>% pull()
-    ggplot(topfreq, aes_string(x = "Sample", y = "Frequency", fill = "Sequence", label = "Frequency", text = "aminoAcid")) + 
-        geom_bar(stat = "identity") + 
-        scale_x_discrete(limits = sample_order) + 
-        scale_fill_manual(values = getPalette(top + 1)) + 
-        theme_classic() + 
-        scale_y_continuous(expand = c(0, 0)) + 
-        theme(legend.position = "none") + 
-        theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1, size = 10), 
-              axis.text.y = element_text(size = 10)) + labs(x = "", y = "Frequency (%)")
+    sample_order <- subdominant %>%
+                    dplyr::arrange(duplicate_frequency) %>% 
+                    dplyr::select(repertoire_id) %>% 
+                    dplyr::pull()
+    ggplot2::ggplot(topfreq, aes_string(x = "repertoire_id", 
+                               y = "Frequency", 
+                               fill = "Sequence", 
+                               label = "Frequency", 
+                               text = "junction_aa")) + 
+    ggplot2::geom_bar(stat = "identity") + 
+    ggplot2::scale_x_discrete(limits = sample_order) + 
+    ggplot2::scale_fill_manual(values = getPalette(top + 1)) + 
+    ggplot2::theme_classic() + 
+    ggplot2::scale_y_continuous(expand = c(0, 0)) + 
+    ggplot2::theme(legend.position = "none") + 
+    ggplot2::theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1, size = 10), 
+                   axis.text.y = element_text(size = 10)) + labs(x = "", y = "Frequency (%)")
 } 

@@ -1,20 +1,20 @@
 #' Align mutliple sequences
 #' 
 #' Perform multiple sequence alignment using one of three methods and output results to the 
-#' console or as a pdf file.  One may perform the alignment of all amino acid or nucleotide
-#' sequences in a single sample.  Alternatively, one may search for a given sequence 
+#' console or as a pdf file.  One may perform the alignment of all amino acid or junction
+#' sequences in a single repertoire_id.  Alternatively, one may search for a given sequence 
 #' within a list of samples using an edit distance threshold.
 #' 
 #' @param study_table A tibble consisting of antigen receptor sequences 
 #' imported by the LymphoSeq function readImmunoSeq.
-#' @param sample A character vector indicating the name of the sample in the productive
+#' @param repertoire_id A character vector indicating the name of the repertoire_id in the productive
 #' sequence list. 
-#' @param sequence A character vector of one ore more amino acid or nucleotide 
+#' @param sequence A character vector of one ore more amino acid or junction 
 #' CDR3 sequences to search.
 #' @param editDistance An integer giving the minimum edit distance that the 
 #' sequence must be less than or equal to.  See details below.
-#' @param type A character vector indicating whether "aminoAcid" or "nucleotide" sequences
-#' should be aligned.  If "aminoAcid" is specified, then run productiveSeqs first.
+#' @param type A character vector indicating whether "junction_aa" or "junction" sequences
+#' should be aligned.  If "junction_aa" is specified, then run productiveSeqs first.
 #' @param method A character vector indicating the multiple sequence alignment method to 
 #' be used.  Refer to the Bioconductor msa package for more details.  Options incude 
 #' "ClustalW", "ClustalOmega", and "Muscle".
@@ -26,7 +26,7 @@
 #' are to one another by counting the minimum number of operations required to 
 #' transform one sequence into the other.  For example, an edit distance of 0 
 #' means the sequences are identical and an edit distance of 1 indicates that 
-#' the sequences different by a single amino acid or nucleotide.
+#' the sequences different by a single amino acid or junction.
 #' 
 #' @return Performs a multiple sequence alignemnt and prints to the console or saves a pdf to 
 #' the working directory.
@@ -38,16 +38,16 @@
 #' 
 #' file.list <- readImmunoSeq(path = file.path)
 #' 
-#' productive.nt <- productiveSeq(file.list = file.list, aggregate = "nucleotide")
+#' productive.nt <- productiveSeq(file.list = file.list, aggregate = "junction")
 #' 
-#' alignSeq(list = productive.nt, sample = "IGH_MVQ92552A_BL", type = "nucleotide", 
+#' alignSeq(list = productive.nt, repertoire_id = "IGH_MVQ92552A_BL", type = "junction", 
 #'          method = "ClustalW", output = "console")
 #' @export
 #' @importFrom Biostrings DNAStringSet
 #' @importFrom Biostrings AAStringSet
 #' @import msa
 #' @import tidyverse
-alignSeq = function(study_table, sample_list = NULL, sequence_list = NULL, editDistance = 15, output = "console", type = "nucleotide", method = "ClustalOmega") {
+alignSeq = function(study_table, sample_list = NULL, sequence_list = NULL, editDistance = 15, output = "console", type = "junction", method = "ClustalOmega") {
     if(!is.null(sequence_list) & is.null(sample_list)){
         search_table <- searchSeq(study_table = study_table, sequence = sequence_list, editDistance = editDistance, type = type, match = "partial")
         if(is.null(search_table)){
@@ -55,14 +55,14 @@ alignSeq = function(study_table, sample_list = NULL, sequence_list = NULL, editD
         }
     }
     if(!is.null(sequence_list) & !is.null(sample_list)){
-        study_table %>% study_table %>% filter(sample %in% sample_list)
-        search_table <- searchSeq(list = list[sample], sequence = sequence_list, editDistance = editDistance, type = type, match = "partial")
+        study_table %>% study_table %>% filter(repertoire_id %in% sample_list)
+        search_table <- searchSeq(list = list[repertoire_id], sequence = sequence_list, editDistance = editDistance, type = type, match = "partial")
         if(is.null(search_table)){
             stop("There are no sequences to be aligned", call. = FALSE)
         }
     }
     if(is.null(sequence_list)){
-        search_table <- study_table %>% filter(sample %in% sample_list)
+        search_table <- study_table %>% filter(repertoire_id %in% sample_list)
     }
     if(nrow(search_table) > 150){
         if(is.null(sequence_list)){
@@ -72,22 +72,22 @@ alignSeq = function(study_table, sample_list = NULL, sequence_list = NULL, editD
         }
         message("Only 150 sequences sampled equally from each search group will be selected")
     }
-    if(type == "nucleotide"){
-        search_table <- search_table %>% filter(nchar(nucleotide) > 15)
-        string_list <- Biostrings::DNAStringSet(search_table$nucleotide)
+    if(type == "junction"){
+        search_table <- search_table %>% filter(nchar(junction) > 15)
+        string_list <- Biostrings::DNAStringSet(search_table$junction)
     }
-    if(type == "aminoAcid"){
-        search_table <- search_table %>% filter(nchar(aminoAcid) > 3)
-        string_list <- Biostrings::AAStringSet(search_table$aminoAcid)
+    if(type == "junction_aa"){
+        search_table <- search_table %>% filter(nchar(junction_aa) > 3)
+        string_list <- Biostrings::AAStringSet(search_table$junction_aa)
     }
     if(nrow(search_table) < 3){
         stop("There are less than 3 sequences to be aligned", call. = FALSE)
     }
     if(!is.null(sequence_list)){
-        names(string_list) <- paste(search_table$sample)
+        names(string_list) <- paste(search_table$repertoire_id)
     } else {
-        names(string_list) <- paste(search_table$vFamilyName, search_table$dFamilyName, 
-                                    search_table$jFamilyName, search_table$count, sep="_")
+        names(string_list) <- paste(search_table$v_family, search_table$d_family, 
+                                    search_table$j_family, search_table$duplicate_count, sep="_")
     }
     names(string_list) <- gsub(names(string_list), pattern = "IGH|IGL|IGK|TCRB|TCRA", replacement = "")
     names(string_list) <- gsub(names(string_list), pattern = "NA|unresolved", replacement = "UNR")

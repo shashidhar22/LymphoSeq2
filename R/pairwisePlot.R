@@ -16,7 +16,7 @@
 #' 
 #' study_table <- readImmunoSeq(path = file.path)
 #' 
-#' productive_aa <- productiveSeq(study_table = study_table, aggregate = "aminoAcid")
+#' productive_aa <- productiveSeq(study_table = study_table, aggregate = "junction_aa")
 #' 
 #' similarity_matrix <- scoringMatrix(productive_table = productive_aa, mode="Similarity")
 #' 
@@ -43,16 +43,16 @@ pairwisePlot <- function(matrix) {
         j <- i + 1
         matrix[i, j:l] <- NA
     }
-    matrix$Samples <- rownames(matrix)
-    melt <- reshape::melt.data.frame(matrix, id.vars = "Samples")
+    matrix$repertoire_ids <- rownames(matrix)
+    melt <- reshape::melt.data.frame(matrix, id.vars = "repertoire_ids")
     melt <- na.omit(melt)
     melt$variable <- factor(melt$variable, levels = rownames(matrix))
-    melt$Samples <- factor(melt$Samples, levels = rev(rownames(matrix)))
-    names(melt) = c("Sample.x", "Sample.y", "Score")
-    ggplot(data = melt, aes_string(x = "Sample.x", y = "Sample.y", fill = "Score")) + 
-        geom_tile() + 
-        scale_fill_gradient(low = "#fee8c8", high = "#e34a33") + 
-        theme_classic() + 
-        labs(x = "", y = "", fill = "") + 
-        theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+    melt$repertoire_ids <- factor(melt$repertoire_ids, levels = rev(rownames(matrix)))
+    names(melt) = c("repertoire_id.x", "repertoire_id.y", "Score")
+    ggplot(data = melt, aes_string(x = "repertoire_id.x", y = "repertoire_id.y", fill = "Score")) + 
+    ggplot2::geom_tile() + 
+    ggplot2::scale_fill_gradient(low = "#fee8c8", high = "#e34a33") + 
+    ggplot2::theme_classic() + 
+    ggplot2::labs(x = "", y = "", fill = "") + 
+    ggplot2::theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
 }

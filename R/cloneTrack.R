@@ -4,9 +4,9 @@
 #' 
 #' @param sequence_matrix A sequence matrix generated from the LymphoSeq 
 #' function seqMatrix.
-#' @param map An optional character vector of one or more sample names contained 
+#' @param map An optional character vector of one or more repertoire_id names contained 
 #' in the productive_aa tibble.  If the same sequence appears in multiple mapped 
-#' samples, then it will be assigned the label of the first listed sample only.
+#' samples, then it will be assigned the label of the first listed repertoire_id only.
 #' @param productive.aa A list of data frames of productive amino acid sequences 
 #' containing the samples to be mapped.  This parameter is only required if 
 #' sequence mapping is performed.
@@ -30,11 +30,11 @@
 #' 
 #' study_table <- readImmunoSeq(path = file.path)
 #' 
-#' productive_aa <- productiveSeq(study_table = study_table, aggregate = "aminoAcid")
+#' productive_aa <- productiveSeq(study_table = study_table, aggregate = "junction_aa")
 #' 
 #' top_freq <- topFreq(productive_table = productive_aa, percent = 0.1)
 #' 
-#' sequence_matrix <- seqMatrix(productive_table = productive_aa, sequences = top.freq$aminoAcid)
+#' sequence_matrix <- seqMatrix(productive_table = productive_aa, sequences = top.freq$junction_aa)
 #' 
 #' # Track clones without mapping or tracking specific sequences
 #' cloneTrack(sequence_matrix = sequence_matrix)
@@ -42,11 +42,11 @@
 #' # Track top 20 clones mapping to the CD4 and CD8 samples
 #' cloneTrack(sequence_matrix = sequence_matrix, productive_table =  productive_aa, 
 #'    map = c("TRB_CD4_949", "TRB_CD8_949"), label = c("CD4", "CD8"), 
-#'    track = top_freq$aminoAcid[1:20], unassigned = TRUE) 
+#'    track = top_freq$junction_aa[1:20], unassigned = TRUE) 
 #' 
 #' # Track the top 10 clones from top.freq
 #' cloneTrack(sequence_matrix = sequence_matrix, productive_table = productive_aa, 
-#'    track = top_freq$aminoAcid[1:10], unassigned = FALSE) 
+#'    track = top_freq$junction_aa[1:10], unassigned = FALSE) 
 #' 
 #' # Track clones mapping to the CD4 and CD8 samples while ignoring all others
 #' cloneTrack(sequence_matrix = sequence_matrix, productive_table = productive_aa, 
@@ -62,10 +62,10 @@
 #' x.limits <- c("TRB_Unsorted_0", "TRB_Unsorted_32", 
 #'    "TRB_Unsorted_83", "TRB_Unsorted_949", "TRB_Unsorted_1320")
 #' 
-#' sequence.matrix <- sequence.matrix[ ,c("aminoAcid", x.limits)]
+#' sequence.matrix <- sequence.matrix[ ,c("junction_aa", x.limits)]
 #'    
 #' clone.track <- cloneTrack(sequence.matrix = sequence.matrix, 
-#'    productive.aa = productive.aa, track = top.freq$aminoAcid[1:10], unassigned = FALSE) 
+#'    productive.aa = productive.aa, track = top.freq$junction_aa[1:10], unassigned = FALSE) 
 #' 
 #' x.labels <- c("Day 0", "Day 32", "Day 83", "Day 949", "Day 1320")
 #' 
@@ -90,18 +90,18 @@ cloneTrack <- function(sequence_matrix, sample_map = "none", productive_aa,
     search_space <- sequence_matrix %>% 
                     as_tibble() %>% 
                     select(-numberSamples) %>%
-                    pivot_longer(names_to = "Sample", values_to="Frequency") %>%
-                    mutate(Map = if_else(sample %in% sample_map, label[sample], "Unassigned")) %>%
-                    mutate(Map = if_else(aminoAcid %in% sequence_track, aminoAcid, Map)) 
+                    pivot_longer(names_to = "repertoire_id", values_to="Frequency") %>%
+                    mutate(Map = if_else(repertoire_id %in% sample_map, label[repertoire_id], "Unassigned")) %>%
+                    mutate(Map = if_else(junction_aa %in% sequence_track, junction_aa, Map)) 
 
     if (unassigned == FALSE) {
         search_space <- search_space %>% filter(sample_guide != "Unassigned")
     }
     getPalette <- grDevices::colorRampPalette(RColorBrewer::brewer.pal(9, "Set1"))
     plot <- ggplot2::ggplot(sequence.melt, 
-                            aes_string(x = "Sample", 
+                            aes_string(x = "repertoire_id", 
                                        y = "Frequency", 
-                                       group = "aminoAcid", 
+                                       group = "junction_aa", 
                                        color = "Map")) + 
             geom_line() + 
             theme_minimal() + 

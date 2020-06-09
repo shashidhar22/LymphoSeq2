@@ -10,9 +10,9 @@
 #' @param family A Boolean value indicating whether or not family names instead 
 #' of gene names are used.  If TRUE, then family names are used and if FALSE, 
 #' gene names are used.
-#' @return Returns a data frame with the sample names, VDJ gene name, count, and 
+#' @return Returns a data frame with the repertoire_id names, VDJ gene name, duplicate_count, and 
 #' \% frequency of the V, D, or J genes (each gene frequency should add to 
-#' 100\% for each sample).
+#' 100\% for each repertoire_id).
 #' @examples
 #' file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
 #' 
@@ -25,7 +25,7 @@
 #' # Create a heat map of V gene usage
 #' vfamilies <- geneFreq(productive_nt, locus = "V", family = TRUE)
 #' 
-#' vfamilies <- reshape::cast(vfamilies, familyName ~ samples, value = "frequencyGene", sum)
+#' vfamilies <- reshape::cast(vfamilies, familyName ~ repertoire_ids, value = "frequencyGene", sum)
 #' 
 #' rownames(vfamilies) <- as.character(vfamilies$familyName)
 #' 
@@ -42,8 +42,8 @@
 #' 
 #' require(wordcloud)
 #' 
-#' wordcloud::wordcloud(words = vgenes[vgenes$samples == "TRB_Unsorted_83", "geneName"], 
-#'    freq = vgenes[vgenes$samples == "TRB_Unsorted_83", "frequencyGene"], 
+#' wordcloud::wordcloud(words = vgenes[vgenes$repertoire_ids == "TRB_Unsorted_83", "geneName"], 
+#'    freq = vgenes[vgenes$repertoire_ids == "TRB_Unsorted_83", "frequencyGene"], 
 #' 	  colors = RedBlue)
 #' 
 #' # Create a cumulative frequency bar plot of V gene usage
@@ -51,7 +51,7 @@
 #' 
 #' require(ggplot2)
 #' 
-#' ggplot2::ggplot(vgenes, aes(x = samples, y = frequencyGene, fill = geneName)) +
+#' ggplot2::ggplot(vgenes, aes(x = repertoire_ids, y = frequencyGene, fill = geneName)) +
 #'   geom_bar(stat = "identity") +
 #'   theme_minimal() + 
 #'   scale_y_continuous(expand = c(0, 0)) + 
@@ -61,21 +61,27 @@
 #' @export
 #' @import tidyverse
 #' @importFrom stats aggregate
-geneFreq <- function(productive.nt, locus = "V|D|J", family = FALSE) {
+geneFreq <- function(productive_nt, locus = "V|D|J", family = FALSE) {
     if (family){
         gene_names <- productive_nt %>% 
-                         select(sample, count, vFamilyName, jFamilyName, dFamilyName) %>%
-                         pivot_longer(cols = contains("FamilyName"), values_to="geneName", names_to="geneType") %>%
-                         filter(str_detect(geneName, paste("[", locus, to_lower(locus), "]", sep=""))) %>%
-                         group_by(sample, geneName) %>% summarize(frequencyGene = count/sum(count) * 100) %>%
-                         ungroup()
+                      select(repertoire_id, duplicate_count, v_family, j_family, d_family) %>%
+                      pivot_longer(cols = contains("FamilyName"), 
+                                   values_to="geneName", 
+                                   names_to="geneType") %>%
+                      filter(str_detect(geneName, paste("[", locus, to_lower(locus), "]", sep=""))) %>%
+                      group_by(repertoire_id, geneName) %>% 
+                      summarize(frequencyGene = duplicate_count/sum(duplicate_count) * 100) %>%
+                     ungroup()
     } else {
         gene_names <- productive_nt %>% 
-                         select(sample, count, vFamilyName, jFamilyName, dFamilyName) %>%
-                         pivot_longer(cols = contains("FamilyName"), values_to="geneName", names_to="geneType") %>%
+                         select(repertoire_id, duplicate_count, v_family, j_family, d_family) %>%
+                         pivot_longer(cols = contains("FamilyName"), 
+                                      values_to="geneName", 
+                                      names_to="geneType") %>%
                          filter(str_detect(geneName, paste("[", locus, to_lower(locus), "]", sep=""))) %>%
-                         group_by(sample, geneName) %>% summarize(count = sum(count)) %>%
-                         mutate(frequencyGene = count/sum(count) * 100) %>%
+                         group_by(repertoire_id, geneName) %>% 
+                         summarize(duplicate_count = sum(duplicate_count)) %>%
+                         mutate(frequencyGene = duplicate_count/sum(duplicate_count) * 100) %>%
                          ungroup()
     }
     return(gene_names)
