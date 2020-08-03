@@ -59,7 +59,7 @@ productiveSeq <- function(study_table, aggregate = "junction_aa", prevalence = F
                                         d_call = first(d_call), 
                                         v_family = first(v_family), 
                                         d_family = first(d_family),
-                                        j_family = first(j_family)) %>% 
+                                        j_family = first(j_family)) %>%
                        dplyr::mutate(duplicate_frequency = duplicate_count / sum(duplicate_count)) %>% 
                        dplyr::ungroup()
     }  else if (aggregate == "junction_aa") {
@@ -74,7 +74,7 @@ productiveSeq <- function(study_table, aggregate = "junction_aa", prevalence = F
                                         d_call = first(d_call), 
                                         v_family = first(v_family), 
                                         d_family = first(d_family),
-                                        j_family = first(j_family)) %>% 
+                                        j_family = first(j_family)) %>%
                        dplyr::mutate(duplicate_frequency = duplicate_count / sum(duplicate_count)) %>% 
                        dplyr::ungroup()
     }
