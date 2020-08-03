@@ -25,7 +25,7 @@ runINext <- function(sample_table, progress, color="repertoire_id") {
     progress$tick()$print()
     repertoire_id <- sample_table$repertoire_id[1]
     rarefaction_tables <- sample_table %>% 
-                          dplyr::pivot_wider(names_from=repertoire_id, 
+                          tidyr::pivot_wider(names_from=repertoire_id, 
                                       id_cols=junction_aa, 
                                       values_from=duplicate_count, 
                                       values_fill=list(duplicate_count=0)) %>% 
