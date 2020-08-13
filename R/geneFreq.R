@@ -22,67 +22,37 @@
 #' 
 #' geneFreq(productive_nt, locus = "VDJ", family = FALSE)
 #' 
-#' # Create a heat map of V gene usage
-#' vfamilies <- geneFreq(productive_nt, locus = "V", family = TRUE)
-#' 
-#' vfamilies <- reshape::cast(vfamilies, familyName ~ repertoire_ids, value = "frequencyGene", sum)
-#' 
-#' rownames(vfamilies) <- as.character(vfamilies$familyName)
-#' 
-#' vfamilies$familyName <- NULL
-#' 
-#' RedBlue <- grDevices::colorRampPalette(rev(RColorBrewer::brewer.pal(11, "RdBu")))(256)
-#' 
-#' require(pheatmap)
-#' 
-#' pheatmap::pheatmap(vfamilies, color = RedBlue, scale = "row")
-#' 
-#' # Create a word cloud of V gene usage
-#' vgenes <- geneFreq(productive.nt, locus = "V", family = FALSE)
-#' 
-#' require(wordcloud)
-#' 
-#' wordcloud::wordcloud(words = vgenes[vgenes$repertoire_ids == "TRB_Unsorted_83", "geneName"], 
-#'    freq = vgenes[vgenes$repertoire_ids == "TRB_Unsorted_83", "frequencyGene"], 
-#' 	  colors = RedBlue)
-#' 
-#' # Create a cumulative frequency bar plot of V gene usage
-#' vgenes <- geneFreq(productive.nt, locus = "V", family = FALSE)
-#' 
-#' require(ggplot2)
-#' 
-#' ggplot2::ggplot(vgenes, aes(x = repertoire_ids, y = frequencyGene, fill = geneName)) +
-#'   geom_bar(stat = "identity") +
-#'   theme_minimal() + 
-#'   scale_y_continuous(expand = c(0, 0)) + 
-#'   guides(fill = guide_legend(ncol = 3)) +
-#'   labs(y = "Frequency (%)", x = "", fill = "") +
-#'   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
 #' @export
 #' @import tidyverse
-#' @importFrom stats aggregate
 geneFreq <- function(productive_nt, locus = "V|D|J", family = FALSE) {
     if (family){
         gene_names <- productive_nt %>% 
-                      select(repertoire_id, duplicate_count, v_family, j_family, d_family) %>%
-                      pivot_longer(cols = contains("FamilyName"), 
-                                   values_to="geneName", 
-                                   names_to="geneType") %>%
-                      filter(str_detect(geneName, paste("[", locus, to_lower(locus), "]", sep=""))) %>%
-                      group_by(repertoire_id, geneName) %>% 
-                      summarize(frequencyGene = duplicate_count/sum(duplicate_count) * 100) %>%
-                     ungroup()
+                      dplyr::select(repertoire_id, duplicate_count, v_family, j_family, d_family) %>%
+                      tidyr::pivot_longer(cols = contains("family"), 
+                                          values_to="gene_name", 
+                                          names_to="gene_type") %>%
+                      dplyr::filter(stringr::str_detect(gene_name, base::paste("[", locus, base::tolower(locus), "]", sep=""))) %>%
+                      dplyr::group_by(repertoire_id, gene_name) %>% 
+                      dplyr::summarize(duplicate_count = sum(duplicate_count), 
+                                       gene_type = dplyr::first(gene_type)) %>%
+                      dplyr::ungroup() %>%
+                      dplyr::group_by(repertoire_id, gene_type) %>% 
+                      dplyr::mutate(gene_frequency = duplicate_count/sum(duplicate_count)) %>%
+                      dplyr::ungroup()
     } else {
         gene_names <- productive_nt %>% 
-                         select(repertoire_id, duplicate_count, v_family, j_family, d_family) %>%
-                         pivot_longer(cols = contains("FamilyName"), 
-                                      values_to="geneName", 
-                                      names_to="geneType") %>%
-                         filter(str_detect(geneName, paste("[", locus, to_lower(locus), "]", sep=""))) %>%
-                         group_by(repertoire_id, geneName) %>% 
-                         summarize(duplicate_count = sum(duplicate_count)) %>%
-                         mutate(frequencyGene = duplicate_count/sum(duplicate_count) * 100) %>%
-                         ungroup()
+                      dplyr::select(repertoire_id, duplicate_count, v_call, j_call, d_call) %>%
+                      tidyr::pivot_longer(cols = contains("call"), 
+                                          values_to="gene_name", 
+                                          names_to="gene_type") %>%
+                      dplyr::filter(stringr::str_detect(gene_name, base::paste("[", locus, base::tolower(locus), "]", sep=""))) %>%
+                      dplyr::group_by(repertoire_id, gene_name) %>% 
+                      dplyr::summarize(duplicate_count = sum(duplicate_count),
+                                       gene_type = dplyr::first(gene_type)) %>%
+                      dplyr::ungroup() %>%
+                      dplyr::group_by(repertoire_id, gene_type) %>%
+                      dplyr::mutate(gene_frequency = duplicate_count/sum(duplicate_count)) %>%
+                      dplyr::ungroup()
     }
     return(gene_names)
 }
