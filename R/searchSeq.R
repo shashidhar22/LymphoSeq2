@@ -9,9 +9,6 @@
 #' CDR3 sequences to search.
 #' @param type A character vector specifying the type of sequence(s) to be 
 #' searched.  Available options are "junction_aa" or "junction". 
-#' @param match A character vector specifying whether an exact partial or exact global
-#'  match of the searched sequence(s) is desired.  Available options are 
-#' "partial" and "global".
 #' @param editDistance An integer giving the minimum edit distance that the 
 #' sequence must be less than or equal to.  See details below.
 #' @details An exact partial match means the searched sequence is contained within 
@@ -26,7 +23,7 @@
 #' @return Returns the rows for every instance in the list of data frames where 
 #' the searched sequence(s) appeared.
 #' @examples
-#' file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
+#' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
 #' 
 #' study_table <- readImmunoSeq(path = file.path)
 #' 
@@ -35,10 +32,10 @@
 #' aa2 <- "CASSQEVPPYQAFF"
 #' 
 #' searchSeq(study_table = study_table, sequence = aa1, type = "junction_aa", 
-#'    match = "global", editDistance = 0)
+#'   editDistance = 0)
 #' 
 #' searchSeq(study_table = study_table, sequence = c(aa1, aa2), 
-#'    type = "junction_aa", match = "global", editDistance = 0)
+#'    type = "junction_aa", editDistance = 0)
 #' 
 #' searchSeq(study_table = study_table, sequence = aa1, type = "junction_aa", editDistance = 1)
 #' 
@@ -47,38 +44,37 @@
 #' searchSeq(study_table = study_table, sequence = nt, type = "junction", editDistance = 3)
 #' 
 #' searchSeq(study_table = study_table, sequence = "CASSPVS", type = "junction_aa", 
-#'    match = "partial", editDistance = 0)
+#'    editDistance = 0)
 #' 
 #' searchSeq(study_table = study_table, sequence = nt, type = "junction", editDistance = 0)
 #' @export
-#' @importFrom plyr llply
-#' @importFrom utils adist
 #' @import tidyverse
-searchSeq <- function(study_table, sequence, seq_type = "junction", match = "global", editDistance = 0) {
-    if (match == "global") {
-        partial=FALSE
-    } else if (match == "partial") {
-        partial=TRUE
-    }
+searchSeq <- function(study_table, sequence, seq_type = "junction", editDistance = 0) {
     query_list <- study_table %>% 
-                  dplyr::select(dplyr::all_of(seq_type)) %>% 
-                  dplyr::filter(!is.na(seq_type)) %>%  
-                  dplyr::as_vector()
-    query_list <- query_list[!is.na(query_list)]
+                  dplyr::filter(!is.na(!!base::as.symbol(seq_type))) %>%
+                  dplyr::pull(!!base::as.symbol(seq_type))
     search_tables <- sequence %>% 
-                     purrr::map(~findSeq(.x, query_list, partial, editDistance, seq_type)) %>% 
-                     dplyr::bind_rows(rbind)
+                     purrr::map(~findSeq(.x, query_list, editDistance, seq_type)) %>% 
+                     dplyr::bind_rows()
+    search_tables <- dplyr::left_join(study_table, search_tables, by = "junction_aa") %>% 
+                     dplyr::filter(!is.na(editDistance))
     return(search_tables)
 }
 
-findSeq <- function(sequence, query_list, mode, editDistance, seq_type){
-    edist <- adist::adist(sequence, query_list, partial = mode)
+#' Find sequences of interest
+#' 
+#' @describeIn searchSeq Find all sequences below edit distance threshold from query list
+#' 
+#' @inheritParams searchSeq
+findSeq <- function(sequence, query_list, editDistance, seq_type){
+    edist <- utils::adist(sequence, query_list)
     match_list <- query_list[(edist <= editDistance)]
     edist_list <- edist[(edist <= editDistance)]
     sequence_table <- tibble::tibble(c1 = match_list, 
                                      c2 = edist_list, 
                                      c3 = sequence, 
-                                     .name_repair= ~ c(seq_type, "editDistance", "searchSequence"))
-    search_table <- dplyr::left_join(sequence_table, study_table, by=seq_type)
-    return(search_table)
+                                     .name_repair= ~ c(seq_type, "editDistance", "searchSequence")) %>%
+                      dplyr::filter(!is.na(!!base::as.symbol(seq_type))) %>% 
+                      dplyr::distinct()
+    return(sequence_table)
 }
