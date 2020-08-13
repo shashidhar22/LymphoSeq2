@@ -2,51 +2,52 @@
 % Please edit documentation in R/alignSeq.R
 \name{alignSeq}
 \alias{alignSeq}
-\title{Align mutliple sequences}
+\title{Align multiple sequences}
 \usage{
 alignSeq(
   study_table,
-  sample_list = NULL,
+  repertoire_ids = NULL,
   sequence_list = NULL,
-  editDistance = 15,
+  edit_distance = 15,
   output = "console",
-  type = "nucleotide",
-  method = "ClustalOmega"
+  type = "junction",
+  method = "ClustalOmega",
+  top = 150
 )
 }
 \arguments{
 \item{study_table}{A tibble consisting of antigen receptor sequences 
 imported by the LymphoSeq function readImmunoSeq.}
 
-\item{editDistance}{An integer giving the minimum edit distance that the 
+\item{sequence_list}{A character vector of one ore more amino acid or junction 
+CDR3 sequences to search.}
+
+\item{edit_distance}{An integer giving the minimum edit distance that the 
 sequence must be less than or equal to.  See details below.}
 
-\item{output}{A character vector indicating where the multiple sequence alignemnt should be
+\item{output}{A character vector indicating where the multiple sequence alignment should be
 printed.  Options include "console" or "pdf".  If "pdf" is selected, the file is saved to
 the working directory.  For "pdf" to work, Texshade must be installed.  Refer to the 
 Bioconductor package msa installation instructions for more details.}
 
-\item{type}{A character vector indicating whether "aminoAcid" or "nucleotide" sequences
-should be aligned.  If "aminoAcid" is specified, then run productiveSeqs first.}
+\item{type}{A character vector indicating whether "junction_aa" or "junction" sequences
+should be aligned.  If "junction_aa" is specified, then run productiveSeqs first.}
 
 \item{method}{A character vector indicating the multiple sequence alignment method to 
-be used.  Refer to the Bioconductor msa package for more details.  Options incude 
+be used.  Refer to the Bioconductor msa package for more details.  Options include 
 "ClustalW", "ClustalOmega", and "Muscle".}
 
-\item{sample}{A character vector indicating the name of the sample in the productive
+\item{repertoire_id}{A character vector indicating the name of the repertoire_id in the productive
 sequence list.}
-
-\item{sequence}{A character vector of one ore more amino acid or nucleotide 
-CDR3 sequences to search.}
 }
 \value{
-Performs a multiple sequence alignemnt and prints to the console or saves a pdf to 
+Performs a multiple sequence alignment and prints to the console or saves a pdf to 
 the working directory.
 }
 \description{
 Perform multiple sequence alignment using one of three methods and output results to the 
-console or as a pdf file.  One may perform the alignment of all amino acid or nucleotide
-sequences in a single sample.  Alternatively, one may search for a given sequence 
+console or as a pdf file.  One may perform the alignment of all amino acid or junction
+sequences in a single repertoire_id.  Alternatively, one may search for a given sequence 
 within a list of samples using an edit distance threshold.
 }
 \details{
@@ -54,20 +55,20 @@ Edit distance is a way of quantifying how dissimilar two sequences
 are to one another by counting the minimum number of operations required to 
 transform one sequence into the other.  For example, an edit distance of 0 
 means the sequences are identical and an edit distance of 1 indicates that 
-the sequences different by a single amino acid or nucleotide.
+the sequences different by a single amino acid or junction.
 }
 \examples{
 file.path <- system.file("extdata", "IGH_sequencing", package = "LymphoSeq")
 
 file.list <- readImmunoSeq(path = file.path)
 
-productive.nt <- productiveSeq(file.list = file.list, aggregate = "nucleotide")
+productive.nt <- productiveSeq(file.list = file.list, aggregate = "junction")
 
-alignSeq(list = productive.nt, sample = "IGH_MVQ92552A_BL", type = "nucleotide", 
+alignSeq(list = productive.nt, repertoire_id = "IGH_MVQ92552A_BL", type = "junction", 
          method = "ClustalW", output = "console")
 }
 \seealso{
-If having trouble saving pdf files, refer to Biconductor package msa for
+If having trouble saving pdf files, refer to Bioconductor package msa for
 installation instructions
 \url{http://bioconductor.org/packages/release/bioc/vignettes/msa/inst/doc/msa.pdf}
 }

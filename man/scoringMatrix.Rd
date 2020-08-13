@@ -8,12 +8,12 @@ scoringMatrix(productive_table, mode = "Bhattacharyya")
 }
 \arguments{
 \item{productive.seqs}{A tibble of productive sequences generated 
-by the LymphoSeq function productiveSeq.  "frequencyCount" and "aminoAcid" 
+by the LymphoSeq function productiveSeq.  "duplicate_frequency" and "junction_aa" 
 are a required columns.}
 }
 \value{
 A data frame of Bhattacharyya coefficients or Similarity scores calculated from all 
-pairwise comparisons from a list of sample data frames.  Both metrics 
+pairwise comparisons from a list of repertoire_id data frames.  Both metrics 
 measure the amount of overlap between two samples.  The 
 value ranges from 0 to 1 where 1 indicates the sequence frequencies are 
 identical in the two samples and 0 indicates no shared frequencies.
@@ -27,7 +27,7 @@ file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
 
 study_table <- readImmunoSeq(path = file.path)
 
-productive_aa <- productiveSeq(study_table, aggregate = "aminoAcid")
+productive_aa <- productiveSeq(study_table, aggregate = "junction_aa")
 
 bhattacharyya_matrix <- scoringMatrix(productive_table = productive_aa, mode = "Bhattacharyya")
 similarity_matrix <- scoringMatrix(productive_table = productive_aa, mode = "Similarity")

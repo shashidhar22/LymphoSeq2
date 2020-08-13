@@ -2,64 +2,50 @@
 % Please edit documentation in R/readImmunoSeq.R
 \name{readImmunoSeq}
 \alias{readImmunoSeq}
-\alias{getFileType}
 \alias{getStandard}
 \alias{readFiles}
 \title{Read ImmunoSeq files}
 \usage{
 readImmunoSeq(path, recursive = FALSE)
 
-getFileType(clone_file)
-
 getStandard(file_type)
 
-readFiles(clone_file, progress = NULL)
+readFiles(clone_file, progress)
 }
 \arguments{
-\item{path}{Path to the directory containing tab-delimited files.  Only
-files with the extension .tsv are imported.  The names of the data frames are
-the same as names of the files.}
+\item{path}{Path to AIRR-seq files. Can be a file path, directory path or a vector of file paths}
 
-\item{clone_file}{.tsv file containing results from AIRRSeq pipeline}
+\item{recursive}{Recursively search directory for AIRR-seq files. Boolean value}
 
 \item{file_type}{file type from getFileType method}
+
+\item{clone_file}{.tsv file containing results from AIRRSeq pipeline}
 }
 \value{
 Returns a tibble with MiAIRR headers and repertoire_id
-
-List containing file type and standardized header names
 
 List of standard header names
 
 Tibble in MiAIRR format
 }
 \description{
-Imports tab-separated value (.tsv) files exported by the Adaptive
-Biotechnologies ImmunoSEQ analyzer and stores them as MiAIRR compliant
-tibble.
+\code{readImmunoSeq} Imports tab-separated value (.tsv) files exported by the Adaptive 
+Biotechnologies ImmunoSEQ analyzer, BGI IR-SEQ, MiXCR and stores 
+them as MiAIRR compliant tibble.
 }
 \details{
-May import tab-delimited files containing antigen receptor
-sequencing from with the following header set.\tabular{lllllll}{
-   MiAIRR field ID \tab Type1 \tab Type2 \tab Type3 \tab Type4 \tab Type5 \tab Type6 \cr
-   junction \tab nucleotide \tab nucleotide \tab nucleotide \tab nucleotide.CDR3.in.lowercase . \tab nucleotide( CDR3   in   lowercase ) \tab nSeqCDR3 \cr
-   junction_aa \tab aminoAcid \tab aminoAcid \tab aminoAcid \tab aminoAcid.CDR3.in.lowercase . \tab aminoAcid( CDR3   in   lowercase ) \tab aaSeqCDR3 \cr
-   duplicate_count \tab count ( reads ) \tab count ( templates / reads ) \tab count ( templates ) \tab cloneCount \tab cloneCount \tab cloneCount \cr
-   v_call \tab vGeneName \tab vGeneName \tab vGeneName \tab vGene \tab vGene \tab allVHitsWithScore \cr
-   d_call \tab dGeneName \tab dGeneName \tab dGeneName \tab dGene \tab dGene \tab allDHitsWithScore \cr
-   j_call \tab jGeneName \tab jGeneName \tab jGeneName \tab jGene \tab jGene \tab allJHitsWithScore \cr
+May import tab-delimited files containing antigen receptor 
+sequencing from with the following header set.  
+
+| MiAIRR field ID | Type1           | Type2                       | Type3               | Type4                          | Type5                               | Type6             |
+| --------------- | --------------- | --------------------------- | ------------------- | ------------------------------ | ----------------------------------- | ----------------- |
+| junction        | nucleotide      | nucleotide                  | nucleotide          | nucleotide.CDR3.in.lowercase . | nucleotide( CDR3   in   lowercase ) | nSeqCDR3          |
+| junction_aa     | aminoAcid       | aminoAcid                   | aminoAcid           | aminoAcid.CDR3.in.lowercase .  | aminoAcid( CDR3   in   lowercase )  | aaSeqCDR3         |
+| duplicate_count | count ( reads ) | count ( templates / reads ) | count ( templates ) | cloneCount                     | cloneCount                          | cloneCount        |
+| v_call          | vGeneName       | vGeneName                   | vGeneName           | vGene                          | vGene                               | allVHitsWithScore |
+| d_call          | dGeneName       | dGeneName                   | dGeneName           | dGene                          | dGene                               | allDHitsWithScore |
+| j_call          | jGeneName       | jGeneName                   | jGeneName           | jGene                          | jGene                               | allJHitsWithScore |
 }
-}
-\section{Creating a study table from path containing AIRRSeq files}{
-
-}
-
-\section{Identify file type}{
-
-
-AIRRSeq results have various formats, this functions identifies six formats
-}
-
 \section{Get standard headers}{
 
 
@@ -73,8 +59,17 @@ Given the path to a single AIRRSeq clone file, generate MiAIRR compliant tibble.
 }
 
 \examples{
-file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
-
-study_table <- readImmunoSeq(path = file.path, 
-                             recursive = FALSE)
+file_path <- base::system.file("extdata", "TCRB_study", package = "LymphoSeq2")
+study_table <- LymphoSeq2::readImmunoSeq(path = file_path, 
+                                         recursive = FALSE)
+                             
+file_list <- base::list.files(file_path, 
+                              full.name = TRUE,
+                              all.files = FALSE,
+                              pattern = ".tsv",
+                              include.dirs = FALSE)
+study_table <- LymphoSeq2::readImmunoSeq(path = file_list[1],
+                                         recursive = FALSE)
+study_table <- LymphoSeq2::readImmunoSeq(path = file_list[1:2],
+                                         recursive = FALSE)
 }

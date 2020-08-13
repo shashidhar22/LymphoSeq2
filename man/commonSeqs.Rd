@@ -2,23 +2,23 @@
 % Please edit documentation in R/commonSeqs.R
 \name{commonSeqs}
 \alias{commonSeqs}
-\title{Common sequences in two or more samples}
+\title{Common sequences in two or more repertoire_ids}
 \usage{
-commonSeqs(samples, productive_aa)
+commonSeqs(repertoire_ids, productive_aa)
 }
 \arguments{
-\item{samples}{A character vector of two or more sample names in 
+\item{repertoire_ids}{A character vector of two or more repertoire_id names in 
 productive.aa.}
 
 \item{productive_aa}{A list of productive amino acid sequences generated
-by the LymphoSeq function productiveSeq where aggregate = "aminoAcid".}
+by the LymphoSeq function productiveSeq where aggregate = "junction_aa".}
 }
 \value{
 Returns a data frame of the common sequences between two or more files 
 displaying their frequencies in each.
 }
 \description{
-Creates a data frame of the common sequences in two or more samples, reporting 
+Creates a data frame of the common sequences in two or more repertoire_ids, reporting 
 their frequencies in each.
 }
 \examples{
@@ -26,9 +26,9 @@ file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
 
 study_table <- readImmunoSeq(path = file.path)
 
-productive_aa <- productiveSeq(study_table = study_table, aggregate = "aminoAcid")
+productive_aa <- productiveSeq(study_table = study_table, aggregate = "junction_aa")
 
-commonSeqs(samples = c("TRB_Unsorted_0", "TRB_Unsorted_32"), 
+commonSeqs(repertoire_ids = c("TRB_Unsorted_0", "TRB_Unsorted_32"), 
    productive_aa = productive_aa)
 }
 \seealso{

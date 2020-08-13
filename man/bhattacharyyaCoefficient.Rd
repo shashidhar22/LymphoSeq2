@@ -8,7 +8,7 @@ bhattacharyyaCoefficient(sample_list)
 }
 \arguments{
 \item{sample_list}{A list of two tibble corresponding derived from the productiveSeq
-function in LymphoSeq2. `frequencyCount`, `aminoAcid`, and `sample` columns are necessary
+function in LymphoSeq2. `duplicate_frequency`, `junction_aa`, and `repertoire_id` columns are necessary
 for the calcualtion of the Bhattacharyya coefficient.}
 }
 \value{
@@ -22,11 +22,11 @@ file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
 
 study_table <- readImmunoSeq(path = file.path)
 
-productive.aa <- productiveSeq(study_table, aggregate = "aminoAcid")
+productive.aa <- productiveSeq(study_table, aggregate = "junction_aa")
 
 sample_list <- productive.aa \%>\% 
-               filter(sample \%in\% c("TRB_Unsorted_32", "TRB_Unsorted_83")) \%>\%
-               group_by(sample) \%>\% group_split()
+               filter(repertoire_id \%in\% c("TRB_Unsorted_32", "TRB_Unsorted_83")) \%>\%
+               group_by(repertoire_id) \%>\% group_split()
 
 bhattacharyyaCoefficient(sample_list)
 }

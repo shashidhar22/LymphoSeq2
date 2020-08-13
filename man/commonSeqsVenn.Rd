@@ -4,10 +4,10 @@
 \alias{commonSeqsVenn}
 \title{Common sequences Venn diagram}
 \usage{
-commonSeqsVenn(samples, productive_aa)
+commonSeqsVenn(repertoire_ids, productive_aa)
 }
 \arguments{
-\item{samples}{A character vector of two or three names of samples in 
+\item{repertoire_ids}{A character vector of two or three names of repertoire_ids in 
 productive.seqs to compare.}
 
 \item{productive_aa}{A tibble of amino acid sequences generated
@@ -15,32 +15,32 @@ by the LymphoSeq function productiveSeq.}
 }
 \value{
 Returns a a Venn diagram of the number of common sequences between
-two or three samples.
+two or three repertoire_ids.
 }
 \description{
 Creates a Venn diagram comparing the number of common sequences in two or 
-three samples.
+three repertoire_ids.
 }
 \examples{
 file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
 
 study_table <- readImmunoSeq(path = file.path)
 
-productive_aa <- productiveSeq(study_table = study_table, aggregate = "aminoAcid")
+productive_aa <- productiveSeq(study_table = study_table, aggregate = "junction_aa")
 
 # Plot a triple Venn diagram
-commonSeqsVenn(samples = c("TRB_Unsorted_0", 
+commonSeqsVenn(repertoire_ids = c("TRB_Unsorted_0", 
    "TRB_Unsorted_32", "TRB_Unsorted_83"), 
    productive_aa = productive_aa)
 
 # Plot a double Venn diagram
-commonSeqsVenn(samples = c("TRB_Unsorted_0", 
+commonSeqsVenn(repertoire_ids = c("TRB_Unsorted_0", 
    "TRB_Unsorted_32"), productive_aa = productive_aa)
 
 # Save Venn diagram as a .png file to working directory
 png(filename = "Venn diagram.png", res = 300, units = "in", height = 5, width = 5)
 
-commonSeqsVenn(samples = c("TRB_Unsorted_0", "TRB_Unsorted_32"), 
+commonSeqsVenn(repertoire_ids = c("TRB_Unsorted_0", "TRB_Unsorted_32"), 
    productive_aa = productive_aa)
 
 dev.off()

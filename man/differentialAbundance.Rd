@@ -8,25 +8,25 @@ differentialAbundance(
   sample1,
   sample2,
   study_table,
-  abundance = "estimatedNumberGenomes",
-  type = "aminoAcid",
+  abundance = "duplicate_count",
+  type = "junction_aa",
   q = 1,
   zero = 1,
   parallel = FALSE
 )
 }
 \arguments{
-\item{sample1}{A character vector indicating the name of the first sample in the list
+\item{sample1}{A character vector indicating the name of the first repertoire_id in the list
 to be compared.}
 
-\item{sample2}{A character vector indicating the name of the second sample in the list
+\item{sample2}{A character vector indicating the name of the second repertoire_id in the list
 to be compared.}
 
-\item{abundance}{The input value for the Fisher exact test.  "estimatedNumberGenomes"
-is recommend but "count" may also be used.}
+\item{abundance}{The input value for the Fisher exact test.  "duplicate_count"
+is recommend but "duplicate_count" may also be used.}
 
-\item{type}{A character vector indicating whether "aminoAcid" or "nucleotide" sequences
-should be used.  If "aminoAcid" is specified, then run productiveSeqs first.}
+\item{type}{A character vector indicating whether "junction_aa" or "junction" sequences
+should be used.  If "junction_aa" is specified, then run productiveSeqs first.}
 
 \item{q}{A numeric value between 0.0 and 1.0 indicating the threshold Holms adjusted 
 P value (also knowns as the false discovery rate or q value) to subset the results with.  
@@ -55,9 +55,9 @@ file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
 
 file.list <- readImmunoSeq(path = file.path)
 
-productive.aa <- productiveSeq(file.list = file.list, aggregate = "aminoAcid")
+productive.aa <- productiveSeq(file.list = file.list, aggregate = "junction_aa")
 
 differentialAbundance(list = productive.aa, sample1 = "TRB_Unsorted_949", 
-                      sample2 = "TRB_Unsorted_1320", type = "aminoAcid", q = 0.01, 
+                      sample2 = "TRB_Unsorted_1320", type = "junction_aa", q = 0.01, 
                       zero = 0.001)
 }

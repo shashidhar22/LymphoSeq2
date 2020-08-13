@@ -8,7 +8,7 @@ topSeqs(productive_table, top = 1)
 }
 \arguments{
 \item{productive_table}{A tibble of productive sequences generated 
-by the LymphoSeq function productiveSeq.  "frequencyCount" and "aminoAcid" 
+by the LymphoSeq function productiveSeq.  "duplicate_frequency" and "junction_aa" 
 are a required columns.}
 
 \item{top}{The number of top productive sequences in each data frame to subset 
@@ -27,7 +27,7 @@ file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
 
 study_table <- readImmunoSeq(path = file.path)
 
-productive_table <- productiveSeq(study_table = study_table, aggregate = "aminoAcid")
+productive_table <- productiveSeq(study_table = study_table, aggregate = "junction_aa")
 
 top_seqs <- topSeqs(productive_table = productive_table, top = 1)
 }

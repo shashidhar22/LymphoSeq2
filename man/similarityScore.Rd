@@ -8,10 +8,10 @@ similarityScore(sample_list)
 }
 \arguments{
 \item{sample1}{A data frame consisting of frequencies of antigen receptor 
-sequences.  "aminoAcid" and "count" are a required columns.}
+sequences.  "junction_aa" and "duplicate_count" are a required columns.}
 
 \item{sample2}{A data frame consisting of frequencies of antigen receptor 
-sequences.  "aminoAcid" and "count" are a required columns.}
+sequences.  "junction_aa" and "duplicate_count" are a required columns.}
 }
 \value{
 Returns the similarity score, a measure of the amount of 
@@ -27,11 +27,11 @@ file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
 
 study_table <- readImmunoSeq(path = file.path)
 
-productive.aa <- productiveSeq(study_table, aggregate = "aminoAcid")
+productive.aa <- productiveSeq(study_table, aggregate = "junction_aa")
 
 sample_list <- productive.aa \%>\% 
-               filter(sample \%in\% c("TRB_Unsorted_32", "TRB_Unsorted_83")) \%>\%
-               group_by(sample) \%>\% group_split()
+               filter(repertoire_id \%in\% c("TRB_Unsorted_32", "TRB_Unsorted_83")) \%>\%
+               group_by(repertoire_id) \%>\% group_split()
 
 similarityScore(sample_list)
 }

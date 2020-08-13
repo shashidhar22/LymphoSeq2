@@ -29,7 +29,7 @@ file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
 
 study_table <- readImmunoSeq(path = file.path)
 
-productive_aa <- productiveSeq(study_table = study_table, aggregate = "aminoAcid")
+productive_aa <- productiveSeq(study_table = study_table, aggregate = "junction_aa")
 
 topSeqsPlot(study_table = productive_aa, top = 10)
 

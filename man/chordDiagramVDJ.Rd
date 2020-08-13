@@ -13,8 +13,8 @@ include "VJ" or "DJ".}
 \item{colors}{A character vector of 2 colors corresponding to the V/D and J 
 gene colors respectively.}
 
-\item{sample}{A tibble consisting of frequencies of antigen receptor 
-sequences.  "vFamilyName", "jFamilyName", and if applicable, "dFamilyName" 
+\item{repertoire_id}{A tibble consisting of frequencies of antigen receptor 
+sequences.  "v_family", "j_family", and if applicable, "d_family" 
 are a required columns.  Using output from the LymphoSeq function topSeqs is
 recommended.}
 }
@@ -36,11 +36,11 @@ file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
 
 study_table <- readImmunoSeq(path = file.path)
 
-productive_nt <- productiveSeq(study_table = study_table, aggregate = "nucleotide")
+productive_nt <- productiveSeq(study_table = study_table, aggregate = "junction")
 
 top_seqs <- topSeqs(productive_table = productive_nt, top = 1)
 
-chordDiagramVDJ(sample = top_seqs, association = "VJ", colors = c("red", "blue"))
+chordDiagramVDJ(repertoire_id = top_seqs, association = "VJ", colors = c("red", "blue"))
 
 
 }

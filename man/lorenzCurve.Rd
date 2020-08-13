@@ -4,13 +4,13 @@
 \alias{lorenzCurve}
 \title{Lorenz curve}
 \usage{
-lorenzCurve(samples, study_table)
+lorenzCurve(repertoire_ids, study_table)
 }
 \arguments{
-\item{samples}{A character vector of sample names in list.}
+\item{repertoire_ids}{A character vector of repertoire_id names in list.}
 
 \item{study_table}{A tibble generated using the LymphoSeq function readImmunoSeq 
-or productiveSeq.  "frequencyCount" is a required column.}
+or productiveSeq.  "duplicate_frequency" is a required column.}
 }
 \value{
 Returns a Lorenz curve.
@@ -36,27 +36,27 @@ file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
 
 study_table <- readImmunoSeq(path = study_table)
 
-samples <- study_table \%>\% pull(sample) \%>\% unique()
+repertoire_ids <- study_table \%>\% pull(repertoire_id) \%>\% unique()
 
-lorenzCurve(samples = samples), study_table = study_table)
+lorenzCurve(repertoire_ids = repertoire_ids), study_table = study_table)
 
-productive_aa <- productiveSeq(study_table = study_table, aggregate = "aminoAcid")
+productive_aa <- productiveSeq(study_table = study_table, aggregate = "junction_aa")
 
-samples <- productive_aa \%>\% pull(sample) \%>\% unique()
+repertoire_ids <- productive_aa \%>\% pull(repertoire_id) \%>\% unique()
 
-lorenzCurve(samples = samples, study_table = productive_aa)
+lorenzCurve(repertoire_ids = repertoire_ids, study_table = productive_aa)
 
 # Change the legend labels, line colors, and add a title
-samples <- c("TRB_Unsorted_0", "TRB_Unsorted_32", 
+repertoire_ids <- c("TRB_Unsorted_0", "TRB_Unsorted_32", 
    "TRB_Unsorted_83", "TRB_Unsorted_949", "TRB_Unsorted_1320")
 
-lorenz_curve <- lorenzCurve(samples = samples, study_table = productive_aa)
+lorenz_curve <- lorenzCurve(repertoire_ids = repertoire_ids, study_table = productive_aa)
 
 labels <- c("Day 0", "Day 32", "Day 83", "Day 949", "Day 1320")
 
 colors <- c("navyblue", "red", "darkgreen", "orange", "purple")
 
-lorenz_curve + ggplot2::scale_color_manual(name = "Samples", breaks = samples, 
+lorenz_curve + ggplot2::scale_color_manual(name = "repertoire_ids", breaks = repertoire_ids, 
    labels = labels, values = colors) + ggplot2::ggtitle("Figure Title")
 }
 \seealso{

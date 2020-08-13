@@ -12,7 +12,7 @@ the listed samples.}
 
 \item{productive_aa}{A tibble of productive amino acid sequences 
 imported using the function LymphoSeq function productiveSeq where the 
-aggregate parameter was set to "aminoAcid".}
+aggregate parameter was set to "junction_aa".}
 }
 \value{
 A data frame of amino acid sequences and the number of samples that 
@@ -37,7 +37,7 @@ file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
 
 study_table <- readImmunoSeq(path = file.path)
 
-productive_aaa <- productiveSeq(study_table = study_table, aggregate = "aminoAcid")
+productive_aaa <- productiveSeq(study_table = study_table, aggregate = "junction_aa")
 
 top_freq <- topFreq(productive_table = productive_aa, percent = 0.1)
 }
