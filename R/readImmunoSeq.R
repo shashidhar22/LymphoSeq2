@@ -55,11 +55,13 @@ readImmunoSeq <- function(path, recursive = FALSE) {
         warning("One or more of the files you are trying to import has no sequences and will be ignored.", 
                 call. = FALSE)
     }
-    progress <- dplyr::progress_estimated(length(file_paths))
+    progress_bar <- progress::progress_bar$new(format = "Reading AIRR-Seq files [:bar] :percent eta: :eta",
+                                           total = length(file_paths), clear = FALSE, width = 60)
+    progress_bar$tick(0)
     file_list <- file_paths %>% 
-                 purrr::map(~ readFiles(.x, progress)) %>% 
+                 purrr::map(~ readFiles(.x, progress_bar)) %>% 
                  dplyr::bind_rows()
-    progress$stop()
+    progress_bar$terminate()
     return(file_list)
 }
 
@@ -233,8 +235,8 @@ getStandard <- function(file_type) {
 #' @return Tibble in MiAIRR format 
 #'
 #' @rdname readImmunoSeq
-readFiles <- function(clone_file, progress) {
-    progress$tick()$print()
+readFiles <- function(clone_file, progress_bar) {
+    progress_bar$tick()
     file_info <- LymphoSeq2::getFileType(clone_file)
     file_type <- file_info[[1]]
     header_list <- file_info[[2]]
@@ -288,7 +290,7 @@ readFiles <- function(clone_file, progress) {
                    dplyr::mutate(repertoire_id = file_names,
                                  duplicate_frequency = duplicate_count/sum(duplicate_count)) %>%
                    dplyr::select(repertoire_id, everything())
-                   
+                 
     return(clone_frame)
 }
 
