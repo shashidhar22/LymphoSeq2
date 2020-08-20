@@ -12,9 +12,9 @@
 #' from a list of data frames.
 #' @seealso \code{\link{chordDiagramVDJ}}
 #' @examples
-#' file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
+#' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
 #' 
-#' study_table <- readImmunoSeq(path = file.path)
+#' study_table <- readImmunoSeq(path = file_path)
 #' 
 #' productive_table <- productiveSeq(study_table = study_table, aggregate = "junction_aa")
 #' 
@@ -23,8 +23,8 @@
 #' @import tidyverse
 topSeqs <- function(productive_table, top = 1) {
     top_seqs <- productive_table %>% 
-                dplyr::group_by(rerpertoire_id) %>% 
-                arrange(desc(duplicate_frequency)) %>% 
-                top_n(top, wt=duplicate_frequency)
+                dplyr::group_by(repertoire_id) %>% 
+                dplyr::arrange(desc(duplicate_frequency)) %>% 
+                dplyr::slice_head(n = top)
     return(top_seqs)
 } 
