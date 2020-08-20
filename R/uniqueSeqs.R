@@ -16,9 +16,6 @@
 #' 
 #' unique_seqs <- uniqueSeqs(productive_table = productive_table, unique_type = "junction_aa")
 #' @export
-#' @importFrom plyr llply ldply
-#' @importFrom stats aggregate
-#' @import tidyverse
 uniqueSeqs <- function(productive_table = productive_table, unique_type = "junction_aa") {
     # Add checks to see if the tibble is a prudctive table
     unique_seq <- tibble::tibble()
