@@ -21,10 +21,10 @@
 #' @import tidyverse
 #' @import purrr
 
-rarefactionCurve <- function(study_table) {
+plotRarefactionCurve <- function(study_table) {
     progress <- dplyr::progress_estimated(length(unique(study_table$sample)))
     rarefaction_tables <- study_table %>% 
-                          dplyr::group_by(sample) %>% 
+                          dplyr::group_by(repertoire_id) %>% 
                           dplyr::group_split() %>% 
                           dplyr::map(~runINext(.x, progress)) %>% 
                           dplyr::bind_rows()
