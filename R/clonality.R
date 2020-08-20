@@ -40,10 +40,10 @@
 #' @importFrom ineq Gini
 clonality <- function(study_table) {
     study_table <- study_table %>% 
-                   group_by(repertoire_id) %>% 
-                   group_split() %>% 
-                   map(summarySeq) %>% 
-                   reduce(rbind)
+                   dplyr::group_by(repertoire_id) %>% 
+                   dplyr::group_split() %>% 
+                   purrr::map(summarySeq) %>% 
+                   dplyr::bind_rows()
     return(study_table)
 }
 
@@ -51,22 +51,37 @@ clonality <- function(study_table) {
 #'
 #' @param sample_table immune repertoire tibble for each a repertoire_id
 #'
-#' @return Tibble summarizing the sequence infomration for each repertoire_id
+#' @return Tibble summarizing the sequence information for each repertoire_id
 #'
 #' @export
-#' @import tidyverse
+#' @import tidyverse breakaway phyloSeq vegan
 
 summarySeq <- function(study_table) {
-    productive <- productiveSeq(study_table, aggregate="junction")
-    frequency <- productive$duplicate_frequency
-    entropy <- -sum(frequency * log2(frequency), na.rm=TRUE)
-    clonality <- 1 - round(entropy/log2(nrow(productive)), digits = 6)
-    study_summary <- tibble(repertoire_id = study_table$repertoire_id[1], 
-                            totalSequences = nrow(study_table), 
-                            uniqueProductiveSequences = nrow(productive),
-                            totalCount = sum(study_table$duplicate_count), 
+    productive <- LymphoSeq2::productiveSeq(study_table, aggregate="junction")
+    frequency <- productive %>% 
+                 dplyr::pull(duplicate_frequency)
+    counts <- productive %>% 
+              dplyr::pull(duplicate_count)
+    entropy <- -base::sum(frequency * base::log2(frequency), na.rm=TRUE)
+    clonality <- 1 - base::round(entropy/base::log2(base::nrow(productive)), digits = 6)
+    simpson_index <- vegan::diversity(frequency, index = "simpson")
+    inverse_simpson <- vegan::diversity(frequency, index = "invsimpson")
+    chao_estimate <- breakaway::chao1(counts)$estimate
+    kemp_estimate <- breakaway::kemp(counts)$estimate
+    hill_estimate <- breakaway::true_hill(frequency, q = 0)
+    breakaway <- breakaway::breakaway(counts)$estimate
+    model <- base::paste(breakaway::breakaway(counts)$model, "breakaway", sep = "_")
+    study_summary <- tibble::tibble(repertoire_id = study_table$repertoire_id[1], 
+                                    totalSequences = base::nrow(study_table), 
+                                    uniqueProductiveSequences = base::nrow(productive),
+                            totalCount = base::sum(study_table$duplicate_count), 
                             clonality = clonality, 
+                            simpson_index = simpson_index,
+                            inverse_simpson = inverse_simpson,
                             giniCoefficient = ineq::Gini(productive$duplicate_frequency), 
-                            topProductiveSequence = max((productive$duplicate_frequency) * 100))
+                            topProductiveSequence = base::max((productive$duplicate_frequency) * 100),
+                            chao_estimate = chao_estimate,
+                            kemp_estimate = kemp_estimate,
+                            hill_estimate = hill_estimate)
     return(study_summary)
 }
