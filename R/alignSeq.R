@@ -18,29 +18,23 @@
 #' @param method A character vector indicating the multiple sequence alignment method to 
 #' be used.  Refer to the Bioconductor msa package for more details.  Options include 
 #' "ClustalW", "ClustalOmega", and "Muscle".
-#' @param output A character vector indicating where the multiple sequence alignment should be
-#' printed.  Options include "console" or "pdf".  If "pdf" is selected, the file is saved to
-#' the working directory.  For "pdf" to work, Texshade must be installed.  Refer to the 
-#' Bioconductor package msa installation instructions for more details.
 #' @details Edit distance is a way of quantifying how dissimilar two sequences 
 #' are to one another by counting the minimum number of operations required to 
 #' transform one sequence into the other.  For example, an edit distance of 0 
 #' means the sequences are identical and an edit distance of 1 indicates that 
 #' the sequences different by a single amino acid or junction.
-#' 
-#' @return Performs a multiple sequence alignment and prints to the console or saves a pdf to 
-#' the working directory.
+#' @return Performs a multiple sequence alignment object.
 #' @seealso If having trouble saving pdf files, refer to Bioconductor package msa for
 #' installation instructions
 #' \url{http://bioconductor.org/packages/release/bioc/vignettes/msa/inst/doc/msa.pdf}
 #' @examples
-#' file.path <- system.file("extdata", "IGH_sequencing", package = "LymphoSeq")
+#' file_path <- system.file("extdata", "IGH_sequencing", package = "LymphoSeq")
 #' 
-#' file.list <- readImmunoSeq(path = file.path)
+#' file_list <- readImmunoSeq(path = file_path)
 #' 
-#' productive.nt <- productiveSeq(file.list = file.list, aggregate = "junction")
+#' productive_nt <- productiveSeq(file_list = file_list, aggregate = "junction")
 #' 
-#' alignSeq(list = productive.nt, repertoire_id = "IGH_MVQ92552A_BL", type = "junction", 
+#' alignSeq(list = productive_nt, repertoire_id = "IGH_MVQ92552A_BL", type = "junction", 
 #'          method = "ClustalW", output = "console")
 #' @export
 #' @importFrom Biostrings DNAStringSet
@@ -49,79 +43,101 @@
 #' @import tidyverse
 alignSeq = function(study_table, repertoire_ids = NULL, 
                     sequence_list = NULL, edit_distance = 15, 
-                    output = "console", type = "junction", 
-                    method = "ClustalOmega", top = 150) {
+                    type = "junction", method = "ClustalOmega", 
+                    top = 150) {
+    #If the sequence list is not null and repertoire ids are NULL,
+    #set repertoire_ids to all samples and align all sequences against 
+    #sequence list
     if(!is.null(sequence_list) & is.null(repertoire_ids)){
-        search_table <- LymphoSeq::searchSeq(study_table = study_table, 
+        search_table <- LymphoSeq2::searchSeq(study_table = study_table, 
                                              sequence = sequence_list, 
                                              edit_distance = edit_distance, 
-                                             type = type, 
+                                             seq_type = type, 
                                              match = "partial")
+        repertoire_ids <- study_table %>%
+                          dplyr::pull(repertoire_id) %>%
+                          base::unique()
         if(is.null(search_table)){
             stop("There are no sequences to be aligned", call. = FALSE)
         }
-    }
-    if(!is.null(sequence_list) & !is.null(repertoire_ids)){
+    } else if(!is.null(sequence_list) & !is.null(repertoire_ids)){
         study_table <- study_table %>% 
                        dplyr::filter(repertoire_id %in% repertoire_ids)
         search_table <- LymphoSeq2::searchSeq(study_table = study_table,
                                               sequence = sequence_list, 
                                               edit_distance =  edit_distance, 
-                                              type = type, 
+                                              seq_type = type, 
                                               match = "partial")
         if(is.null(search_table)){
             stop("There are no sequences to be aligned", call. = FALSE)
         }
-    }
-    if(is.null(sequence_list)){
+    } else if(is.null(sequence_list) & !is.null(repertoire_ids)){
         search_table <- study_table %>% 
                         dplyr::filter(repertoire_id %in% repertoire_ids)
+    } else if(is.null(sequence_list) & is.null(repertoire_ids)) {
+        search_table <- study_table
+        repertoire_ids <- study_table %>% 
+                          dplyr::pull(repertoire_id) %>%
+                          base::unique()
     }
+    #Select only the top sequences to perform alignment
     if(nrow(search_table) > top){
         if(is.null(sequence_list)){
             search_table <- search_table %>% 
-                            dplyr::top_n(top) 
+                            LymphoSeq2::topSeqs(top = top)
         } else {
             search_table <- search_table %>% 
-                            dplyr::group_by(searchSequence) %>% 
-                            dplyr::top_n(150) %>% 
-                            dplyr::ungroup()
+                            dplyr::filter(!!base::as.symbol(type) %in% searchSequence) %>% 
+                            LymphoSeq2::topSeqs(top = top)
         }
         message("Only 150 sequences sampled equally from each search group will be selected")
     }
+    #Select the string set according to the type provided by the user
+    #and create a DNA/AAStringSet with this
     if(type == "junction"){
         search_table <- search_table %>% 
                         dplyr::filter(nchar(junction) > 15)
-        string_list <- Biostrings::DNAStringSet(search_table$junction)
+        string_list <- search_table %>% 
+                       dplyr::pull(junction) %>%
+                       Biostrings::DNAStringSet()
     }
     if(type == "junction_aa"){
-        search_table <- search_table %>% filter(nchar(junction_aa) > 3)
-        string_list <- Biostrings::AAStringSet(search_table$junction_aa)
+        search_table <- search_table %>% 
+                        dplyr::filter(nchar(junction_aa) > 3)
+        string_list <- search_table %>% 
+                       dplyr::pull(junction_aa) %>%
+                       Biostrings::AAStringSet()
     }
+    #Stop if the number of sequences are less than three
     if(nrow(search_table) < 3){
         stop("There are less than 3 sequences to be aligned", call. = FALSE)
     }
-    if(!is.null(sequence_list)){
-        names(string_list) <- paste(search_table$repertoire_id)
+    #Prepare a string list to name annotate the sequences with repertoire_ids
+    #if provided or use gene family names with sequence counts 
+    if(!is.null(repertoire_ids)){
+        names(string_list) <- search_table %>%
+                              dplyr::pull(repertoire_id) 
     } else {
-        names(string_list) <- paste(search_table$v_family, search_table$d_family, 
-                                    search_table$j_family, search_table$duplicate_count, sep="_")
+        names(string_list) <- search_table %>% 
+                              dplyr::mutate(seq_name = base::paste(v_family, 
+                                                                   d_family, 
+                                                                   j_family, 
+                                                                   duplicate_count, 
+                                                                   sep="_"),
+                                            seq_name = stringr::str_replace(seq_name, 
+                                                                            "IGH|IGL|IGK|TCRB|TCRA",
+                                                                            ""),
+                                            seq_name = stringr::str_replace(seq_name,
+                                                                            "unresolved",
+                                                                            "UNR"),
+                                            seq_name = stringr::str_replace_na(seq_name,
+                                                                               replacement = "UNR")) %>%
+                              dplyr::pull(seq_name)
     }
-    names(string_list) <- gsub(names(string_list), pattern = "IGH|IGL|IGK|TCRB|TCRA", replacement = "")
-    names(string_list) <- gsub(names(string_list), pattern = "NA|unresolved", replacement = "UNR")
+    #Perform multiple sequence alignment using the method described by the user
+    base::set.seed(12357)
     alignment <- msa::msa(string_list, method = method)
-    if(output == "console"){
-        print(alignment, show = "complete")
-    }
-    if(output == "pdf"){
-        file.name <- "Sequence_aligment.pdf"
-        msa::msaPrettyPrint(alignment, output = "pdf", file = file.name, 
-                            showNumbering = "right", showNames = "left", showConsensus = "top",  
-                            shadingMode = "similar", shadingColors = "blues",
-                            paperWidth = ncol(alignment)*0.1 + 5, paperHeight = nrow(alignment)*0.1 + 5,
-                            showLogo = "bottom", showLogoScale = "right", logoColors = "rasmol",
-                            psFonts = TRUE, showLegend = TRUE, askForOverwrite = FALSE,
-                            furtherCode=c("\\defconsensus{.}{lower}{upper}","\\showruler{1}{top}"))
-       message(paste(file.name, "saved to", getwd()))
-    }
+    return(alignment)
 }
+
+
