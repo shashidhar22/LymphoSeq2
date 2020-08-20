@@ -49,9 +49,9 @@ topFreq <- function(productive_table, percent = 0.1) {
                 dplyr::arrange(desc(numberSamples), desc(meanFrequency))
     
 
-    top_freq <- dplyr::left_join(top_freq, LymphoSeqDB::prevalenceTRB, by="junction_aa") %>% 
+    top_freq <- dplyr::left_join(top_freq, LymphoSeq2::prevalenceTRB, by="junction_aa") %>% 
                 dplyr::mutate(prevalence = dplyr::replace_na(0))
-    antigen_table <- LymphoSeqDB::publishedTRB %>% 
+    antigen_table <- LymphoSeq2::publishedTRB %>% 
                      dplyr::as_tibble() %>% 
                      dplyr::select(junction_aa, antigen)
     top_freq <- dplyr::left_join(top_freq, antigen_table, by="junction_aa")  
