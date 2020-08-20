@@ -32,7 +32,7 @@ scoringMatrix <- function(productive_table, mode="Bhattacharyya") {
         scoring_matrix <- list(sample_list, sample_list) %>% 
                           purrr::cross() %>% 
                           purrr::map(bhattacharyyaCoefficient) %>%
-                          purrr::reduce(rbind) %>% 
+                          dplyr::bind_rows() %>% 
                           dplyr::pivot_wider(id_cols=sample1, 
                                              names_from=sample2, 
                                              values_from=bhattacharyya_coefficient)
@@ -40,7 +40,7 @@ scoringMatrix <- function(productive_table, mode="Bhattacharyya") {
         scoring_matrix <- list(sample_list, sample_list) %>% 
                           purrr::cross() %>% 
                           purrr::map(similarityScore) %>%
-                          purrr::reduce(rbind) %>% 
+                          dplyr::bind_rows() %>% 
                           dplyr::pivot_wider(id_cols=sample1, 
                                             names_from=sample2, 
                                             values_from=similarityScore)
@@ -86,7 +86,7 @@ bhattacharyyaCoefficient <- function(sample_list) {
                      dplyr::mutate(duplicate_frequency_p = dplyr::replace_na(duplicate_frequency_p, 0), 
                                    duplicate_frequency_q = dplyr::replace_na(duplicate_frequency_q, 0))              
     s <- sample_merged$duplicate_frequency_p * sample_merged$duplicate_frequency_q
-    bc <- sum(sqrt(s))
+    bc <- base::sum(base::sqrt(s))
     bhattacharyya_coefficient <- tibble::tibble(sample1=sample1$repertoire_id[1], 
                                                 sample2=sample2$repertoire_id[1],
                                                 bhattacharyya_coefficient=bc)
@@ -124,12 +124,12 @@ similarityScore <- function(sample_list) {
     s1 <- sample1 %>% 
           dplyr::filter(junction_aa %in% sample2$junction_aa) %>% 
           dplyr::summarise(total = sum(duplicate_count)) %>% 
-          as.integer()
+          base::as.integer()
     s2 <- sample2 %>% 
           dplyr::filter(junction_aa %in% sample1$junction_aa) %>% 
           dplyr::summarise(total = sum(duplicate_count)) %>% 
-          as.integer()
-    score <- (sample1 + sample2)/ (sum(sample1$duplicate_count) + sum(sample2$duplicate_count))
+          base::as.integer()
+    score <- (sample1 + sample2)/ (base::sum(sample1$duplicate_count) + base::sum(sample2$duplicate_count))
     similarity_score <- tibble::tibble(sample1=sample1$repertoire_id[1], 
                                        sample2=sample2$repertoire_id[1], 
                                        similarityScore=score)
