@@ -23,8 +23,8 @@
 #' prevalenceTRB database is located in a separate package called LymphoSeqDB 
 #' that should be loaded automatically.
 #' @return Returns a list of data frames of productive amino acid sequences with
-#' recomputed values for "duplicate_count", "duplicate_frequency", and 
-#' "esimatedNumberGenomes".  A productive sequences is defined as a sequences 
+#' recomputed values for "duplicate_count", "duplicate_frequency". 
+#' A productive sequences is defined as a sequences 
 #' that is in frame and does not have an early stop codon.
 #' @examples
 #' file_path <- base::system.file("extdata", "TCRB_study", package = "LymphoSeq2")
@@ -36,8 +36,7 @@
 #'                                            prevalence = TRUE)
 #'                                            
 #' @export
-#' @import tidyverse
-#' @import progress
+#' @import tidyverse 
 productiveSeq <- function(study_table, aggregate = "junction_aa", prevalence = FALSE) {
     if (aggregate == "junction" & prevalence) {
         stop("In order to add prevalence to your list of data frames, aggregate must be equal 'junction_aa'.", 
@@ -47,28 +46,29 @@ productiveSeq <- function(study_table, aggregate = "junction_aa", prevalence = F
                dplyr::pull(repertoire_id) %>% 
                base::unique() %>% 
                base::length()
-    progress <- dplyr::progress_estimated(nsample)
+    progress_bar <- progress::progress_bar$new(format = "Subsetting productive sequences [:bar] :percent eta: :eta",
+        total = nsample, clear = FALSE, width = 60)
+    progress_bar$tick(0)
     agg_table <- study_table %>% 
                  dplyr::group_by(repertoire_id) %>%
                  dplyr::group_split() %>%
-                 purrr::map(~ aggreateSeq(.x, aggregate, prevalence, progress)) %>% 
+                 purrr::map(~ aggreateSeq(.x, aggregate, prevalence, progress_bar)) %>% 
                  dplyr::bind_rows()
-    progress$stop()
     return(agg_table)
 }
 
 #' Group productive sequences by repertoire
 #' 
-#' @param progress Dplyr progress bar
+#' @param progress_bar Progress progress bar
 #' @inheritParams productiveSeq
-aggreateSeq <- function(study_table, aggregate, prevalence, progress) {
-    progress$tick()$print()
+aggreateSeq <- function(study_table, aggregate, prevalence, progress_bar) {
+    progress_bar$tick()
     if (aggregate == "junction") {
         study_table <- study_table %>% 
                        dplyr::filter(reading_frame == "in-frame") %>% 
-                       dplyr::group_by(repertoire_id, junction) %>% 
-                       dplyr::arrange(desc(duplicate_count)) %>%    
-                       dplyr::summarize(junction_aa = dplyr::first(junction_aa), 
+                       dplyr::group_by(junction) %>% 
+                       dplyr::summarize(repertoire_id = dplyr::first(repertoire_id),
+                                        junction_aa = dplyr::first(junction_aa), 
                                         duplicate_count = base::sum(duplicate_count), 
                                         v_call = dplyr::first(v_call), 
                                         reading_frame = dplyr::first(reading_frame),
@@ -82,9 +82,9 @@ aggreateSeq <- function(study_table, aggregate, prevalence, progress) {
     }  else if (aggregate == "junction_aa") {
         study_table <- study_table  %>% 
                        dplyr::filter(reading_frame == "in-frame") %>% 
-                       dplyr::group_by(repertoire_id, junction_aa) %>% 
-                       dplyr::arrange(desc(duplicate_count)) %>% 
-                       dplyr::summarize(duplicate_count = base::sum(duplicate_count), 
+                       dplyr::group_by(junction_aa) %>% 
+                       dplyr::summarize(repertoire_id = dplyr::first(repertoire_id),
+                                        duplicate_count = base::sum(duplicate_count), 
                                         v_call = dplyr::first(v_call), 
                                         reading_frame = dplyr::first(reading_frame),
                                         j_call = dplyr::first(j_call), 
