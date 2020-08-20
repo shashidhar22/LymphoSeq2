@@ -38,20 +38,26 @@
 #' top.freq.matrix <- merge(top.freq, sequence.matrix)
 #' @export
 #' @import tidyverse
-seqMatrix <- function(productive_aa, sequences) {
-    row_names <- productive_aa$junction_aa
-    sequence_matrix <- productive_aa %>% 
-                       dplyr::pivot_wider(id_cols = junction_aa, 
-                                   names_from = repertoire_id, 
-                                   values_from = duplicate_frequency, 
-                                   values_fill= list(duplicate_frequency=0.00)) %>%
-                      dplyr:: filter(junction_aa %in% sequences$junction_aa) 
-    row_names <- sequence_matrix$junction_aa
-    sequence_matrix <- sequence_matrix %>%
-                       dplyr::select(-junction_aa) %>%
-                       dplyr::mutate(numberSamples = rowSums(. > 0)) %>%
-                       dplyr::select(numberSamples, dplyr::everything()) %>%
-                       as.matrix()
-    rownames(sequence_matrix) <- row_names
+seqMatrix <- function(productive_aa, sequences = NULL, by = "duplicate_frequency") {
+    if (is.null(sequences)) {
+        sequences <- productive_aa %>%
+                     dplyr::pull(junction_aa) %>%
+                     base::unique()
+    }
+    if (by == "duplicate_count") {
+        sequence_matrix <- productive_aa %>% 
+                           tidyr::pivot_wider(id_cols = junction_aa, 
+                                              names_from = repertoire_id, 
+                                              values_from = duplicate_count, 
+                                              values_fill= list(duplicate_count = 0L)) %>%
+                           dplyr:: filter(junction_aa %in% sequences) 
+    } else if (by == "duplicate_frequency") {
+        sequence_matrix <- productive_aa %>% 
+                           tidyr::pivot_wider(id_cols = junction_aa, 
+                                              names_from = repertoire_id, 
+                                              values_from = duplicate_frequency, 
+                                              values_fill= list(duplicate_frequency = 0.0)) %>%
+                           dplyr:: filter(junction_aa %in% sequences) 
+    }
     return(sequence_matrix)
 }
