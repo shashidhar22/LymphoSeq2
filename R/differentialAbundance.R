@@ -37,56 +37,32 @@
 #' @importFrom stats p.adjust
 #' @importFrom stats fisher.test
 #' @import tidyverse
-differentialAbundance <- function(sample1, sample2, study_table, abundance = "duplicate_count", 
+differentialAbundance <- function(study_table, repertoire_ids = NULL, abundance = "duplicate_count", 
                                   type = "junction_aa", q = 1, zero = 1, parallel = FALSE) {
-    x <- study_table %>% filter(repertoire_id == sample1)
-    y <- study_table %>% filter(repertoire_id == sample2)
-    sequences <- union(x[, type], y[, type])
-    fisherFunction <- function(sequences) {
-        p.value <- as.numeric()
-        sample1.freq <- as.numeric()
-        sample2.freq <- as.numeric()
-        if (any(x[, type] == sequences)) {
-            in.x <- x[x[, type] == sequences, abundance]
-            x.freq <- x[x[, type] == sequences, abundance]/sum(x[, abundance]) * 
-                100
-        } else {
-            in.x <- 0
-            x.freq <- 0
-        }
-        if (any(y[, type] == sequences)) {
-            in.y <- y[y[, type] == sequences, abundance]
-            y.freq <- y[y[, type] == sequences, abundance]/sum(y[, abundance]) * 
-                100
-        } else {
-            in.y <- 0
-            y.freq <- 0
-        }
-        not.x <- sum(x[, abundance]) - in.x
-        not.y <- sum(y[, abundance]) - in.y
-        matrix <- matrix(c(in.x, in.y, not.x, not.y), nrow = 2)
-        fisher <- stats::fisher.test(matrix, workspace = 2e6)
-        p.value <- c(p.value, fisher$p.value)
-        sample1.freq <- c(sample1.freq, x.freq)
-        sample2.freq <- c(sample2.freq, y.freq)
-        results <- data.frame(junction_aa = sequences, 
-                              x = sample1.freq, 
-                              y = sample2.freq, 
-                              p = p.value)
-        return(results)
+    if (base::is.null(repertoire_ids)) {
+        repertoire_ids <- study_table %>% 
+                          dplyr::pull(repertoire_id) 
+        repertoire_ids <- repertoire_ids[1:3]
     }
-    #doMC::registerDoMC(cores = cores)
-    results <- plyr::ldply(sequences, fisherFunction, .parallel = parallel)
-    results$q <- stats::p.adjust(results$p, method = "holm")
-    x.not.zero <- results[, "x"]
-    x.not.zero[x.not.zero == 0] <- zero
-    y.not.zero <- results[, "y"]
-    y.not.zero[y.not.zero == 0] <- zero
-    results$l2fc <- log2(x.not.zero/y.not.zero)
-    names(results)[2] <- sample1
-    names(results)[3] <- sample2
-    results <- results[order(results$q, decreasing = FALSE), ]
-    results <- results[results$q <= q, ]
-    rownames(results) <- NULL
-    return(results)
+    fisher_table <- study_table %>%
+                    dplyr::filter(repertoire_id %in% repertoire_ids) %>%
+                    LymphoSeq2::seqMatrix(by = "duplicate_count") %>%
+                    dplyr::mutate(not_x = base::sum(!!base::as.name(repertoire_ids[1])) - !!base::as.name(repertoire_ids[1]),
+                                  not_y = base::sum(!!base::as.name(repertoire_ids[2])) - !!base::as.name(repertoire_ids[2])) %>%
+              
+                    dplyr::rowwise() %>%
+                    dplyr::mutate(p_value = LymphoSeq2::fisherFunction(!!base::as.name(repertoire_ids[1]), 
+                                                                       !!base::as.name(repertoire_ids[2]), 
+                                                                       not_x, 
+                                                                       not_y)) 
+    
+    return(fisher_table)
+}
+
+#' 
+#' @export
+fisherFunction <- function(x, y, not_x, not_y) {
+    matrix <- matrix(c(x, y, not_x, not_y), nrow = 2)
+    fisher <- stats::fisher.test(matrix, workspace = 2e6)
+    return(fisher$p.value)
 }
