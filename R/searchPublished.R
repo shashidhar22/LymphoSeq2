@@ -27,7 +27,7 @@
 #' @import tidyverse
 #' @import LymphoSeqDB
 searchPublished <- function(study_table) {
-    study_table <- dplyr::left_join(study_table, LymphoSeqDB::publishedTRB,
+    study_table <- dplyr::left_join(study_table, LymphoSeq2::publishedTRB,
                                     by="junction_aa")
     return(study_table)
 }
