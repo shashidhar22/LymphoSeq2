@@ -1,4 +1,4 @@
-context("Perform multiple sequence alignemtn")
+context("Perform multiple sequence alignment")
 library(LymphoSeq2)
 
 test_that("Align all sequences in all sample within edit distance of 15", {
