@@ -12,6 +12,7 @@ Depends: R (>= 3.3)
 Imports: Biostrings,
          circlize,
          ggplot2,
+         ggalluvial,
          ggtree,
          grid,
          ineq,
@@ -26,6 +27,7 @@ Imports: Biostrings,
          UpSetR,
          utils,
          VennDiagram
+Remotes: adw96/breakaway
 License: Artistic-2.0
 LazyData: true
 RoxygenNote: 7.1.1
@@ -36,6 +38,6 @@ Suggests:
     rmarkdown,
     testthat
 VignetteBuilder: knitr
-biocViews: Software, Technology, Sequencing, TargetedResequencing, Alignment, MultipleSequenceAlignment, msa
+biocViews: Software, Technology, Sequencing, TargetedResequencing, Alignment, MultipleSequenceAlignment, msa, phyloseq
 NeedsCompilation: no
 Encoding: UTF-8
