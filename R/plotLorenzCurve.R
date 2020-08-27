@@ -56,7 +56,7 @@ lorenzCurve <- function(repertoire_ids, study_table) {
               dplyr::group_by(repertoire_id) %>% 
               dplyr::group_split() %>%
               purrr::map(LymphoSeq2::getLorenz) %>%
-              dplyr::row_bind()
+              dplyr::bind_rows()
     getPalette <- grDevices::colorRampPalette(RColorBrewer::brewer.pal(9, "Set1"))
     plot <- ggplot2::ggplot(lorenz, aes_string(x = "p", y = "L", color = "repertoire_id")) + 
             ggplot2::geom_line(size = 1) + 
