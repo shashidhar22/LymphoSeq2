@@ -67,6 +67,7 @@ aggreateSeq <- function(study_table, aggregate, prevalence, progress_bar) {
         study_table <- study_table %>% 
                        dplyr::filter(reading_frame == "in-frame") %>% 
                        dplyr::group_by(junction) %>% 
+                       dplyr::arrange(desc(duplicate_count)) %>% 
                        dplyr::summarize(repertoire_id = dplyr::first(repertoire_id),
                                         junction_aa = dplyr::first(junction_aa), 
                                         duplicate_count = base::sum(duplicate_count), 
@@ -78,11 +79,14 @@ aggreateSeq <- function(study_table, aggregate, prevalence, progress_bar) {
                                         d_family = dplyr::first(d_family),
                                         j_family = dplyr::first(j_family)) %>%
                        dplyr::ungroup() %>%
-                       dplyr::mutate(duplicate_frequency = duplicate_count / base::sum(duplicate_count))
+                       dplyr::mutate(duplicate_frequency = duplicate_count / base::sum(duplicate_count)) %>%
+                       dplyr::select(repertoire_id, junction, junction_aa, v_call, d_call, j_call, v_family, 
+                                     d_family, j_family, reading_frame, duplicate_count, duplicate_frequency)
     }  else if (aggregate == "junction_aa") {
         study_table <- study_table  %>% 
                        dplyr::filter(reading_frame == "in-frame") %>% 
                        dplyr::group_by(junction_aa) %>% 
+                       dplyr::arrange(desc(duplicate_count)) %>% 
                        dplyr::summarize(repertoire_id = dplyr::first(repertoire_id),
                                         duplicate_count = base::sum(duplicate_count), 
                                         v_call = dplyr::first(v_call), 
@@ -93,7 +97,9 @@ aggreateSeq <- function(study_table, aggregate, prevalence, progress_bar) {
                                         d_family = dplyr::first(d_family),
                                         j_family = dplyr::first(j_family)) %>%
                        dplyr::ungroup() %>%
-                       dplyr::mutate(duplicate_frequency = duplicate_count / base::sum(duplicate_count))
+                       dplyr::mutate(duplicate_frequency = duplicate_count / base::sum(duplicate_count)) %>%
+                       dplyr::select(repertoire_id, junction_aa, v_call, d_call, j_call, v_family, d_family, 
+                                     j_family, reading_frame, duplicate_count, duplicate_frequency)
     }
     if (prevalence) {
         prev_table <- LymphoSeq2::prevalenceTRB
