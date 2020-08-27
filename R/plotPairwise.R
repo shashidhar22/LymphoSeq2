@@ -36,23 +36,19 @@
 #' @importFrom reshape melt.data.frame
 #' @importFrom stats na.omit
 pairwisePlot <- function(matrix) {
-    i <- 1
-    l <- length(matrix)
-    p <- l - 1
-    for (i in 1:p) {
-        j <- i + 1
-        matrix[i, j:l] <- NA
-    }
-    matrix$repertoire_ids <- rownames(matrix)
-    melt <- reshape::melt.data.frame(matrix, id.vars = "repertoire_ids")
-    melt <- na.omit(melt)
-    melt$variable <- factor(melt$variable, levels = rownames(matrix))
-    melt$repertoire_ids <- factor(melt$repertoire_ids, levels = rev(rownames(matrix)))
-    names(melt) = c("repertoire_id.x", "repertoire_id.y", "Score")
-    ggplot(data = melt, aes_string(x = "repertoire_id.x", y = "repertoire_id.y", fill = "Score")) + 
+    samples <- rownames(matrix)
+    matrix[base::lower.tri(matrix)] <- NA
+    matrix <- matrix %>% 
+              tibble::as_tibble() %>%
+              dplyr::mutate(repertoire_id = samples) %>%
+              dplyr::select(repertoire_id, dplyr::everything()) %>%
+              tidyr::pivot_longer(-repertoire_id, names_to = "repertoire_id_y", values_to = "score", values_drop_na = TRUE) %>%
+              dplyr::arrange(repertoire_id, repertoire_id_y)
+    ggplot(data = matrix, aes_string(x = "repertoire_id", y = "repertoire_id_y", fill = "score")) + 
     ggplot2::geom_tile() + 
     ggplot2::scale_fill_gradient(low = "#fee8c8", high = "#e34a33") + 
     ggplot2::theme_classic() + 
     ggplot2::labs(x = "", y = "", fill = "") + 
+    ggplot2::scale_y_discrete(limits = rev(levels(as.factor(matrix$repertoire_id_y)))) +
     ggplot2::theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
 }
