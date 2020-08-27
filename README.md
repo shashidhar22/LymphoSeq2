@@ -9,7 +9,7 @@ LymphoSeq2 presents a toolkit for Adatptive Immume Receptor Repertoire Sequencin
 Install from GitHub
 
 ```{r}
-devtools::install_github("shashidhar22/LymphoSeq", ref="v0.0.0.9000")
+devtools::install_github("shashidhar22/LymphoSeq2", ref="v0.0.0.9000", build_vignette=TRUE)
 ```
 
 ## Documentation
