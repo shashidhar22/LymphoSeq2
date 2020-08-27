@@ -34,39 +34,38 @@
 #'    ggplot2::scale_y_log10() + 
 #'    ggplot2::annotation_logticks(sides = "bl")
 #' @export
-#' @import ggplot2
-#' @import tidyverse
 commonSeqsPlot <- function(sample1, sample2, productive_aa, show = "common") {
     # Check if tibble is contains unproductive sequences
     if (show == "common") {
-        common <- commonSeqs(samples = c(sample1, sample2), 
-                             productive_aa = productive_aa)
-        plot <- ggplot(data = common, 
-                       aes_string(x = names(common)[2], 
-                                  y = names(common)[3], 
-                                  label = "junction_aa")) + 
-                geom_point() +
-                theme_minimal() + 
-                labs(x = paste(sample1, "frequency (%)"), 
-                     y = paste(sample2, "frequency (%)"))
+        common <- LymphoSeq2::commonSeqs(repertoire_ids =  c(sample1, sample2), 
+                                         study_table =  productive_aa)
+        plot <- ggplot2::ggplot(data = common, 
+                                aes_string(x = names(common)[2], 
+                                            y = names(common)[3], 
+                                label = "junction_aa")) + 
+                ggplot2::geom_point() +
+                ggplot2::theme_minimal() + 
+                ggplot2::labs(x = paste(sample1, "frequency"), 
+                              y = paste(sample2, "frequency"))
     }
     if (show == "all") {
         stable1 <- productive_aa %>% 
-                   filter(repertoire_id == sample1)
+                   dplyr::filter(repertoire_id == sample1)
         stable2 <- productive_aa %>% 
-                   filter(repertoire_id == sample2)
-        all <- full_join(stable1, stable2, by = "junction_aa") %>% 
-               mutate_all(~replace(., is.na(.), 0))
+                   dplyr::filter(repertoire_id == sample2)
+        all <- dplyr::full_join(stable1, stable2, by = "junction_aa") %>% 
+               dplyr::mutate_all(~dplyr::replace(., is.na(.), 0))
         all <- all %>% 
-               recode(duplicate_frequency.x = sample1, 
-                      duplicate_frequency.y = sample2)
+               dplyr::recode(duplicate_frequency.x = sample1, 
+                             duplicate_frequency.y = sample2)
         plot <- ggplot2::ggplot(data = all, 
                                 aes_string(x = sample1, 
                                            y = sample2, 
                                            label = "junction_aa")) + 
-                geom_point() +
-                theme_minimal() + 
-                labs(x = paste(sample1, "frequency (%)"), y = paste(sample2, "frequency (%)"))
+                ggplot2::geom_point() +
+                ggplot2::theme_minimal() + 
+                ggplot2::labs(x = paste(sample1, "frequency"), 
+                              y = paste(sample2, "frequency"))
     }
     return(plot)
 }
