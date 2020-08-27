@@ -51,10 +51,16 @@ differentialAbundance <- function(study_table, repertoire_ids = NULL, abundance 
                                   not_y = base::sum(!!base::as.name(repertoire_ids[2])) - !!base::as.name(repertoire_ids[2])) %>%
               
                     dplyr::rowwise() %>%
-                    dplyr::mutate(p_value = LymphoSeq2::fisherFunction(!!base::as.name(repertoire_ids[1]), 
+                    dplyr::mutate(fisher = list(LymphoSeq2::fisherFunction(!!base::as.name(repertoire_ids[1]), 
                                                                        !!base::as.name(repertoire_ids[2]), 
                                                                        not_x, 
-                                                                       not_y)) 
+                                                                       not_y)))  %>%
+                    tidyr::unnest_wider(fisher) %>%
+                    dplyr::select(junction_aa,
+                                 !!base::as.name(repertoire_ids[1]),
+                                 !!base::as.name(repertoire_ids[2]),
+                                 p, q, l2fc)
+    
     
     return(fisher_table)
 }
@@ -64,5 +70,7 @@ differentialAbundance <- function(study_table, repertoire_ids = NULL, abundance 
 fisherFunction <- function(x, y, not_x, not_y) {
     matrix <- matrix(c(x, y, not_x, not_y), nrow = 2)
     fisher <- stats::fisher.test(matrix, workspace = 2e6)
-    return(fisher$p.value)
+    q <- stats::p.adjust(fisher$p, method = "holm")
+    l2fc <- base::log2(x/y)
+    return(list( "p" = fisher$p, "q" = q, "l2fc" = l2fc))
 }
