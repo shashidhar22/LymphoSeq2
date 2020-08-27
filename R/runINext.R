@@ -21,8 +21,7 @@
 #' @import tidyverse
 #' @import iNEXT
 #' @import purrr
-runINext <- function(sample_table, progress, color="repertoire_id") {
-    progress$tick()$print()
+runINext <- function(sample_table, color="repertoire_id") {
     repertoire_id <- sample_table$repertoire_id[1]
     rarefaction_tables <- sample_table %>% 
                           tidyr::pivot_wider(names_from=repertoire_id, 
@@ -30,6 +29,7 @@ runINext <- function(sample_table, progress, color="repertoire_id") {
                                       values_from=duplicate_count, 
                                       values_fill=list(duplicate_count=0)) %>% 
                           dplyr::select(-junction_aa) %>% as.matrix()
+    
     rarefaction_tables <- iNEXT::iNEXT(rarefaction_tables, 
                                        q=0, 
                                        datatype="abundance", 
