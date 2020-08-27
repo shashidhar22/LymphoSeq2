@@ -14,4 +14,4 @@ devtools::install_github("shashidhar22/LymphoSeq", ref="v0.0.0.9000")
 
 ## Documentation
 
-* ![LymphoSeq2 Vigentte]("vignettes/LymphoSeq2.html")
+* ![LymphoSeq2 Vigentte](vignettes/LymphoSeq2.html)
