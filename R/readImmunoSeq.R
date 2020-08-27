@@ -191,6 +191,7 @@ getFileType <- function(clone_file) {
 #' @param file_type file type from getFileType method
 #'
 #' @return List of standard header names 
+#' 
 #' @rdname readImmunoSeq
 getStandard <- function(file_type) {
     type1 <- c(junction = "nucleotide", junction_aa = "aminoAcid", 
@@ -237,7 +238,7 @@ getStandard <- function(file_type) {
 #' @rdname readImmunoSeq
 readFiles <- function(clone_file, progress_bar) {
     progress_bar$tick()
-    file_info <- LymphoSeq2::getFileType(clone_file)
+    file_info <-getFileType(clone_file)
     file_type <- file_info[[1]]
     header_list <- file_info[[2]]
     col_std <- getStandard(file_type)

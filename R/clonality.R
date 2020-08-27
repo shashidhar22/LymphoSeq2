@@ -54,7 +54,7 @@ clonality <- function(study_table) {
 #' @return Tibble summarizing the sequence information for each repertoire_id
 #'
 #' @export
-#' @import tidyverse breakaway phyloSeq vegan
+#' @import tidyverse breakaway vegan
 
 summarySeq <- function(study_table) {
     productive <- LymphoSeq2::productiveSeq(study_table, aggregate="junction")
@@ -72,14 +72,14 @@ summarySeq <- function(study_table) {
     breakaway <- breakaway::breakaway(counts)$estimate
     model <- base::paste(breakaway::breakaway(counts)$model, "breakaway", sep = "_")
     study_summary <- tibble::tibble(repertoire_id = study_table$repertoire_id[1], 
-                                    totalSequences = base::nrow(study_table), 
-                                    uniqueProductiveSequences = base::nrow(productive),
-                            totalCount = base::sum(study_table$duplicate_count), 
+                                    total_sequences = base::nrow(study_table), 
+                                    unique_productive_sequences = base::nrow(productive),
+                            total_count = base::sum(study_table$duplicate_count), 
                             clonality = clonality, 
                             simpson_index = simpson_index,
                             inverse_simpson = inverse_simpson,
-                            giniCoefficient = ineq::Gini(productive$duplicate_frequency), 
-                            topProductiveSequence = base::max((productive$duplicate_frequency) * 100),
+                            gini_coefficient = ineq::Gini(productive$duplicate_frequency), 
+                            top_productive_sequence = base::max((productive$duplicate_frequency) * 100),
                             chao_estimate = chao_estimate,
                             kemp_estimate = kemp_estimate,
                             hill_estimate = hill_estimate)
