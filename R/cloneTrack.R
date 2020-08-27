@@ -66,10 +66,6 @@
 #'    ggplot2::scale_y_log10() + ggplot2::annotation_logticks(sides = "l") + 
 #'    ggplot2::ggtitle("Figure Title")
 #' @export
-#' @import ggplot2
-#' @importFrom RColorBrewer brewer.pal
-#' @importFrom reshape melt.data.frame
-#' @import tidyverse
 cloneTrack <- function(study_table, sample_list = NULL, sequence_track = NULL, 
                        unassigned = TRUE) {
   if (base::is.null(sample_list)) {
