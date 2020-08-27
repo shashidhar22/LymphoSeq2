@@ -22,11 +22,11 @@
 #' searchSeq(list = cleansed, sequence = "CASSDLIGNGKLFF")
 #' @export
 #' @import  tidyverse
-removeSeq <- function(file.list, sequence) {
+removeSeq <- function(study_table, sequence) {
     study_table <- study_table %>% 
-                   dplyr::filter(!aminoAcid %in% sequence) %>% 
-                   dplyr::group_by(sample) %>%
-                   dplyr::mutate(frequencyCount = `count` / sum(`count`)) %>% 
+                   dplyr::filter(!junction_aa %in% sequence) %>% 
+                   dplyr::group_by(repertoire_id) %>%
+                   dplyr::mutate(duplicate_frequency = `duplicate_count` / sum(`duplicate_count`)) %>% 
                    dplyr::ungroup()
     return(study_table)
 }
