@@ -31,7 +31,7 @@ geneFreq <- function(productive_nt, locus = "V|D|J", family = FALSE) {
                       tidyr::pivot_longer(cols = contains("family"), 
                                           values_to="gene_name", 
                                           names_to="gene_type") %>%
-                      dplyr::filter(stringr::str_detect(gene_name, base::paste("[", locus, base::tolower(locus), "]", sep=""))) %>%
+                      dplyr::filter(stringr::str_detect(gene_type, base::paste("[", locus, base::tolower(locus), "]", sep=""))) %>%
                       dplyr::group_by(repertoire_id, gene_name) %>% 
                       dplyr::summarize(duplicate_count = sum(duplicate_count), 
                                        gene_type = dplyr::first(gene_type)) %>%
@@ -45,7 +45,7 @@ geneFreq <- function(productive_nt, locus = "V|D|J", family = FALSE) {
                       tidyr::pivot_longer(cols = contains("call"), 
                                           values_to="gene_name", 
                                           names_to="gene_type") %>%
-                      dplyr::filter(stringr::str_detect(gene_name, base::paste("[", locus, base::tolower(locus), "]", sep=""))) %>%
+                      dplyr::filter(stringr::str_detect(gene_type, base::paste("[", locus, base::tolower(locus), "]", sep=""))) %>%
                       dplyr::group_by(repertoire_id, gene_name) %>% 
                       dplyr::summarize(duplicate_count = sum(duplicate_count),
                                        gene_type = dplyr::first(gene_type)) %>%
