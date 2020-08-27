@@ -31,14 +31,11 @@
 #' @seealso Refer to the LymphoSeqDB package for details regarding the 
 #' prevalenceTRB and publishedTRB database.
 #' @export
-#' @import LymphoSeqDB
-#' @import tidyverse
-#' @importFrom dplyr group_by summarise
 topFreq <- function(productive_table, percent = 0.1) {
     top_aa <- productive_table %>%  
               dplyr::arrange(desc(duplicate_frequency)) %>% 
               dplyr::top_frac(percent, wt=duplicate_frequency) %>% 
-              dplyr::as_vector()
+              purrr::as_vector()
     top_freq <- productive_table %>% 
                 dplyr::filter(junction_aa %in% top_aa) %>%
                 dplyr::group_by(junction_aa) %>%
@@ -48,12 +45,11 @@ topFreq <- function(productive_table, percent = 0.1) {
                                  numberSamples = length(duplicate_frequency > 0)) %>%
                 dplyr::arrange(desc(numberSamples), desc(meanFrequency))
     
-
-    top_freq <- dplyr::left_join(top_freq, LymphoSeq2::prevalenceTRB, by="junction_aa") %>% 
-                dplyr::mutate(prevalence = dplyr::replace_na(0))
+    top_freq <- dplyr::left_join(top_freq, LymphoSeq2::prevalenceTRB, by=c("junction_aa" = "aminoAcid")) %>% 
+                dplyr::mutate(prevalence = tidyr::replace_na(0))
     antigen_table <- LymphoSeq2::publishedTRB %>% 
-                     dplyr::as_tibble() %>% 
-                     dplyr::select(junction_aa, antigen)
-    top_freq <- dplyr::left_join(top_freq, antigen_table, by="junction_aa")  
+        dplyr::as_tibble() %>% 
+        dplyr::select(aminoAcid, antigen)
+    top_freq <- dplyr::left_join(top_freq, antigen_table, by=c("junction_aa" = "aminoAcid"))  
     return(top_freq)
 }
