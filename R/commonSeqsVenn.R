@@ -34,18 +34,15 @@
 #' 
 #' dev.off()
 #' @export
-#' @importFrom VennDiagram draw.pairwise.venn draw.triple.venn
-#' @importFrom grid grid.newpage grid.draw
-#' @import tidyverse
 commonSeqsVenn <- function(repertoire_ids, productive_aa) {
-    if (length(repertoire_ids) > 3 | length(repertoire_ids) < 2) {
+    if (base::length(repertoire_ids) > 3 | base::length(repertoire_ids) < 2) {
         stop("Please enter 2 or 3 repertoire_ids.")
     }
-    if (length(repertoire_ids) == 2) {
+    if (base::length(repertoire_ids) == 2) {
         a <- productive_aa %>% 
-             filter(repertoire_id == repertoire_ids[[1]])
+             dplyr::filter(repertoire_id == repertoire_ids[[1]])
         b <- productive_aa %>% 
-             filter(repertoire_id == repertoire_ids[[2]])
+             dplyr::filter(repertoire_id == repertoire_ids[[2]])
         grid::grid.newpage()
         venn <- VennDiagram::draw.pairwise.venn(area1 = length(a$junction_aa), 
                                                 area2 = length(b$junction_aa), 
@@ -63,13 +60,13 @@ commonSeqsVenn <- function(repertoire_ids, productive_aa) {
                                                 lwd = rep(2, 2))
         grid::grid.draw(venn)
     }
-    if (length(repertoire_ids) == 3) {
+    if (base::length(repertoire_ids) == 3) {
         a <- productive_aa %>% 
-             filter(repertoire_id == repertoire_ids[[1]])
+             dplyr::filter(repertoire_id == repertoire_ids[[1]])
         b <- productive_aa %>% 
-             filter(repertoire_id == repertoire_ids[[2]])
+             dplyr::filter(repertoire_id == repertoire_ids[[2]])
         c <- productive_aa %>% 
-             filter(repertoire_id == repertoire_ids[[3]])
+             dplyr::filter(repertoire_id == repertoire_ids[[3]])
         grid::grid.newpage()
         venn <- VennDiagram::draw.triple.venn(area1 = length(a$junction_aa), 
                                               area2 = length(b$junction_aa), 
