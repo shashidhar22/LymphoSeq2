@@ -4,14 +4,14 @@
 \alias{commonSeqs}
 \title{Common sequences in two or more repertoire_ids}
 \usage{
-commonSeqs(repertoire_ids, productive_aa)
+commonSeqs(study_table, repertoire_ids = NULL)
 }
 \arguments{
+\item{study_table}{A list of productive amino acid sequences generated
+by the LymphoSeq function productiveSeq where aggregate = "junction_aa".}
+
 \item{repertoire_ids}{A character vector of two or more repertoire_id names in 
 productive.aa.}
-
-\item{productive_aa}{A list of productive amino acid sequences generated
-by the LymphoSeq function productiveSeq where aggregate = "junction_aa".}
 }
 \value{
 Returns a data frame of the common sequences between two or more files 

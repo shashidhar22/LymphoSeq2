@@ -9,7 +9,6 @@ alignSeq(
   repertoire_ids = NULL,
   sequence_list = NULL,
   edit_distance = 15,
-  output = "console",
   type = "junction",
   method = "ClustalOmega",
   top = 150
@@ -25,11 +24,6 @@ CDR3 sequences to search.}
 \item{edit_distance}{An integer giving the minimum edit distance that the 
 sequence must be less than or equal to.  See details below.}
 
-\item{output}{A character vector indicating where the multiple sequence alignment should be
-printed.  Options include "console" or "pdf".  If "pdf" is selected, the file is saved to
-the working directory.  For "pdf" to work, Texshade must be installed.  Refer to the 
-Bioconductor package msa installation instructions for more details.}
-
 \item{type}{A character vector indicating whether "junction_aa" or "junction" sequences
 should be aligned.  If "junction_aa" is specified, then run productiveSeqs first.}
 
@@ -41,8 +35,7 @@ be used.  Refer to the Bioconductor msa package for more details.  Options inclu
 sequence list.}
 }
 \value{
-Performs a multiple sequence alignment and prints to the console or saves a pdf to 
-the working directory.
+Performs a multiple sequence alignment object.
 }
 \description{
 Perform multiple sequence alignment using one of three methods and output results to the 
@@ -58,13 +51,13 @@ means the sequences are identical and an edit distance of 1 indicates that
 the sequences different by a single amino acid or junction.
 }
 \examples{
-file.path <- system.file("extdata", "IGH_sequencing", package = "LymphoSeq")
+file_path <- system.file("extdata", "IGH_sequencing", package = "LymphoSeq")
 
-file.list <- readImmunoSeq(path = file.path)
+file_list <- readImmunoSeq(path = file_path)
 
-productive.nt <- productiveSeq(file.list = file.list, aggregate = "junction")
+productive_nt <- productiveSeq(file_list = file_list, aggregate = "junction")
 
-alignSeq(list = productive.nt, repertoire_id = "IGH_MVQ92552A_BL", type = "junction", 
+alignSeq(list = productive_nt, repertoire_id = "IGH_MVQ92552A_BL", type = "junction", 
          method = "ClustalW", output = "console")
 }
 \seealso{

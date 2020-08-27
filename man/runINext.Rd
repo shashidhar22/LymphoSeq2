@@ -4,7 +4,7 @@
 \alias{runINext}
 \title{Run iNEXT on repertoire_ids}
 \usage{
-runINext(sample_table, progress, color = "repertoire_id")
+runINext(sample_table, color = "repertoire_id")
 }
 \arguments{
 \item{sample_table}{A tibble consisting antigen receptor sequencing 

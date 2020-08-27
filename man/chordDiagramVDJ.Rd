@@ -7,16 +7,16 @@
 chordDiagramVDJ(study_table, association = "VJ", colors = c("red", "blue"))
 }
 \arguments{
+\item{study_table}{A tibble consisting of frequencies of antigen receptor 
+sequences.  "v_family", "j_family", and if applicable, "d_family" 
+are a required columns.  Using output from the LymphoSeq function topSeqs is
+recommended.}
+
 \item{association}{A character vector of gene familes to associate.  Options 
 include "VJ" or "DJ".}
 
 \item{colors}{A character vector of 2 colors corresponding to the V/D and J 
 gene colors respectively.}
-
-\item{repertoire_id}{A tibble consisting of frequencies of antigen receptor 
-sequences.  "v_family", "j_family", and if applicable, "d_family" 
-are a required columns.  Using output from the LymphoSeq function topSeqs is
-recommended.}
 }
 \value{
 Returns a chord diagram showing VJ or DJ gene associations from one or 

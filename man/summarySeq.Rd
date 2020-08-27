@@ -10,7 +10,7 @@ summarySeq(study_table)
 \item{sample_table}{immune repertoire tibble for each a repertoire_id}
 }
 \value{
-Tibble summarizing the sequence infomration for each repertoire_id
+Tibble summarizing the sequence information for each repertoire_id
 }
 \description{
 Get summary statistics for each repertoire_id in the analysis

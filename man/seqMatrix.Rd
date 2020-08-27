@@ -4,7 +4,7 @@
 \alias{seqMatrix}
 \title{Sequence matrix}
 \usage{
-seqMatrix(productive_aa, sequences)
+seqMatrix(productive_aa, sequences = NULL, by = "duplicate_frequency")
 }
 \arguments{
 \item{productive_aa}{A tibble of productive amino acid sequences 

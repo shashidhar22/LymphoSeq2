@@ -4,7 +4,7 @@
 \alias{aggreateSeq}
 \title{Group productive sequences by repertoire}
 \usage{
-aggreateSeq(study_table, aggregate, prevalence, progress)
+aggreateSeq(study_table, aggregate, prevalence, progress_bar)
 }
 \arguments{
 \item{study_table}{A tibble consisting antigen receptor sequencing 
@@ -30,7 +30,7 @@ is added and FALSE means it is not.  Values range from 0 to 100\% where
 prevalenceTRB database is located in a separate package called LymphoSeqDB 
 that should be loaded automatically.}
 
-\item{progress}{Dplyr progress bar}
+\item{progress_bar}{Progress progress bar}
 }
 \description{
 Group productive sequences by repertoire

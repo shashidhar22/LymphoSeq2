@@ -32,8 +32,8 @@ that should be loaded automatically.}
 }
 \value{
 Returns a list of data frames of productive amino acid sequences with
-recomputed values for "duplicate_count", "duplicate_frequency", and 
-"esimatedNumberGenomes".  A productive sequences is defined as a sequences 
+recomputed values for "duplicate_count", "duplicate_frequency". 
+A productive sequences is defined as a sequences 
 that is in frame and does not have an early stop codon.
 }
 \description{

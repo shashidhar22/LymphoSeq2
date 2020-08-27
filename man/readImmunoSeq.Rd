@@ -10,7 +10,7 @@ readImmunoSeq(path, recursive = FALSE)
 
 getStandard(file_type)
 
-readFiles(clone_file, progress)
+readFiles(clone_file, progress_bar)
 }
 \arguments{
 \item{path}{Path to AIRR-seq files. Can be a file path, directory path or a vector of file paths}

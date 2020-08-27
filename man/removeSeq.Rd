@@ -4,14 +4,14 @@
 \alias{removeSeq}
 \title{Remove sequence}
 \usage{
-removeSeq(file.list, sequence)
+removeSeq(study_table, sequence)
 }
 \arguments{
-\item{file.list}{A list of data frames imported using the LymphoSeq function 
-readImmunoSeq.  "aminoAcid", "count", and "frequencyCount" are required columns.}
-
 \item{sequence}{A character vector of one or more amino acid sequences to 
 remove from the list of data frames.}
+
+\item{file.list}{A list of data frames imported using the LymphoSeq function 
+readImmunoSeq.  "aminoAcid", "count", and "frequencyCount" are required columns.}
 }
 \value{
 Returns a list of data frames like the one imported except all rows 

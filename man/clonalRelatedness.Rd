@@ -33,14 +33,14 @@ means the sequences are identical and an edit distance of 1 indicates that
 the sequences different by a single amino acid or junction.
 }
 \examples{
-file.path <- system.file("extdata", "IGH_sequencing", package = "LymphoSeq")
+file_path <- system.file("extdata", "IGH_sequencing", package = "LymphoSeq")
 
-study_table <- readImmunoSeq(path = file.path)
+study_table <- readImmunoSeq(path = file_path)
 
 clonal_relatedness <- clonalRelatedness(study_table = study_table, editDistance = 10)
 
 # Merge results with clonality table
-clonality <- clonality(file.list = file.list)
-merged <- merge(clonality, clonal.relatedness)
+clonality <- clonality(study_table)
+merged <- full_join(clonality, clonal_relatedness, by = "repertoire_id")
 
 }

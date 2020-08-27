@@ -23,9 +23,9 @@ Creates a tibble of a selected number of top productive sequences
 from the study table.
 }
 \examples{
-file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
+file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
 
-study_table <- readImmunoSeq(path = file.path)
+study_table <- readImmunoSeq(path = file_path)
 
 productive_table <- productiveSeq(study_table = study_table, aggregate = "junction_aa")
 

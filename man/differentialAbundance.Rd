@@ -5,9 +5,8 @@
 \title{Differential abundance analysis}
 \usage{
 differentialAbundance(
-  sample1,
-  sample2,
   study_table,
+  repertoire_ids = NULL,
   abundance = "duplicate_count",
   type = "junction_aa",
   q = 1,
@@ -16,12 +15,6 @@ differentialAbundance(
 )
 }
 \arguments{
-\item{sample1}{A character vector indicating the name of the first repertoire_id in the list
-to be compared.}
-
-\item{sample2}{A character vector indicating the name of the second repertoire_id in the list
-to be compared.}
-
 \item{abundance}{The input value for the Fisher exact test.  "duplicate_count"
 is recommend but "duplicate_count" may also be used.}
 
@@ -40,6 +33,12 @@ p and q value calculations.}
 
 \item{list}{A tibble consisting of antigen receptor sequences 
 imported by the LymphoSeq function readImmunoSeq.}
+
+\item{sample1}{A character vector indicating the name of the first repertoire_id in the list
+to be compared.}
+
+\item{sample2}{A character vector indicating the name of the second repertoire_id in the list
+to be compared.}
 }
 \value{
 Returns a data frame with columns corresponding to the frequency of the abudance
