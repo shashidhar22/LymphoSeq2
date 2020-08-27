@@ -28,6 +28,6 @@
 #' @import LymphoSeqDB
 searchPublished <- function(study_table) {
     study_table <- dplyr::left_join(study_table, LymphoSeq2::publishedTRB,
-                                    by="junction_aa")
+                                    by=c("junction_aa" = "aminoAcid"))
     return(study_table)
 }
