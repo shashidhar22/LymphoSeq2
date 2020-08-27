@@ -33,7 +33,7 @@ scoringMatrix <- function(productive_table, mode="Bhattacharyya") {
                           purrr::cross() %>% 
                           purrr::map(bhattacharyyaCoefficient) %>%
                           dplyr::bind_rows() %>% 
-                          dplyr::pivot_wider(id_cols=sample1, 
+                          tidyr::pivot_wider(id_cols=sample1, 
                                              names_from=sample2, 
                                              values_from=bhattacharyya_coefficient)
     } else if ( mode == "Similarity") {
@@ -41,7 +41,7 @@ scoringMatrix <- function(productive_table, mode="Bhattacharyya") {
                           purrr::cross() %>% 
                           purrr::map(similarityScore) %>%
                           dplyr::bind_rows() %>% 
-                          dplyr::pivot_wider(id_cols=sample1, 
+                          tidyr::pivot_wider(id_cols=sample1, 
                                             names_from=sample2, 
                                             values_from=similarityScore)
     }
@@ -83,8 +83,8 @@ bhattacharyyaCoefficient <- function(sample_list) {
     sample_merged <- dplyr::full_join(sample1, sample2, 
                                       by="junction_aa", 
                                       suffix = c("_p", "_q")) %>% 
-                     dplyr::mutate(duplicate_frequency_p = dplyr::replace_na(duplicate_frequency_p, 0), 
-                                   duplicate_frequency_q = dplyr::replace_na(duplicate_frequency_q, 0))              
+                     dplyr::mutate(duplicate_frequency_p = tidyr::replace_na(duplicate_frequency_p, 0), 
+                                   duplicate_frequency_q = tidyr::replace_na(duplicate_frequency_q, 0))              
     s <- sample_merged$duplicate_frequency_p * sample_merged$duplicate_frequency_q
     bc <- base::sum(base::sqrt(s))
     bhattacharyya_coefficient <- tibble::tibble(sample1=sample1$repertoire_id[1], 
