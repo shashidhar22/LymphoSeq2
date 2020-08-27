@@ -376,7 +376,7 @@ searchSeq(study_table = cleansed, sequence = "CASSESAGSTGELFF", seq_type = "junc
 
 Rarefaction and extrapolation curves allow for comparison of TCR diversity across repertoires given a ideal sequencing depth. Rarefaction and extrapolation curves are drawn by sampling a sequencing dataset to various depths to understand the trajectory of sequence diversity and then extrapolating the curve to an ideal depth.
 
-```{r rarefation}
+```{r rarefation, warning=FALSE}
 plotRarefactionCurve(study_table = aa_table)
 ```
 
