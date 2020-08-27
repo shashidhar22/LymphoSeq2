@@ -264,25 +264,25 @@ readFiles <- function(clone_file, progress_bar) {
                                                               junction_aa))
     clone_frame <- clone_frame %>%
                    dplyr::mutate(v_call = dplyr::if_else(stringr::str_detect(v_call, 
-                                                                             "(TRB|TCRB)V\\d+-\\d+\\*\\d+"),
+                                                                             "(TRB|TCRB|IGH|IGL|IGK|TCRA)V\\d+-\\d+\\*\\d+"),
                                                          stringr::str_extract(v_call, 
-                                                                              "(TRB|TCRB)V\\d+-\\d+\\*\\d+"), 
+                                                                              "(TRB|TCRB|IGH|IGL|IGK|TCRA)V\\d+-\\d+\\*\\d+"), 
                                                          v_call),
-                                 j_call = dplyr::if_else(stringr::str_detect(j_call, "(TRB|TCRB)J\\d+-\\d+\\*\\d+"),
-                                                         stringr::str_extract(j_call, "(TRB|TCRB)J\\d+-\\d+\\*\\d+"), 
+                                 j_call = dplyr::if_else(stringr::str_detect(j_call, "(TRB|TCRB|IGH|IGL|IGK|TCRA)J\\d+-\\d+\\*\\d+"),
+                                                         stringr::str_extract(j_call, "(TRB|TCRB|IGH|IGL|IGK|TCRA)J\\d+-\\d+\\*\\d+"), 
                                                          j_call),
-                                 d_call = dplyr::if_else(stringr::str_detect(d_call, "(TRB|TCRB)D\\d+\\*\\d+"),
-                                                         stringr::str_extract(d_call, "(TRB|TCRB)D\\d+\\*\\d+"), 
+                                 d_call = dplyr::if_else(stringr::str_detect(d_call, "(TRB|TCRB|IGH|IGL|IGK|TCRA)D\\d+\\*\\d+"),
+                                                         stringr::str_extract(d_call, "(TRB|TCRB|IGH|IGL|IGK|TCRA)D\\d+\\*\\d+"), 
                                                          d_call))
     clone_frame <- clone_frame %>%
-                   dplyr::mutate(v_family = dplyr::if_else(stringr::str_detect(v_call, "(TRB|TCRB)V"),
-                                                           stringr::str_extract(v_call, "(TRB|TCRB)V\\d+"), 
+                   dplyr::mutate(v_family = dplyr::if_else(stringr::str_detect(v_call, "(TRB|TCRB|IGH|IGL|IGK|TCRA)V"),
+                                                           stringr::str_extract(v_call, "(TRB|TCRB|IGH|IGL|IGK|TCRA)V\\d+"), 
                                                           "unresolved"),
-                                 j_family = dplyr::if_else(stringr::str_detect(j_call, "(TRB|TCRB)J"),
-                                                           stringr::str_extract(j_call, "(TRB|TCRB)J\\d+"), 
+                                 j_family = dplyr::if_else(stringr::str_detect(j_call, "(TRB|TCRB|IGH|IGL|IGK|TCRA)J"),
+                                                           stringr::str_extract(j_call, "(TRB|TCRB|IGH|IGL|IGK|TCRA)J\\d+"), 
                                                            "unresolved"),
-                                 d_family = dplyr::if_else(stringr::str_detect(d_call, "(TRB|TCRB)D"),
-                                                           stringr::str_extract(d_call, "(TRB|TCRB)D\\d+"), 
+                                 d_family = dplyr::if_else(stringr::str_detect(d_call, "(TRB|TCRB|IGH|IGL|IGK|TCRA)D"),
+                                                           stringr::str_extract(d_call, "(TRB|TCRB|IGH|IGL|IGK|TCRA)D\\d+"), 
                                                            "unresolved"))
     clone_frame <- clone_frame %>% 
                    dplyr::group_by(junction, junction_aa, v_call, j_call, d_call, v_family, j_family, d_family, reading_frame) %>% 
