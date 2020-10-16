@@ -19,7 +19,7 @@
 #' the sequences different by a single amino acid or junction.
 #' @return Returns a tibble with the calculated clonal relatedness for each repertoire_id.
 #' @examples
-#' file_path <- system.file("extdata", "IGH_sequencing", package = "LymphoSeq")
+#' file_path <- system.file("extdata", "IGH_sequencing", package = "LymphoSeq2")
 #' 
 #' study_table <- readImmunoSeq(path = file_path)
 #' 
