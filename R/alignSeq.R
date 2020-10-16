@@ -28,7 +28,7 @@
 #' installation instructions
 #' \url{http://bioconductor.org/packages/release/bioc/vignettes/msa/inst/doc/msa.pdf}
 #' @examples
-#' file_path <- system.file("extdata", "IGH_sequencing", package = "LymphoSeq")
+#' file_path <- system.file("extdata", "IGH_sequencing", package = "LymphoSeq2")
 #' 
 #' file_list <- readImmunoSeq(path = file_path)
 #' 
