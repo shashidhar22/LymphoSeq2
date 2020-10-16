@@ -18,18 +18,18 @@
 #' @seealso An excellent resource for examples on how to reformat a ggplot can 
 #' be found in the R Graphics Cookbook online (\url{http://www.cookbook-r.com/Graphs/}).
 #' @examples
-#' file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
+#' file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
 #' 
 #' study_table <- readImmunoSeq(path = file.path)
 #' 
 #' productive_aa <- productiveSeq(study_table = study_table, aggregate = "junction_aa")
 #' 
 #' commonSeqsPlot("TRB_Unsorted_32", "TRB_Unsorted_83", 
-#'    productive.aa = productive.aa)
+#'    productive_aa = productive_aa)
 #' 
-#' # Change the X and Y axises to log-10 scale
+#' # Change the X and Y axis to log-10 scale
 #' commonSeqsPlot("TRB_Unsorted_32", "TRB_Unsorted_83", 
-#'    productive.aa = productive.aa) +
+#'    productive_aa = productive_aa) +
 #'    ggplot2::scale_x_log10() + 
 #'    ggplot2::scale_y_log10() + 
 #'    ggplot2::annotation_logticks(sides = "bl")
