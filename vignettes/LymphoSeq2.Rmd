@@ -104,7 +104,7 @@ If you are interested in just the complementarity determining region 3 (CDR3) am
 ```{r readAmino}
 aa_table <- productiveSeq(study_table = study_table, aggregate = "junction_aa", 
                           prevalence = FALSE)
-aa_table
+  aa_table
 ```
 
 Alternatively you can aggregate by `junction` to group sequences by CDR3 nucleotide sequences. This option will produce a tibble similar to the output of `readImmunoSeq`. Many of the functions within LymphoSeq2 use the results from `productiveSeq` function. Please be sure to check the function documentation.
@@ -305,10 +305,12 @@ plotTrack(ctable)
 You can track particular sequences across samples by providing an optional list of CDR3 amino acid sequences.
 
 ```{r plotCloneSet}
+ttable <- topSeqs(aa_table, top = 10)
+ctable <- cloneTrack(ttable)
 plotTrack(ctable, alist = c("CASSESAGSTGELFF", "CASSLAGDSQETQYF")) + theme(legend.position = "bottom")
 ```
 
-Alternatively you can use the function `plotTrackSingular` to retrieve a list of alluvial diagrams each tracking one single amino acid from the clone track table.
+Alternatively you can use the function `plotTrackSingular` to retrieve a list of alluvial diagrams each tracking one single amino acid from the clone track table. Considering that a plot is generated for each unique CDR3 sequence, we recommend running this feature on a clone track table derived from only the top sequences from each repertoire as described in the example above.
 
 ```{r plotSingular}
 lalluvial <- plotTrackSingular(ctable)
