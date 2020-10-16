@@ -11,14 +11,14 @@
 #' displaying their frequencies in each.
 #' @seealso \code{\link{commonSeqsVenn}}
 #' @examples
-#' file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
+#' file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
 #' 
 #' study_table <- readImmunoSeq(path = file.path)
 #' 
 #' productive_aa <- productiveSeq(study_table = study_table, aggregate = "junction_aa")
 #' 
 #' commonSeqs(repertoire_ids = c("TRB_Unsorted_0", "TRB_Unsorted_32"), 
-#'    productive_aa = productive_aa)
+#'    study_table = productive_aa)
 #' @export
 commonSeqs <- function(study_table, repertoire_ids = NULL) {
     if (base::is.null(repertoire_ids)) {
