@@ -24,18 +24,15 @@
 #' measure in samples 1 and 2, the P value, Q value (Holms adjusted P value, also knowns as 
 #' the false discovery rate), and log2 transformed fold change.
 #' @examples
-#' file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
+#' file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
 #' 
-#' file.list <- readImmunoSeq(path = file.path)
+#' study_table <- readImmunoSeq(path = file.path)
 #' 
-#' productive.aa <- productiveSeq(file.list = file.list, aggregate = "junction_aa")
+#' productive_aa <- productiveSeq(study_table = study_table, aggregate = "junction_aa")
 #' 
-#' differentialAbundance(list = productive.aa, sample1 = "TRB_Unsorted_949", 
-#'                       sample2 = "TRB_Unsorted_1320", type = "junction_aa", q = 0.01, 
-#'                       zero = 0.001)
+#' differentialAbundance(study_table = productive_aa, repertoire_ids = c("TRB_Unsorted_949", "TRB_Unsorted_1320"), 
+#'                       type = "junction_aa", q = 0.01, zero = 0.001)
 #' @export
-#' @importFrom stats p.adjust
-#' @importFrom stats fisher.test
 #' @import tidyverse
 differentialAbundance <- function(study_table, repertoire_ids = NULL, abundance = "duplicate_count", 
                                   type = "junction_aa", q = 1, zero = 1, parallel = FALSE) {

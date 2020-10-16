@@ -4,14 +4,14 @@
 #' three repertoire_ids.
 #' 
 #' @param repertoire_ids A character vector of two or three names of repertoire_ids in 
-#' productive.seqs to compare.
+#' productiveSeq table to compare.
 #' @param productive_aa A tibble of amino acid sequences generated
 #' by the LymphoSeq function productiveSeq.
 #' @return Returns a a Venn diagram of the number of common sequences between
 #' two or three repertoire_ids.
 #' @seealso \code{\link{commonSeqs}}
 #' @examples
-#' file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
+#' file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
 #' 
 #' study_table <- readImmunoSeq(path = file.path)
 #' 
@@ -26,13 +26,6 @@
 #' commonSeqsVenn(repertoire_ids = c("TRB_Unsorted_0", 
 #'    "TRB_Unsorted_32"), productive_aa = productive_aa)
 #' 
-#' # Save Venn diagram as a .png file to working directory
-#' png(filename = "Venn diagram.png", res = 300, units = "in", height = 5, width = 5)
-#' 
-#' commonSeqsVenn(repertoire_ids = c("TRB_Unsorted_0", "TRB_Unsorted_32"), 
-#'    productive_aa = productive_aa)
-#' 
-#' dev.off()
 #' @export
 commonSeqsVenn <- function(repertoire_ids, productive_aa) {
     if (base::length(repertoire_ids) > 3 | base::length(repertoire_ids) < 2) {

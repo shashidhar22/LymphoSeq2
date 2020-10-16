@@ -25,7 +25,6 @@
 #' publishedTRB database.
 #' @export
 #' @import tidyverse
-#' @import LymphoSeqDB
 searchPublished <- function(study_table) {
     study_table <- dplyr::left_join(study_table, LymphoSeq2::publishedTRB,
                                     by=c("junction_aa" = "aminoAcid"))
