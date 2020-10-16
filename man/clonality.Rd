@@ -9,15 +9,16 @@ clonality(study_table)
 \arguments{
 \item{study_table}{A tibble consisting of antigen receptor 
 sequencing imported by the LymphoSeq function readImmunoSeq. "junction_aa", "duplicate_count", 
-and "duplicate_frequency" are required columns.  "estimatedNumberGenomes" is optional.  
-Note that clonality is usually calculated from productive junction sequences.  
-Therefore, it is not recommended to run this function using a productive sequence
-list aggregated by amino acids.}
+and "duplicate_frequency" are required columns. Note that clonality is usually calculated from 
+productive junction sequences. Therefore, it is not recommended to run this function using a 
+productive sequence list aggregated by amino acids.}
 }
 \value{
 Returns a tibble giving the total number of sequences, number of 
 unique productive sequences, number of genomes, clonality, Gini coefficient, 
-and the frequency (\%) of the top productive sequence in each repertoire_id.
+and the frequency (\%) of the top productive sequence, simpson index,
+inverse simpson index, hill diversity index, chao diversity index, and kemp diversity index
+for each repertoire_id.
 }
 \description{
 Creates a tibble giving the total number of sequences, number of unique 
@@ -43,7 +44,7 @@ Both Gini coefficient and clonality are reported on a scale from 0 to 1 where
 repertoire is dominated by a single sequence.
 }
 \examples{
-file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
+file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
 
 study_table <- readImmunoSeq(path = file.path)
 

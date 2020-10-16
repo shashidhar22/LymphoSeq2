@@ -22,14 +22,14 @@ Creates a data frame of the common sequences in two or more repertoire_ids, repo
 their frequencies in each.
 }
 \examples{
-file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
+file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
 
 study_table <- readImmunoSeq(path = file.path)
 
 productive_aa <- productiveSeq(study_table = study_table, aggregate = "junction_aa")
 
 commonSeqs(repertoire_ids = c("TRB_Unsorted_0", "TRB_Unsorted_32"), 
-   productive_aa = productive_aa)
+   study_table = productive_aa)
 }
 \seealso{
 \code{\link{commonSeqsVenn}}

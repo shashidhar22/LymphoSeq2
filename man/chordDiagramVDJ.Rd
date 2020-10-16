@@ -12,7 +12,7 @@ sequences.  "v_family", "j_family", and if applicable, "d_family"
 are a required columns.  Using output from the LymphoSeq function topSeqs is
 recommended.}
 
-\item{association}{A character vector of gene familes to associate.  Options 
+\item{association}{A character vector of gene families to associate.  Options 
 include "VJ" or "DJ".}
 
 \item{colors}{A character vector of 2 colors corresponding to the V/D and J 
@@ -32,7 +32,7 @@ number of samples or number of sequences that make up that recombination
 event.  The thicker the ribbon, the higher the frequency of the recombination.
 }
 \examples{
-file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
+file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
 
 study_table <- readImmunoSeq(path = file.path)
 

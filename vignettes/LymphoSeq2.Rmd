@@ -302,6 +302,20 @@ ctable <- cloneTrack(study_table = aa_table,
 plotTrack(ctable)
 ```
 
+You can track particular sequences across samples by providing an optional list of CDR3 amino acid sequences.
+
+```{r plotCloneSet}
+plotTrack(ctable, alist = c("CASSESAGSTGELFF", "CASSLAGDSQETQYF")) + theme(legend.position = "bottom")
+```
+
+Alternatively you can use the function `plotTrackSingular` to retrieve a list of alluvial diagrams each tracking one single amino acid from the clone track table.
+
+```{r plotSingular}
+lalluvial <- plotTrackSingular(ctable)
+lalluvial[[1]]
+```
+
+
 # Comparing V(D)J gene usage
 
 To compare the V, D, and J gene usage across samples, start by creating a data frame of V, D, and J gene counts and frequencies using the function `geneFreq`. You can specify if you are interested in the “VDJ”, “DJ”, “VJ”, “DJ”, “V”, “D”, or “J” loci using the locus parameter. Set family to TRUE if you prefer the family names instead of the gene names as reported by ImmunoSeq.

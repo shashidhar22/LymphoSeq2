@@ -50,13 +50,12 @@ Use a Fisher exact test to calculate differential abdunance of each sequence in
 two samples and reports the log2 transformed fold change, P value and adjusted P value.
 }
 \examples{
-file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
+file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
 
-file.list <- readImmunoSeq(path = file.path)
+study_table <- readImmunoSeq(path = file.path)
 
-productive.aa <- productiveSeq(file.list = file.list, aggregate = "junction_aa")
+productive_aa <- productiveSeq(study_table = study_table, aggregate = "junction_aa")
 
-differentialAbundance(list = productive.aa, sample1 = "TRB_Unsorted_949", 
-                      sample2 = "TRB_Unsorted_1320", type = "junction_aa", q = 0.01, 
-                      zero = 0.001)
+differentialAbundance(study_table = productive_aa, repertoire_ids = c("TRB_Unsorted_949", "TRB_Unsorted_1320"), 
+                      type = "junction_aa", q = 0.01, zero = 0.001)
 }
