@@ -18,7 +18,7 @@
 #' @seealso An excellent resource for examples on how to reformat a ggplot can 
 #' be found in the R Graphics Cookbook online (\url{http://www.cookbook-r.com/Graphs/}).
 #' @examples
-#' file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
+#' file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
 #' 
 #' study_table <- readImmunoSeq(path = file.path)
 #' 
@@ -26,45 +26,25 @@
 #' 
 #' top_freq <- topFreq(productive_table = productive_aa, percent = 0.1)
 #' 
-#' sequence_matrix <- seqMatrix(productive_table = productive_aa, sequences = top.freq$junction_aa)
-#' 
 #' # Track clones without mapping or tracking specific sequences
-#' cloneTrack(sequence_matrix = sequence_matrix)
+#' cloneTrack(study_table = productive_aa)
 #' 
 #' # Track top 20 clones mapping to the CD4 and CD8 samples
-#' cloneTrack(sequence_matrix = sequence_matrix, productive_table =  productive_aa, 
-#'    map = c("TRB_CD4_949", "TRB_CD8_949"), label = c("CD4", "CD8"), 
-#'    track = top_freq$junction_aa[1:20], unassigned = TRUE) 
+#' cloneTrack(study_table = productive_aa, sample_list = c("TRB_CD4_949", "TRB_CD8_949"),
+#'    sequence_track = top_freq$junction_aa[1:20], unassigned = TRUE) 
 #' 
 #' # Track the top 10 clones from top.freq
-#' cloneTrack(sequence_matrix = sequence_matrix, productive_table = productive_aa, 
-#'    track = top_freq$junction_aa[1:10], unassigned = FALSE) 
+#' cloneTrack(study_table = productive_aa, sequence_track = top_freq$junction_aa[1:10], 
+#'            unassigned = FALSE) 
 #' 
 #' # Track clones mapping to the CD4 and CD8 samples while ignoring all others
-#' cloneTrack(sequence_matrix = sequence_matrix, productive_table = productive_aa, 
-#'    map = c("TRB_CD4_949", "TRB_CD8_949"), label = c("CD4", "CD8"), 
+#' cloneTrack(study_table = productive_aa, sample_list = c("TRB_CD4_949", "TRB_CD8_949"),
 #'    unassigned = FALSE) 
 #' 
 #' # Track clones mapping to the CD4 and CD8 samples and track 2 specific sequences
-#' cloneTrack(sequence_matrix = sequence_matrix, productive_table = productive_aa, 
-#'    map = c("TRB_CD4_949", "TRB_CD8_949"), label = c("CD4", "CD8"), 
-#'    track = c("CASSPPTGERDTQYF", "CASSQDRTGQYGYTF"), unassigned = FALSE)
+#' cloneTrack(study_table = productive_aa, sample_list = c("TRB_CD4_949", "TRB_CD8_949"),
+#'    sequence_track = c("CASSPPTGERDTQYF", "CASSQDRTGQYGYTF"), unassigned = FALSE)
 #' 
-#' # Reorder the x axis, change the axis labels, convert to log scale, and add title
-#' x.limits <- c("TRB_Unsorted_0", "TRB_Unsorted_32", 
-#'    "TRB_Unsorted_83", "TRB_Unsorted_949", "TRB_Unsorted_1320")
-#' 
-#' sequence.matrix <- sequence.matrix[ ,c("junction_aa", x.limits)]
-#'    
-#' clone.track <- cloneTrack(sequence.matrix = sequence.matrix, 
-#'    productive.aa = productive.aa, track = top.freq$junction_aa[1:10], unassigned = FALSE) 
-#' 
-#' x.labels <- c("Day 0", "Day 32", "Day 83", "Day 949", "Day 1320")
-#' 
-#' clone.track + 
-#'    ggplot2::scale_x_discrete(expand = c(0,0), labels = x.labels) + 
-#'    ggplot2::scale_y_log10() + ggplot2::annotation_logticks(sides = "l") + 
-#'    ggplot2::ggtitle("Figure Title")
 #' @export
 cloneTrack <- function(study_table, sample_list = NULL, sequence_track = NULL, 
                        unassigned = TRUE) {
