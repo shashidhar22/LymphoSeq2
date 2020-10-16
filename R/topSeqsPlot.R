@@ -55,7 +55,6 @@ topSeqsPlot <- function(study_table, top = 10) {
                dplyr::arrange(repertoire_id, Sequence, desc(Frequency)) %>%
                dplyr::mutate(Frequency = Frequency *  100)
     getPalette <- grDevices::colorRampPalette(RColorBrewer::brewer.pal(11, "Spectral"))
-    print(dominant)  
     sample_order <- subdominant %>%
                     dplyr::arrange(Frequency) %>% 
                     dplyr::select(repertoire_id) %>% 
