@@ -39,7 +39,6 @@
 #' @seealso \code{\link{lorenzCurve}}
 #' @export
 #' @importFrom ineq Gini
-#' @import breakaway plyr reshape jsonlite httr vegan 
 clonality <- function(study_table) {
     study_table <- study_table %>% 
                    dplyr::group_by(repertoire_id) %>% 
