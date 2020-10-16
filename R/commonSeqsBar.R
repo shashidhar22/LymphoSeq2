@@ -21,16 +21,15 @@
 #' @return Returns an UpSetR bar plot showing the number of intersecting sequences 
 #' across multiple repertoire_ids.
 #' @examples
-#' file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
+#' file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
 #' 
-#' file.list <- readImmunoSeq(path = file.path)
+#' study_table <- readImmunoSeq(path = file.path)
 #' 
-#' productive.aa <- productiveSeq(file.list = file.list, aggregate = "junction_aa")
+#' productive_aa <- productiveSeq(file.list = file.list, aggregate = "junction_aa")
 #' 
-#' commonSeqsBar(productive.aa = productive.aa, repertoire_ids = c("TRB_CD4_949", "TRB_CD8_949", 
-#' "TRB_Unsorted_949", "TRB_Unsorted_1320"), color.repertoire_id = "TRB_CD8_949")
+#' commonSeqsBar(productive_aa = productive_aa, repertoire_ids = c("TRB_CD4_949", "TRB_CD8_949", 
+#' "TRB_Unsorted_949", "TRB_Unsorted_1320"), color_sample = "TRB_CD8_949")
 #' @export
-#' @import UpSetR
 #' @import tidyverse
 commonSeqsBar <- function(productive_aa, repertoire_ids, color_sample = NULL , 
                          color_intersection = NULL, color = "#377eb8", labels = "no"){
