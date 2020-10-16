@@ -7,7 +7,7 @@
 #' sequences.  "v_family", "j_family", and if applicable, "d_family" 
 #' are a required columns.  Using output from the LymphoSeq function topSeqs is
 #' recommended.
-#' @param association A character vector of gene familes to associate.  Options 
+#' @param association A character vector of gene families to associate.  Options 
 #' include "VJ" or "DJ".
 #' @param colors A character vector of 2 colors corresponding to the V/D and J 
 #' gene colors respectively.
@@ -18,7 +18,7 @@
 #' more samples.
 #' @seealso \code{\link{topSeqs}}
 #' @examples
-#' file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
+#' file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
 #' 
 #' study_table <- readImmunoSeq(path = file.path)
 #' 
