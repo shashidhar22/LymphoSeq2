@@ -9,7 +9,7 @@
 #' @details The plot is made using the package ggplot2 and can be reformatted
 #' using ggplot2 functions.  See examples below.
 #' @export
-plotTrack <- function(clone_table, alist = NULL) {
+plotTrack <- function(clone_table, alist = NULL, apal = NULL) {
   set.seed(12345)
   # Identify all common sequences across samples
   acommon <- clone_table %>% 
@@ -26,7 +26,9 @@ plotTrack <- function(clone_table, alist = NULL) {
                   dplyr::ungroup()
   #print(sample_table)
   if (!is.null(alist)) {
-    apal <- randomcoloR::distinctColorPalette(length(alist))
+    if (is.null(apal)) {
+      apal <- randomcoloR::distinctColorPalette(length(alist))
+    } 
     names(apal) <- alist
     clone_table <- clone_table %>% 
                    mutate(filler = if_else(junction_aa %in% alist, apal[junction_aa], "grey"))

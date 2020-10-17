@@ -4,7 +4,7 @@
 \alias{plotTrack}
 \title{Plot clone}
 \usage{
-plotTrack(clone_table, alist = NULL)
+plotTrack(clone_table, alist = NULL, apal = NULL)
 }
 \arguments{
 \item{clone_table}{A tibble of productive amino acid sequences 
