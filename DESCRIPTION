@@ -15,6 +15,7 @@ Imports: Biostrings,
          ggalluvial,
          ggtree,
          grid,
+         randomcolorR
          ineq,
          iNEXT,
          msa,
