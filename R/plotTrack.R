@@ -27,7 +27,8 @@ plotTrack <- function(clone_table, alist = NULL, apal = NULL) {
   #print(sample_table)
   if (!is.null(alist)) {
     if (is.null(apal)) {
-      apal <- randomcoloR::distinctColorPalette(length(alist))
+      pal <- grDevices::colorRampPalette(c("red", "yellow"))
+      apal <- pal(length(alist))
     } 
     names(apal) <- alist
     clone_table <- clone_table %>% 
