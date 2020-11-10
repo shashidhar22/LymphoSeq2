@@ -66,8 +66,13 @@ aggreateSeq <- function(study_table, aggregate, prevalence, progress_bar) {
     if (aggregate == "junction") {
         study_table <- study_table %>% 
                        dplyr::filter(reading_frame == "in-frame") %>% 
+                       dplyr::mutate(vdj_comb_call = stringr::str_glue("{v_call};{j_call};{d_call}"),
+                                     vdj_comb_family = stringr::str_glue("{v_family};{j_family};{d_family}")) %>%
+                       dplyr::group_by(junction, vdj_comb_call) %>%
+                       dplyr::mutate(vdj_comb_count = sum(duplicate_count)) %>%
+                       dplyr::ungroup() %>% 
                        dplyr::group_by(junction) %>% 
-                       dplyr::arrange(desc(duplicate_count)) %>% 
+                       dplyr::arrange(desc(duplicate_count), desc(vdj_comb_count)) %>% 
                        dplyr::summarize(repertoire_id = dplyr::first(repertoire_id),
                                         junction_aa = dplyr::first(junction_aa), 
                                         duplicate_count = base::sum(duplicate_count), 
@@ -85,8 +90,13 @@ aggreateSeq <- function(study_table, aggregate, prevalence, progress_bar) {
     }  else if (aggregate == "junction_aa") {
         study_table <- study_table  %>% 
                        dplyr::filter(reading_frame == "in-frame") %>% 
+                       dplyr::mutate(vdj_comb_call = stringr::str_glue("{v_call};{j_call};{d_call}"),
+                                     vdj_comb_family = stringr::str_glue("{v_family};{j_family};{d_family}")) %>%
+                       dplyr::group_by(junction_aa, vdj_comb_call) %>%
+                       dplyr::mutate(vdj_comb_count = sum(duplicate_count)) %>%
+                       dplyr::ungroup() %>%
                        dplyr::group_by(junction_aa) %>% 
-                       dplyr::arrange(desc(duplicate_count)) %>% 
+                       dplyr::arrange(desc(duplicate_count), desc(vdj_comb_count)) %>% 
                        dplyr::summarize(repertoire_id = dplyr::first(repertoire_id),
                                         duplicate_count = base::sum(duplicate_count), 
                                         v_call = dplyr::first(v_call), 
