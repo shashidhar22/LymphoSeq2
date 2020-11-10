@@ -86,27 +86,32 @@ getFileType <- function(clone_file) {
     
     type3 <- c("nucleotide", "aminoAcid", "count (templates)", 
                "frequencyCount (%)", "vGeneName", "dGeneName", "jGeneName", 
-               "vFamilyName", "dFamilyName", "jFamilyName", "sequenceStatus", 
+               "vMaxResolved", "dMaxResolved", "jMaxResolved", "sequenceStatus", 
                "estimatedNumberGenomes")
+    
+    type4 <- c("nucleotide", "aminoAcid", "count (templates)", 
+               "frequencyCount (%)", "vGeneName", "dGeneName", "jGeneName", 
+               "vFamilyName", "dFamilyName", "jFamilyName", "sequenceStatus", 
+                "estimatedNumberGenomes")
 
-    type4 <- c("nucleotide", "aminoAcid", "count", "frequencyCount", 
+    type5 <- c("nucleotide", "aminoAcid", "count", "frequencyCount", 
                "vGeneName", "dGeneName", "jGeneName", "vFamilyName", 
                "dFamilyName", "jFamilyName", "sequenceStatus", 
                "estimatedNumberGenomes")
     
-    type5 <- c("nucleotide.CDR3.in.lowercase.", "aminoAcid.CDR3.in.lowercase.", 
+    type6 <- c("nucleotide.CDR3.in.lowercase.", "aminoAcid.CDR3.in.lowercase.", 
                "cloneCount", "clonefrequency....", "vGene", "dGene", "jGene", 
                "fuction")
 
-    type6 <- c("nucleotide(CDR3 in lowercase)", "aminoAcid(CDR3 in lowercase)", 
+    type7 <- c("nucleotide(CDR3 in lowercase)", "aminoAcid(CDR3 in lowercase)", 
                "cloneCount", "clonefrequency (%)", "vGene", "dGene", "jGene", 
                "fuction")
     
-    type7 <- c("cloneCount", "cloneFraction", "allVHitsWithScore", 
+    type8 <- c("cloneCount", "cloneFraction", "allVHitsWithScore", 
                "allDHitsWithScore", "allJHitsWithScore", "nSeqCDR3", 
                "aaSeqCDR3")
 
-    type8 <- c("duplicate_count", "v_call", "d_call", "j_call", "junction", 
+    type9 <- c("duplicate_count", "v_call", "d_call", "j_call", "junction", 
                "junction_aa")
 
     columns <- invisible(colnames(readr::read_tsv(clone_file, 
@@ -131,21 +136,29 @@ getFileType <- function(clone_file) {
     } else if (all(type3 %in% columns)) {
         file_type <- "type3"
         header_list <- readr::cols_only(nucleotide = "c", 
-                                        aminoAcid = "c", 
-                                        `count (templates)` = "i", 
-                                        vGeneName = "c", 
-                                        dGeneName = "c", 
-                                        jGeneName = "c")
+                                       aminoAcid = "c", 
+                                       `count (templates)` = "i", 
+                                       vMaxResolved = "c", 
+                                       dMaxResolved = "c", 
+                                       jMaxResolved = "c")
     } else if (all(type4 %in% columns)) {
         file_type <- "type4"
+        header_list <- readr::cols_only(nucleotide = "c", 
+                                        aminoAcid = "c", 
+                                        `count (templates)` = "i", 
+                                        vFamilyName = "c", 
+                                        dGeneName = "c", 
+                                        jGeneAllele = "c")
+    } else if (all(type5 %in% columns)) {
+        file_type <- "type5"
         header_list <- readr::cols_only(nucleotide = "c", 
                                         aminoAcid = "c", 
                                         `count` = "i", 
                                         vGeneName = "c", 
                                         dGeneName = "c", 
                                         jGeneName = "c")
-    } else if (all(type5 %in% columns)) {
-        file_type <- "type5"
+    } else if (all(type6 %in% columns)) {
+        file_type <- "type6"
         header_list <- readr::cols_only(`nucleotide.CDR3.in.lowercase.` = "c", 
                                         `aminoAcid.CDR3.in.lowercase.` = "c", 
                                         cloneCount = "i", 
@@ -153,8 +166,8 @@ getFileType <- function(clone_file) {
                                         vGene = "c", 
                                         dGene = "c", 
                                         jGene = "c")
-    } else if (all(type6 %in% columns)) {
-        file_type <- "type6"
+    } else if (all(type7 %in% columns)) {
+        file_type <- "type7"
         header_list <- readr::cols_only(`nucleotide(CDR3 in lowercase)` = "c", 
                                         `aminoAcid(CDR3 in lowercase)` = "c", 
                                         cloneCount = "i", 
@@ -162,8 +175,8 @@ getFileType <- function(clone_file) {
                                         vGene = "c", 
                                         dGene = "c", 
                                         jGene = "c")
-    } else if (all(type7 %in% columns)) {
-        file_type <- "type7"
+    } else if (all(type8 %in% columns)) {
+        file_type <- "type8"
         header_list <- readr::cols_only(cloneCount = 'd', 
                                         cloneFraction = 'd', 
                                         allVHitsWithScore = 'c', 
@@ -171,8 +184,8 @@ getFileType <- function(clone_file) {
                                         allJHitsWithScore = 'c', 
                                         nSeqCDR3 = 'c', 
                                         aaSeqCDR3 = 'c')
-    } else if (all(type8 %in% columns)) {
-        file_type <- "type8"
+    } else if (all(type9 %in% columns)) {
+        file_type <- "type9"
         header_list <- readr::cols_only(duplicate_count = 'd', 
                                         v_call = 'c', 
                                         d_call = 'c', 
@@ -201,29 +214,35 @@ getStandard <- function(file_type) {
     type2 <- c(junction = "nucleotide", junction_aa = "aminoAcid", 
                duplicate_count = "count (templates/reads)",
                v_call = "vGeneName", d_call = "dGeneName", j_call = "jGeneName")
-
+    
     type3 <- c(junction = "nucleotide", junction_aa = "aminoAcid", 
                duplicate_count = "count (templates)", 
-               v_call = "vGeneName", d_call = "dGeneName", j_call = "jGeneName")
+               v_call = "vMaxResolved", d_call = "dMaxResolved", j_call = "jMaxResolved")
+    
 
     type4 <- c(junction = "nucleotide", junction_aa = "aminoAcid", 
+               duplicate_count = "count (templates)", 
+               v_call = "vFamilyName", d_call = "dGeneName", j_call = "jGeneAllele")
+
+    type5 <- c(junction = "nucleotide", junction_aa = "aminoAcid", 
                duplicate_count = "count", v_call = "vGeneName", d_call = "dGeneName", 
                j_call = "jGeneName")
 
-    type5 <- c(junction = "nucleotide.CDR3.in.lowercase.", junction_aa = "aminoAcid.CDR3.in.lowercase.", 
+    type6 <- c(junction = "nucleotide.CDR3.in.lowercase.", junction_aa = "aminoAcid.CDR3.in.lowercase.", 
                duplicate_count = "cloneCount", v_call = "vGene", d_call = "dGene", j_call = "jGene")   
     
-    type6 <- c(junction = "nucleotide(CDR3 in lowercase)", junction_aa = "aminoAcid(CDR3 in lowercase)", 
+    type7 <- c(junction = "nucleotide(CDR3 in lowercase)", junction_aa = "aminoAcid(CDR3 in lowercase)", 
                duplicate_count = "cloneCount", v_call = "vGene", d_call = "dGene", j_call = "jGene")   
     
-    type7 <- c(junction = "nSeqCDR3", junction_aa = "aaSeqCDR3", duplicate_count = "cloneCount",
+    type8 <- c(junction = "nSeqCDR3", junction_aa = "aaSeqCDR3", duplicate_count = "cloneCount",
                v_call = "allVHitsWithScore", j_call = "allJHitsWithScore", d_call = "allDHitsWithScore")
 
-    type8 <- c(junction = "junction", junction_aa = "junction_aa", duplicate_count = "duplicate_count",
+    type9 <- c(junction = "junction", junction_aa = "junction_aa", duplicate_count = "duplicate_count",
                v_call = "v_call", j_call = "j_call", d_call = "d_call")
 
     type_hash <- list("type1"=type1, "type2"=type2, "type3"=type3, "type4"=type4,
-                      "type5"=type5, "type6"=type6, "type7"=type7, "type8"=type8)
+                      "type5"=type5, "type6"=type6, "type7"=type7, "type8"=type8,
+                      "type9"=type9)
     return(type_hash[[file_type]])
 }
 
@@ -247,12 +266,12 @@ readFiles <- function(clone_file, progress_bar) {
     options(readr.show_progress = FALSE)
     clone_frame <- readr::read_tsv(clone_file, 
                                    col_types = col_old,
-                                   na = c("", "NA", "Nan", "NaN"), 
-                                   trim_ws = TRUE)
+                                   na = c("", "NA", "Nan", "NaN", " "), 
+                                   trim_ws = FALSE)
     clone_frame <- clone_frame %>% 
                    dplyr::rename(!!!col_std)
     clone_frame <- clone_frame %>% 
-                   dplyr::mutate(reading_frame = dplyr::if_else(stringr::str_detect(junction_aa, "\\*"), 
+                   dplyr::mutate(reading_frame = dplyr::if_else(stringr::str_detect(junction_aa, "\\*") | is.na(junction_aa), 
                                                                 "out-of-frame", 
                                                                 "in-frame"),
                                  junction = dplyr::if_else(stringr::str_detect(junction, "[acgt]+"), 
@@ -271,8 +290,8 @@ readFiles <- function(clone_file, progress_bar) {
                                  j_call = dplyr::if_else(stringr::str_detect(j_call, "(TRB|TCRB|IGH|IGL|IGK|TCRA)J\\d+-\\d+\\*\\d+"),
                                                          stringr::str_extract(j_call, "(TRB|TCRB|IGH|IGL|IGK|TCRA)J\\d+-\\d+\\*\\d+"), 
                                                          j_call),
-                                 d_call = dplyr::if_else(stringr::str_detect(d_call, "(TRB|TCRB|IGH|IGL|IGK|TCRA)D\\d+\\*\\d+"),
-                                                         stringr::str_extract(d_call, "(TRB|TCRB|IGH|IGL|IGK|TCRA)D\\d+\\*\\d+"), 
+                                 d_call = dplyr::if_else(stringr::str_detect(d_call, "(TRB|TCRB|IGH|IGL|IGK|TCRA)D\\d+-?\\d+\\*\\d+"),
+                                                         stringr::str_extract(d_call, "(TRB|TCRB|IGH|IGL|IGK|TCRA)D\\d+-?\\d+\\*\\d+"), 
                                                          d_call))
     clone_frame <- clone_frame %>%
                    dplyr::mutate(v_family = dplyr::if_else(stringr::str_detect(v_call, "(TRB|TCRB|IGH|IGL|IGK|TCRA)V"),
