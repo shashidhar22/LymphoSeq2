@@ -70,8 +70,6 @@ summarySeq <- function(study_table) {
     chao_estimate <- breakaway::chao1(counts)$estimate
     kemp_estimate <- breakaway::kemp(counts)$estimate
     hill_estimate <- breakaway::true_hill(frequency, q = 0)
-    breakaway <- breakaway::breakaway(counts)$estimate
-    model <- base::paste(breakaway::breakaway(counts)$model, "breakaway", sep = "_")
     study_summary <- tibble::tibble(repertoire_id = study_table$repertoire_id[1], 
                                     total_sequences = base::nrow(study_table), 
                                     unique_productive_sequences = base::nrow(productive),
