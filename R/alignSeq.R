@@ -96,14 +96,14 @@ alignSeq = function(study_table, repertoire_ids = NULL,
     #and create a DNA/AAStringSet with this
     if(type == "junction"){
         search_table <- search_table %>% 
-                        dplyr::filter(nchar(junction) > 15)
+                        dplyr::filter(base::nchar(junction) > 15)
         string_list <- search_table %>% 
                        dplyr::pull(junction) %>%
                        Biostrings::DNAStringSet()
     }
     if(type == "junction_aa"){
         search_table <- search_table %>% 
-                        dplyr::filter(nchar(junction_aa) > 3)
+                        dplyr::filter(base::nchar(junction_aa) > 3)
         string_list <- search_table %>% 
                        dplyr::pull(junction_aa) %>%
                        Biostrings::AAStringSet()

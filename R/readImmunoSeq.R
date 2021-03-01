@@ -303,12 +303,13 @@ readFiles <- function(clone_file, progress_bar) {
                                  d_family = dplyr::if_else(stringr::str_detect(d_call, "(TRB|TCRB|IGH|IGL|IGK|TCRA)D"),
                                                            stringr::str_extract(d_call, "(TRB|TCRB|IGH|IGL|IGK|TCRA)D\\d+"), 
                                                            "unresolved"))
+    rep_col <- c(repertoire_id = file_names)
     clone_frame <- clone_frame %>% 
                    dplyr::group_by(junction, junction_aa, v_call, j_call, d_call, v_family, j_family, d_family, reading_frame) %>% 
                    dplyr::summarize(duplicate_count = sum(duplicate_count)) %>% 
                    dplyr::ungroup() %>%
-                   dplyr::mutate(repertoire_id = file_names,
-                                 duplicate_frequency = duplicate_count/sum(duplicate_count)) %>%
+                   tibble::add_column(!!!rep_col[!names(rep_col) %in% names(.)]) %>%
+                   dplyr::mutate(duplicate_frequency = duplicate_count/sum(duplicate_count)) %>%
                    dplyr::select(repertoire_id, everything())
                  
     return(clone_frame)
