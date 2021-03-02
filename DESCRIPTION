@@ -10,6 +10,8 @@ Description: This R package analyzes high-throughput sequencing of T
         exported from the ImmunoSEQ analyzer.
 Depends: R (>= 3.3)
 Imports: Biostrings,
+         phyloseq,
+         breakaway, 
          circlize,
          ggplot2,
          ggalluvial,
@@ -28,17 +30,21 @@ Imports: Biostrings,
          UpSetR,
          utils,
          VennDiagram, 
-         pheatmap,
-         wordcloud,
-         reshape
-Remotes: adw96/breakaway
+         pheatmap
+Remotes: shashidhar22/breakaway
 License: Artistic-2.0
 LazyData: true
 RoxygenNote: 7.1.1
 Suggests: 
     knitr,
     rmarkdown,
-    testthat
+    testthat,
+    httr,
+    jsonlite,
+    plyr,
+    vegan,
+    reshape,
+    wordcloud
 VignetteBuilder: knitr
 biocViews: Software, 
            Technology, 
