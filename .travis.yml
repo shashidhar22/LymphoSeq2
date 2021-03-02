@@ -1,17 +1,6 @@
-matrix:
-  include:
-    - r: 3.2
-    - r: 3.3
-    - r: 3.4
-    - r: 3.5
-    - r: release
-      before_cache: Rscript -e 'remotes::install_cran("pkgdown")'
-      deploy:
-        provider: script
-        script: Rscript -e 'pkgdown::deploy_site_github()'
-        skip_cleanup: tru
-    - r: devel
-    - os: osx
-      osx_image: xcode9.3 #High Sierra
-    - os: osx
-      osx_image: xcode8.3 #Sierra
+language: r
+before_cache: Rscript -e 'remotes::install_cran("pkgdown")'
+deploy:
+  provider: script
+  script: Rscript -e 'pkgdown::deploy_site_github()'
+  skip_cleanup: true
