@@ -2,15 +2,10 @@ language: r
 before_cache: Rscript -e 'remotes::install_cran("pkgdown")'
 #cache: packages
 cache:
-  directories:
-    - $TRAVIS_BUILD_DIR/packrat/src
-    - $TRAVIS_BUILD_DIR/packrat/lib
   packages: true
 warnings_are_errors: false
 install: 
   - travis_wait 30
-  - R -e "0" --args --bootstrap-packrat
-  - R -e "packrat::restore(restart = FALSE)"
 r:
   - oldrel
   - release
