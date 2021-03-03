@@ -32,7 +32,6 @@
 #' @import ggplot2
 #' @import tidyverse
 #' @importFrom RColorBrewer brewer.pal
-#' @importFrom plyr llply
 topSeqsPlot <- function(study_table, top = 10) {
     dominant <- study_table %>% 
                 dplyr::group_by(repertoire_id) %>% 
