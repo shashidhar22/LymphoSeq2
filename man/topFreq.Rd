@@ -4,10 +4,10 @@
 \alias{topFreq}
 \title{Top frequencies}
 \usage{
-topFreq(productive_table, percent = 0.1)
+topFreq(productive_table, frequency = 0.1)
 }
 \arguments{
-\item{percent}{The minimum \% frequency that the sequence appears in any of 
+\item{frequency}{The minimum frequency that the sequence appears in any of 
 the listed samples.}
 
 \item{productive_aa}{A tibble of productive amino acid sequences 
