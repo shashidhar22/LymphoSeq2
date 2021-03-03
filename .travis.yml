@@ -1,5 +1,6 @@
 language: r
 cache: packages
+sudo: true
 before_cache: Rscript -e 'remotes::install_cran("pkgdown")'
 warnings_are_errors: false
 r_github_packages: adw96/breakaway
