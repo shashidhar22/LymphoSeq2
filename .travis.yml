@@ -1,7 +1,6 @@
 language: r
 before_install: R -q -e 'install.packages(c("remotes", "curl", "knitr", "rmarkdown"))'
 before_cache: Rscript -e 'remotes::install_cran("pkgdown")'
-cache: packages
 warnings_are_errors: false
 install: 
   - travis_wait 30
