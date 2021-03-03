@@ -30,7 +30,8 @@ Imports: Biostrings,
          UpSetR,
          utils,
          VennDiagram, 
-         pheatmap
+         pheatmap,
+         LymphoSeqDB
 Remotes: shashidhar22/breakaway
 License: Artistic-2.0
 LazyData: true
@@ -53,6 +54,7 @@ biocViews: Software,
            Alignment, 
            MultipleSequenceAlignment, 
            msa, 
-           phyloseq
+           phyloseq,
+           LymphoSeqDB
 NeedsCompilation: no
 Encoding: UTF-8
