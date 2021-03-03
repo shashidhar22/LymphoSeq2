@@ -39,7 +39,8 @@ Imports: Biostrings,
          knitr,
          rmarkdown,
          testthat,
-         wordcloud
+         wordcloud,
+         packrat
 Remotes: shashidhar22/breakaway
 License: Artistic-2.0
 LazyData: true
