@@ -41,7 +41,7 @@
 #' @importFrom Biostrings AAStringSet
 #' @import msa
 #' @import tidyverse
-alignSeq = function(study_table, repertoire_ids = NULL, 
+alignSeq <- function(study_table, repertoire_ids = NULL, 
                     sequence_list = NULL, edit_distance = 15, 
                     type = "junction", method = "ClustalOmega", 
                     top = 150) {
