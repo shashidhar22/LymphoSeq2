@@ -32,12 +32,8 @@
 #' prevalenceTRB and publishedTRB database.
 #' @export
 topFreq <- function(productive_table, percent = 0.1) {
-    top_aa <- productive_table %>%  
-              dplyr::arrange(desc(duplicate_frequency)) %>% 
-              dplyr::top_frac(percent, wt=duplicate_frequency) %>% 
-              purrr::as_vector()
-    top_freq <- productive_table %>% 
-                dplyr::filter(junction_aa %in% top_aa) %>%
+    top_freq <- productive_table %>%
+                dplyr::filter(duplicate_frequency >= percent) %>%
                 dplyr::group_by(junction_aa) %>%
                 dplyr::summarise(minFrequency = min(duplicate_frequency),
                                  maxFrequency = max(duplicate_frequency),
