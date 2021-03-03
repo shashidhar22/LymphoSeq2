@@ -1,8 +1,11 @@
 language: r
 before_cache: Rscript -e 'remotes::install_cran("pkgdown")'
-cache: packages
+#cache: packages
 warnings_are_errors: false
-install: travis_wait 30
+install: 
+  - travis_wait 30
+  - R -e "0" --args --bootstrap-packrat
+  - R -e "packrat::restore(restart = FALSE)"
 r:
   - oldrel
   - release
