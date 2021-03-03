@@ -4,7 +4,7 @@ sudo: true
 before_cache: Rscript -e 'remotes::install_cran("pkgdown")'
 warnings_are_errors: false
 r_github_packages: adw96/breakaway
-r_packages: remotes, knitr, rmarkdown
+r_packages: knitr, rmarkdown
 bioc_packages: Biostrings, phyloseq, ggtree, iNEXT, msa, LymphoSeqDB, vegan 
 #install: travis_wait 30
 notifications:
