@@ -1,6 +1,23 @@
 language: r
 before_cache: Rscript -e 'remotes::install_cran("pkgdown")'
+cache: packages
+warnings_are_errors: false
+r:
+  - oldrel
+  - release
+  - devel
+notifications:
+  email:
+    on_success: change
+    on_failure: change
 deploy:
   provider: script
   script: Rscript -e 'pkgdown::deploy_site_github()'
   skip_cleanup: true
+  # environment variables set for all builds
+env:
+  global:
+    - BIOC_USE_DEVEL="FALSE"  ## Use the current release version
+
+# we need to install BiocInstaller for testing Bioconductor packages
+#bioc_required: true
