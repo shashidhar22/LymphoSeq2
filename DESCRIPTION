@@ -31,21 +31,19 @@ Imports: Biostrings,
          utils,
          VennDiagram, 
          pheatmap,
-         LymphoSeqDB
+         LymphoSeqDB,
+         httr,
+         jsonlite,
+         reshape,
+         vegan
 Remotes: shashidhar22/breakaway
 License: Artistic-2.0
 LazyData: true
 RoxygenNote: 7.1.1
-Suggests: 
-    knitr,
-    rmarkdown,
-    testthat,
-    httr,
-    jsonlite,
-    plyr,
-    vegan,
-    reshape,
-    wordcloud
+Suggests: knitr,
+          rmarkdown,
+          testthat,
+          wordcloud
 VignetteBuilder: knitr
 biocViews: Software, 
            Technology, 
@@ -54,6 +52,7 @@ biocViews: Software,
            Alignment, 
            MultipleSequenceAlignment, 
            msa, 
+           vegan,
            phyloseq,
            LymphoSeqDB
 NeedsCompilation: no
