@@ -33,7 +33,7 @@
 #' @export
 topFreq <- function(productive_table, frequency = 0.1) {
     top_freq <- productive_table %>%
-                dplyr::filter(duplicate_frequency >= percent) %>%
+                dplyr::filter(duplicate_frequency >= frequency) %>%
                 dplyr::group_by(junction_aa) %>%
                 dplyr::summarise(minFrequency = min(duplicate_frequency),
                                  maxFrequency = max(duplicate_frequency),
