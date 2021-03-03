@@ -9,7 +9,7 @@
 #' @param productive_aa A tibble of productive amino acid sequences 
 #' imported using the function LymphoSeq function productiveSeq where the 
 #' aggregate parameter was set to "junction_aa".  
-#' @param percent The minimum \% frequency that the sequence appears in any of 
+#' @param frequency The minimum frequency that the sequence appears in any of 
 #' the listed samples.
 #' @return A data frame of amino acid sequences and the number of samples that 
 #' the sequence appears in along with the minimum, maximum, and mean frequency 
@@ -31,7 +31,7 @@
 #' @seealso Refer to the LymphoSeqDB package for details regarding the 
 #' prevalenceTRB and publishedTRB database.
 #' @export
-topFreq <- function(productive_table, percent = 0.1) {
+topFreq <- function(productive_table, frequency = 0.1) {
     top_freq <- productive_table %>%
                 dplyr::filter(duplicate_frequency >= percent) %>%
                 dplyr::group_by(junction_aa) %>%
