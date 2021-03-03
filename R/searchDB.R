@@ -20,10 +20,8 @@
 #' 
 #' top_seqs <- topSeqs(productive_table = productive_aa, top = 1)
 #' searchDB(list = top_seqs, db="Adaptive")
-#' @seealso Refer to the LymphoSeqDB package for details regarding the 
-#' publishedTRB database.
 #' @export
-#' @import tidyverse httr jsonlite LymphoSeqDB
+#' @import tidyverse httr jsonlite 
 searchDB <- function(study_table, credential) {
     study_table <- study_table %>% 
                    filter(!is.na(aminoAcid)) %>%

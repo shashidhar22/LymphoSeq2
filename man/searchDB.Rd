@@ -32,7 +32,3 @@ productive_aa <- productiveSeq(study_table = study_table, aggregate = "aminoAcid
 top_seqs <- topSeqs(productive_table = productive_aa, top = 1)
 searchDB(list = top_seqs, db="Adaptive")
 }
-\seealso{
-Refer to the LymphoSeqDB package for details regarding the 
-publishedTRB database.
-}
