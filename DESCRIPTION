@@ -35,15 +35,15 @@ Imports: Biostrings,
          httr,
          jsonlite,
          reshape,
-         vegan
+         vegan,
+         knitr,
+         rmarkdown,
+         testthat,
+         wordcloud
 Remotes: shashidhar22/breakaway
 License: Artistic-2.0
 LazyData: true
 RoxygenNote: 7.1.1
-Suggests: knitr,
-          rmarkdown,
-          testthat,
-          wordcloud
 VignetteBuilder: knitr
 biocViews: Software, 
            Technology, 
