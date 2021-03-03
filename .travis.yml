@@ -2,6 +2,7 @@ language: r
 before_cache: Rscript -e 'remotes::install_cran("pkgdown")'
 cache: packages
 warnings_are_errors: false
+install: travis_wait 30
 r:
   - oldrel
   - release
