@@ -281,7 +281,7 @@ sequence_matrix
 If just the top clones with a frequency greater than a specified amount are of interest to you, then use the `topFreq` function. This creates a tibble of the top productive amino acid sequences having a minimum specified frequency and reports the minimum, maximum, and mean frequency that the sequence appears in a list of samples. For TCRB sequences, the prevalence (%) and the published antigen specificity of that sequence are also provided.
 
 ```{r topFreq}
-top_freq <- topFreq(productive_table = aa_table, percent = 0.1)
+top_freq <- topFreq(productive_table = aa_table, frequency = 0.001)
 top_freq
 ```
 
