@@ -1,10 +1,12 @@
 language: r
+cache: packages
 before_cache: Rscript -e 'remotes::install_cran("pkgdown")'
 warnings_are_errors: false
 r_github_packages: adw96/breakaway
-r_packages: remotes, curl, knitr, rmarkdown, tidyverse, circlize, ggalluvial, randomcoloR, ineq, phangorn, RColorBrewer, stringdist, UpSetR, VennDiagram, pheatmap, httr, reshape, testthat, wordcloud
+r_binary_packages: knitr, rmarkdown
+r_packages: remotes, curl, tidyverse, circlize, ggalluvial, randomcoloR, ineq, phangorn, RColorBrewer, stringdist, UpSetR, VennDiagram, pheatmap, httr, reshape, testthat, wordcloud
 bioc_packages: Biostrings, phyloseq, ggtree, iNEXT, msa, LymphoSeqDB, vegan 
-install: travis_wait 30
+#install: travis_wait 30
 notifications:
   email:
     on_success: change
