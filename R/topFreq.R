@@ -18,8 +18,7 @@
 #' \% prevalence that the sequence appears in 55 healthy donor blood samples.  
 #' Also provided is the antigen specificity of that sequence if known by 
 #' comparing it to a database of previously reported sequences in the 
-#' literature.  The prevalenceTRB and publishedTRB databases are located in a 
-#' separate package called LymphoSeqDB that should be loaded automatically.
+#' literature. 
 #' @examples
 #' file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
 #' 
@@ -28,8 +27,6 @@
 #' productive_aaa <- productiveSeq(study_table = study_table, aggregate = "junction_aa")
 #' 
 #' top_freq <- topFreq(productive_table = productive_aa, percent = 0.1)
-#' @seealso Refer to the LymphoSeqDB package for details regarding the 
-#' prevalenceTRB and publishedTRB database.
 #' @export
 topFreq <- function(productive_table, frequency = 0.1) {
     top_freq <- productive_table %>%
