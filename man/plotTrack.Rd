@@ -23,7 +23,7 @@ The plot is made using the package ggplot2 and can be reformatted
 using ggplot2 functions.  See examples below.
 }
 \examples{
-file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
+file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
 stable <- LymphoSeq2::readImmunoSeq(path = file_path)
 atable <- LymphoSeq2::productiveSeq(stable, aggregate = "junction_aa")
 ctable <- LymphoSeq2::cloneTrack(study_table = atable,

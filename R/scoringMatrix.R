@@ -14,7 +14,7 @@
 #' value ranges from 0 to 1 where 1 indicates the sequence frequencies are 
 #' identical in the two samples and 0 indicates no shared frequencies.
 #' @examples
-#' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
+#' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
 #' stable <- readImmunoSeq(path = file_path)
 #' atable <- productiveSeq(stable, aggregate = "junction_aa")
 #' bhattacharyya_matrix <- scoringMatrix(productive_table = atable, 
@@ -65,13 +65,13 @@ scoringMatrix <- function(productive_table, mode="Bhattacharyya") {
 #' @return A tibble with one row and three columns sample1, sample2, bhattacharyyaCoefficient
 #'
 #' @examples
-#' file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
+#' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
 #' 
-#' study_table <- readImmunoSeq(path = file.path)
+#' stable <- readImmunoSeq(path = file_path)
 #' 
-#' productive.aa <- productiveSeq(study_table, aggregate = "junction_aa")
+#' atable <- productiveSeq(stable, aggregate = "junction_aa")
 #' 
-#' sample_list <- productive.aa %>% 
+#' sample_list <- atable %>% 
 #'                filter(repertoire_id %in% c("TRB_Unsorted_32", "TRB_Unsorted_83")) %>%
 #'                group_by(repertoire_id) %>% group_split()
 #' 
@@ -106,13 +106,13 @@ bhattacharyyaCoefficient <- function(sample_list) {
 #' the sequence frequencies are identical in the two samples and 0 
 #' indicates no shared frequencies.
 #' @examples
-#' file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
+#' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
 #' 
-#' study_table <- readImmunoSeq(path = file.path)
+#' stable <- readImmunoSeq(path = file_path)
 #' 
-#' productive.aa <- productiveSeq(study_table, aggregate = "junction_aa")
+#' atable <- productiveSeq(stable, aggregate = "junction_aa")
 #' 
-#' sample_list <- productive.aa %>% 
+#' sample_list <- atable %>% 
 #'                filter(repertoire_id %in% c("TRB_Unsorted_32", "TRB_Unsorted_83")) %>%
 #'                group_by(repertoire_id) %>% group_split()
 #' 

@@ -16,7 +16,7 @@ Multiple sequence alignment plot.
 Generate MSA alignment figures from the results of alignSeq
 }
 \examples{
-file_path <- system.file("extdata", "IGH_sequencing", package = "LymphoSeq")
+file_path <- system.file("extdata", "IGH_sequencing", package = "LymphoSeq2")
 
 stable <- readImmunoSeq(path = file_path)
 

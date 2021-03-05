@@ -25,7 +25,7 @@ repertoire_id names as headers.  Each value in the data frame represents the
 frequency that the sequence appeared in the repertoire_id.
 }
 \examples{
-file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
+file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
 stable <- readImmunoSeq(path = file_path)
 atable <- productiveSeq(stable,
                         aggregate = "junction_aa")

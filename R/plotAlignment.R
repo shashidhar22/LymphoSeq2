@@ -7,7 +7,7 @@
 #' on ggmsa can be found at the link mentioned below.
 #' \url{https://cran.r-project.org/web/packages/ggmsa/vignettes/ggmsa.html}
 #' @examples
-#' file_path <- system.file("extdata", "IGH_sequencing", package = "LymphoSeq")
+#' file_path <- system.file("extdata", "IGH_sequencing", package = "LymphoSeq2")
 #' 
 #' stable <- readImmunoSeq(path = file_path)
 #' 

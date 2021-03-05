@@ -26,7 +26,7 @@ Calculates the Bhattacharyya coefficient of all pairwise comparison from a
 list of data frames.
 }
 \examples{
-file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
+file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
 stable <- readImmunoSeq(path = file_path)
 atable <- productiveSeq(stable, aggregate = "junction_aa")
 bhattacharyya_matrix <- scoringMatrix(productive_table = atable, 

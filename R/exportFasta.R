@@ -10,7 +10,7 @@
 #' If "rank" is specified, then the rank order of the sequences by frequency is used.
 #' @return Exports fasta files to the working directory.
 #' @examples
-#' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
+#' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
 #' 
 #' stable <- readImmunoSeq(path = file_path)
 #' 

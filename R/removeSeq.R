@@ -11,7 +11,7 @@
 #' with the specified amino acid sequence are removed.  The frequencyCount is 
 #' recalculated.
 #' @examples
-#' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
+#' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
 #' stable <- readImmunoSeq(path = file_path)
 #' searchSeq(stable, sequence = "CASSDLIGNGKLFF")
 #' cleansed <- removeSeq(stable, sequence = "CASSDLIGNGKLFF")

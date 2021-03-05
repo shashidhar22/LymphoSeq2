@@ -27,7 +27,7 @@ Exports fasta files to the working directory.
 Export junction or amino acid sequences in fasta format.
 }
 \examples{
-file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
+file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
 
 stable <- readImmunoSeq(path = file_path)
 

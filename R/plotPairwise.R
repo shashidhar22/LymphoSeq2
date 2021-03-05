@@ -12,7 +12,7 @@
 #' The functions to create the similarity or Bhattacharyya matrix can be found 
 #' here: \code{\link{similarityMatrix}} and \code{\link{bhattacharyyaMatrix}}
 #' @examples
-#' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
+#' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
 #' 
 #' stable <- readImmunoSeq(path = file_path)
 #' 

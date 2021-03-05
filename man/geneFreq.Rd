@@ -27,7 +27,7 @@ Returns a data frame with the repertoire_id names, VDJ gene name, duplicate_coun
 Creates a data frame of VDJ gene counts and frequencies.
 }
 \examples{
-file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
+file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
 
 stable <- readImmunoSeq(path = file_path)
 

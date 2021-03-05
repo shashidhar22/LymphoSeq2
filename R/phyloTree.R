@@ -17,7 +17,7 @@
 #' shaped leaf indicates the dominant sequence.  Refer to the ggtree Bioconductor package 
 #' documentation for details on how to manipulate the tree.
 #' @examples
-#' file_path <- system.file("extdata", "IGH_sequencing", package = "LymphoSeq")
+#' file_path <- system.file("extdata", "IGH_sequencing", package = "LymphoSeq2")
 #' 
 #' stable <- readImmunoSeq(path = file_path)
 #' 

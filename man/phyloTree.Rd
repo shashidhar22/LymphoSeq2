@@ -38,7 +38,7 @@ Create a phylogenetic tree using neighbor joining tree estimation for amino acid
 junction CDR3 sequences in a list of data frames.
 }
 \examples{
-file_path <- system.file("extdata", "IGH_sequencing", package = "LymphoSeq")
+file_path <- system.file("extdata", "IGH_sequencing", package = "LymphoSeq2")
 
 stable <- readImmunoSeq(path = file_path)
 

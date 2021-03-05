@@ -8,7 +8,7 @@
 #' data imported by the LymphoSeq function readImmunoSeq. "aminoAcid", "count", and 
 #' "frequencyCount" are required columns.
 #' @examples
-#' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
+#' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
 #' stable <- readImmunoSeq(path = file_path)
 #' rarefaction_curve <- rarefactionCurve(stable)
 #'

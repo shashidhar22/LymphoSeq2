@@ -25,7 +25,7 @@ The plot is made using the package ggplot2 and can be reformatted
 using ggplot2 functions.  See examples below.
 }
 \examples{
-file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
+file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
 stable <- readImmunoSeq(path = file_path)
 atable <- productiveSeq(study_table = stable, aggregate = "junction_aa")
 topSeqsPlot(study_table = atable, top = 10)

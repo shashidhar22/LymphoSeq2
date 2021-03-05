@@ -20,7 +20,7 @@
 #' @seealso An excellent resource for examples on how to reformat a ggplot can 
 #' be found in the R Graphics Cookbook online (\url{http://www.cookbook-r.com/Graphs/}).
 #' @examples
-#' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
+#' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
 #' 
 #' stable <- readImmunoSeq(path = file_path)
 #' 

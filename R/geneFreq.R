@@ -14,7 +14,7 @@
 #' \% frequency of the V, D, or J genes (each gene frequency should add to 
 #' 100\% for each repertoire_id).
 #' @examples
-#' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
+#' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
 #' 
 #' stable <- readImmunoSeq(path = file_path)
 #' 
