@@ -48,10 +48,8 @@ searchDB <- function(study_table, credential) {
 #' productive_aa <- productiveSeq(study_table = study_table, aggregate = "aminoAcid")
 #' 
 #' searchPublished(list = productive_aa, db="Adaptive")
-#' @seealso Refer to the LymphoSeqDB package for details regarding the 
-#' publishedTRB database.
 #' @export
-#' @import tidyverse httr jsonlite LymphoSeqDB
+#' @import tidyverse httr jsonlite
 searchIreceptor <- function(...) {
     sequence_row <- tibble(...)
     path <- "https://ipa1.ireceptor.org/v2/sequences_summary?"
