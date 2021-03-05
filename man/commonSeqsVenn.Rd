@@ -22,20 +22,20 @@ Creates a Venn diagram comparing the number of common sequences in two or
 three repertoire_ids.
 }
 \examples{
-file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
+file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
 
-study_table <- readImmunoSeq(path = file.path)
+stable <- readImmunoSeq(path = file_path)
 
-productive_aa <- productiveSeq(study_table = study_table, aggregate = "junction_aa")
+atable <- productiveSeq(study_table = stable, aggregate = "junction_aa")
 
 # Plot a triple Venn diagram
 commonSeqsVenn(repertoire_ids = c("TRB_Unsorted_0", 
    "TRB_Unsorted_32", "TRB_Unsorted_83"), 
-   productive_aa = productive_aa)
+   productive_aa = atable)
 
 # Plot a double Venn diagram
 commonSeqsVenn(repertoire_ids = c("TRB_Unsorted_0", 
-   "TRB_Unsorted_32"), productive_aa = productive_aa)
+   "TRB_Unsorted_32"), productive_aa = atable)
 
 }
 \seealso{

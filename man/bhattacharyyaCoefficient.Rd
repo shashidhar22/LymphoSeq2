@@ -18,13 +18,13 @@ A tibble with one row and three columns sample1, sample2, bhattacharyyaCoefficie
 Calculates the Bhattacharyya coefficient of two samples.
 }
 \examples{
-file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
+file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
 
-study_table <- readImmunoSeq(path = file.path)
+stable <- readImmunoSeq(path = file_path)
 
-productive.aa <- productiveSeq(study_table, aggregate = "junction_aa")
+atable <- productiveSeq(stable, aggregate = "junction_aa")
 
-sample_list <- productive.aa \%>\% 
+sample_list <- atable \%>\% 
                filter(repertoire_id \%in\% c("TRB_Unsorted_32", "TRB_Unsorted_83")) \%>\%
                group_by(repertoire_id) \%>\% group_split()
 

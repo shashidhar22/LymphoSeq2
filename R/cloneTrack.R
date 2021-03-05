@@ -18,31 +18,31 @@
 #' @seealso An excellent resource for examples on how to reformat a ggplot can 
 #' be found in the R Graphics Cookbook online (\url{http://www.cookbook-r.com/Graphs/}).
 #' @examples
-#' file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
+#' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
 #' 
-#' study_table <- readImmunoSeq(path = file.path)
+#' stable <- readImmunoSeq(path = file_path)
 #' 
-#' productive_aa <- productiveSeq(study_table = study_table, aggregate = "junction_aa")
+#' atable <- productiveSeq(study_table = stable, aggregate = "junction_aa")
 #' 
-#' top_freq <- topFreq(productive_table = productive_aa, percent = 0.1)
+#' top_freq <- topFreq(atable, frequency = 0.001)
 #' 
 #' # Track clones without mapping or tracking specific sequences
-#' cloneTrack(study_table = productive_aa)
+#' cloneTrack(atable)
 #' 
 #' # Track top 20 clones mapping to the CD4 and CD8 samples
-#' cloneTrack(study_table = productive_aa, sample_list = c("TRB_CD4_949", "TRB_CD8_949"),
+#' cloneTrack(atable, sample_list = c("TRB_CD4_949", "TRB_CD8_949"),
 #'    sequence_track = top_freq$junction_aa[1:20], unassigned = TRUE) 
 #' 
 #' # Track the top 10 clones from top.freq
-#' cloneTrack(study_table = productive_aa, sequence_track = top_freq$junction_aa[1:10], 
+#' cloneTrack(study_table = atable, sequence_track = top_freq$junction_aa[1:10], 
 #'            unassigned = FALSE) 
 #' 
 #' # Track clones mapping to the CD4 and CD8 samples while ignoring all others
-#' cloneTrack(study_table = productive_aa, sample_list = c("TRB_CD4_949", "TRB_CD8_949"),
+#' cloneTrack(study_table = atable, sample_list = c("TRB_CD4_949", "TRB_CD8_949"),
 #'    unassigned = FALSE) 
 #' 
 #' # Track clones mapping to the CD4 and CD8 samples and track 2 specific sequences
-#' cloneTrack(study_table = productive_aa, sample_list = c("TRB_CD4_949", "TRB_CD8_949"),
+#' cloneTrack(study_table = atable, sample_list = c("TRB_CD4_949", "TRB_CD8_949"),
 #'    sequence_track = c("CASSPPTGERDTQYF", "CASSQDRTGQYGYTF"), unassigned = FALSE)
 #' 
 #' @export

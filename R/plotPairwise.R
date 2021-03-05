@@ -12,29 +12,27 @@
 #' The functions to create the similarity or Bhattacharyya matrix can be found 
 #' here: \code{\link{similarityMatrix}} and \code{\link{bhattacharyyaMatrix}}
 #' @examples
-#' file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
+#' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
 #' 
-#' study_table <- readImmunoSeq(path = file.path)
+#' stable <- readImmunoSeq(path = file_path)
 #' 
-#' productive_aa <- productiveSeq(study_table = study_table, aggregate = "junction_aa")
+#' atable <- productiveSeq(stable, aggregate = "junction_aa")
 #' 
-#' similarity_matrix <- scoringMatrix(productive_table = productive_aa, mode="Similarity")
+#' similarity_matrix <- scoringMatrix(productive_table = atable, mode="Similarity")
 #' 
 #' pairwisePlot(matrix = similarity_matrix)
 #' 
-#' bhattacharyya_matrix <- scoringMatrix(productive_table = productive_aa, mode="Bhattacharyya")
+#' bhattacharyya_matrix <- scoringMatrix(productive_table = atable, mode="Bhattacharyya")
 #' 
 #' pairwisePlot(matrix = bhattacharyya_matrix)
 #' 
 #' # Change plot color, title legend, and add title
 #' pairwisePlot(matrix = similarity.matrix) + 
-#'    ggplot2::scale_fill_gradient(low = "#deebf7", high = "#3182bd") + 
-#'    ggplot2::labs(fill = "Similarity score") + ggplot2::ggtitle("Figure Title")
+#' ggplot2::scale_fill_gradient(low = "#deebf7", high = "#3182bd") + 
+#' ggplot2::labs(fill = "Similarity score") + 
+#' ggplot2::ggtitle("Figure Title")
 #' @export
-#' @import ggplot2
 #' @import tidyverse
-#' @importFrom reshape melt.data.frame
-#' @importFrom stats na.omit
 pairwisePlot <- function(matrix) {
     samples <- rownames(matrix)
     matrix[base::lower.tri(matrix)] <- NA

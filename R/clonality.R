@@ -31,11 +31,11 @@
 #' 0 indicates all sequences have the same frequency and 1 indicates the 
 #' repertoire is dominated by a single sequence.
 #' @examples
-#' file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
+#' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
 #' 
-#' study_table <- readImmunoSeq(path = file.path)
+#' stable <- readImmunoSeq(path = file_path)
 #' 
-#' clonality(study_table = study_table)
+#' clonality(stable)
 #' @seealso \code{\link{lorenzCurve}}
 #' @export
 #' @importFrom ineq Gini

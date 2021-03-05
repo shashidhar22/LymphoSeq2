@@ -23,13 +23,10 @@ Creates a tibble of a selected number of top productive sequences
 from the study table.
 }
 \examples{
-file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
-
-study_table <- readImmunoSeq(path = file_path)
-
-productive_table <- productiveSeq(study_table = study_table, aggregate = "junction_aa")
-
-top_seqs <- topSeqs(productive_table = productive_table, top = 1)
+file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
+stable <- readImmunoSeq(path = file_path)
+atable <- productiveSeq(study_table = stable, aggregate = "junction_aa")
+top_seqs <- topSeqs(productive_table = atable, top = 1)
 }
 \seealso{
 \code{\link{chordDiagramVDJ}}

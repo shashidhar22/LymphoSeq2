@@ -16,13 +16,13 @@ Multiple sequence alignment plot.
 Generate MSA alignment figures from the results of alignSeq
 }
 \examples{
-file_path <- system.file("extdata", "IGH_sequencing", package = "LymphoSeq")
+file_path <- system.file("extdata", "IGH_sequencing", package = "LymphoSeq2")
 
-file_list <- readImmunoSeq(path = file_path)
+stable <- readImmunoSeq(path = file_path)
 
-productive_nt <- productiveSeq(file_list = file_list, aggregate = "junction")
+ntable <- productiveSeq(stable, aggregate = "junction")
 
-msa <- alignSeq(list = productive_nt, repertoire_id = "IGH_MVQ92552A_BL", type = "junction", 
+msa <- alignSeq(ntable, repertoire_id = "IGH_MVQ92552A_BL", type = "junction", 
          method = "ClustalW", output = "console")
 plotAlignment(msa)
 }

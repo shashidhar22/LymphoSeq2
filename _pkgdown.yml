@@ -1,0 +1,4 @@
+destination: docs
+url: https://shashidhar22.github.io/LymphoSeq2/
+development:
+  mode: auto

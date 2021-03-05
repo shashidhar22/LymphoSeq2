@@ -30,18 +30,18 @@
 #' @examples
 #' file_path <- system.file("extdata", "IGH_sequencing", package = "LymphoSeq2")
 #' 
-#' file_list <- readImmunoSeq(path = file_path)
+#' stable <- readImmunoSeq(path = file_path)
 #' 
-#' productive_nt <- productiveSeq(file_list = file_list, aggregate = "junction")
+#' ntable <- productiveSeq(stable, aggregate = "junction")
 #' 
-#' alignSeq(list = productive_nt, repertoire_id = "IGH_MVQ92552A_BL", type = "junction", 
-#'          method = "ClustalW", output = "console")
+#' alignSeq(ntable, repertoire_id = "IGH_MVQ92552A_BL", type = "junction", 
+#'          method = "ClustalW")
 #' @export
 #' @importFrom Biostrings DNAStringSet
 #' @importFrom Biostrings AAStringSet
 #' @import msa
 #' @import tidyverse
-alignSeq = function(study_table, repertoire_ids = NULL, 
+alignSeq <- function(study_table, repertoire_ids = NULL, 
                     sequence_list = NULL, edit_distance = 15, 
                     type = "junction", method = "ClustalOmega", 
                     top = 150) {

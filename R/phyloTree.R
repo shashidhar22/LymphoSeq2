@@ -17,22 +17,20 @@
 #' shaped leaf indicates the dominant sequence.  Refer to the ggtree Bioconductor package 
 #' documentation for details on how to manipulate the tree.
 #' @examples
-#' file.path <- system.file("extdata", "IGH_sequencing", package = "LymphoSeq")
+#' file_path <- system.file("extdata", "IGH_sequencing", package = "LymphoSeq2")
 #' 
-#' study_table <- readImmunoSeq(path = file.path)
+#' stable <- readImmunoSeq(path = file_path)
 #' 
-#' productive_nt <- productiveSeq(study_table = study_table, aggregate = "junction")
+#' ntable <- productiveSeq(study_table = stable, aggregate = "junction")
 #' 
-#' phyloTree(study_table = productive_nt, repertoire_id = "IGH_MVQ92552A_BL", type = "junction", 
+#' phyloTree(study_table = ntable, repertoire_id = "IGH_MVQ92552A_BL", type = "junction", 
 #'          layout = "rectangular")
 #' 
-#' phyloTree(study_table = productive_nt, repertoire_id = "IGH_MVQ92552A_BL", type = "junction_aa", 
+#' phyloTree(study_table = ntable, repertoire_id = "IGH_MVQ92552A_BL", type = "junction_aa", 
 #'          layout = "circular")
 #'          
 #' # Add scale and title to figure
-#' library(ggtree)
-#' library(ggplot2)
-#' phyloTree(study_table = productive_nt, repertoire_id = "IGH_MVQ92552A_BL", type = "junction_aa", 
+#' phyloTree(study_table = ntable, repertoire_id = "IGH_MVQ92552A_BL", type = "junction_aa", 
 #'          layout = "rectangular") +
 #'          ggtree::theme_tree2() +
 #'          ggplot2::theme(legend.position = "right", legend.key = element_rect(colour = "white")) +
@@ -42,7 +40,7 @@
 #' phyloTree(study_table = productive_nt, repertoire_id = "IGH_MVQ92552A_BL", type = "junction", 
 #'          layout = "rectangular", label = FALSE) +
 #'          ggplot2::theme(legend.position="none")
-#' @importFrom ggtree "%<+%"    
+#' @importFrom ggtree "%<+%"
 #' @export
 phyloTree <- function(study_table, repertoire_ids, type = "junction", layout = "rectangular", label = TRUE) {
     sample_table <- study_table %>% 

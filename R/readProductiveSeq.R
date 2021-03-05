@@ -19,22 +19,17 @@
 #' to each of the data frames giving the prevalence of each CDR3 amino acid 
 #' sequence in 55 healthy donor peripheral blood samples.  TRUE means the column 
 #' is added and FALSE means it is not.  Values range from 0 to 100\% where 
-#' 100\% means the sequence appeared in the blood of all 55 individuals.  The 
-#' prevalenceTRB database is located in a separate package called LymphoSeqDB 
-#' that should be loaded automatically.
+#' 100\% means the sequence appeared in the blood of all 55 individuals.
 #' @return Returns a list of data frames of productive amino acid sequences with
 #' recomputed values for "duplicate_count", "duplicate_frequency". 
 #' A productive sequences is defined as a sequences 
 #' that is in frame and does not have an early stop codon.
 #' @examples
 #' file_path <- base::system.file("extdata", "TCRB_study", package = "LymphoSeq2")
-#' 
-#' study_table <- LymphoSeq2::readImmunoSeq(path = file_path)
-#' 
-#' productive_aa <- LymphoSeq2::productiveSeq(study_table = study_table, 
-#'                                            aggregate = "junction_aa", 
-#'                                            prevalence = TRUE)
-#'                                            
+#' stable <- LymphoSeq2::readImmunoSeq(path = file_path)
+#' atable <- LymphoSeq2::productiveSeq(study_table = stable, 
+#'                                     aggregate = "junction_aa", 
+#'                                     prevalence = TRUE)
 #' @export
 #' @import tidyverse 
 productiveSeq <- function(study_table, aggregate = "junction_aa", prevalence = FALSE) {

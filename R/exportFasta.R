@@ -10,15 +10,15 @@
 #' If "rank" is specified, then the rank order of the sequences by frequency is used.
 #' @return Exports fasta files to the working directory.
 #' @examples
-#' file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
+#' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
 #' 
-#' study_table <- readImmunoSeq(path = file.path)
+#' stable <- readImmunoSeq(path = file_path)
 #' 
-#' exportFasta(study_table = study_table, type = "junction", names = c("rank", "junction_aa", "duplicate_count"))
+#' exportFasta(study_table = stable, type = "junction", names = c("rank", "junction_aa", "duplicate_count"))
 #' 
-#' productive_aa <- productiveSeq(study_table = study_table, aggregate = "junction_aa")
+#' atable <- productiveSeq(study_table = stable, aggregate = "junction_aa")
 #' 
-#' exportFasta(list = productive_aa, type = "junction_aa", names = "duplicate_frequency")
+#' exportFasta(study_table = atable, type = "junction_aa", names = "duplicate_frequency")
 #' @export
 #' @import tidyverse
 #' @importFrom Biostrings DNAStringSet

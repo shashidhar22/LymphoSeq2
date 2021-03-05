@@ -1,6 +1,23 @@
 language: r
+cache: packages
+sudo: true
 before_cache: Rscript -e 'remotes::install_cran("pkgdown")'
+warnings_are_errors: false
+bioc_packages: phyloseq
+r_github_packages: adw96/breakaway
+#install: travis_wait 30
+notifications:
+  email:
+    on_success: change
+    on_failure: change
 deploy:
   provider: script
   script: Rscript -e 'pkgdown::deploy_site_github()'
   skip_cleanup: true
+  # environment variables set for all builds
+env:
+  global:
+    - BIOC_USE_DEVEL="FALSE"  ## Use the current release version
+
+# we need to install BiocInstaller for testing Bioconductor packages
+#bioc_required: true

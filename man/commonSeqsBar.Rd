@@ -44,12 +44,12 @@ multiple repertoire_ids.  This function is useful when more than 3 repertoire_id
 compared.
 }
 \examples{
-file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
+file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
 
-study_table <- readImmunoSeq(path = file.path)
+stable <- readImmunoSeq(path = file_path)
 
-productive_aa <- productiveSeq(file.list = file.list, aggregate = "junction_aa")
+atable <- productiveSeq(atable, aggregate = "junction_aa")
 
-commonSeqsBar(productive_aa = productive_aa, repertoire_ids = c("TRB_CD4_949", "TRB_CD8_949", 
+commonSeqsBar(atable, repertoire_ids = c("TRB_CD4_949", "TRB_CD8_949", 
 "TRB_Unsorted_949", "TRB_Unsorted_1320"), color_sample = "TRB_CD8_949")
 }

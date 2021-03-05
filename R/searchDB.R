@@ -12,7 +12,7 @@
 #' information including disease status, sample type, and PubMed ID 
 #' (PMID) for the reference where the sequence was characterized.  
 #' @examples
-#' file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
+#' file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
 #' 
 #' study_table <- readImmunoSeq(path = file.path)
 #' 
@@ -20,10 +20,8 @@
 #' 
 #' top_seqs <- topSeqs(productive_table = productive_aa, top = 1)
 #' searchDB(list = top_seqs, db="Adaptive")
-#' @seealso Refer to the LymphoSeqDB package for details regarding the 
-#' publishedTRB database.
 #' @export
-#' @import tidyverse httr jsonlite LymphoSeqDB
+#' @import tidyverse httr jsonlite 
 searchDB <- function(study_table, credential) {
     study_table <- study_table %>% 
                    filter(!is.na(aminoAcid)) %>%
@@ -42,18 +40,8 @@ searchDB <- function(study_table, credential) {
 #' that the published TCR sequence appeared along with additional 
 #' information including disease status, sample type, and PubMed ID 
 #' (PMID) for the reference where the sequence was characterized.  
-#' @examples
-#' file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
-#' 
-#' study_table <- readImmunoSeq(path = file.path)
-#' 
-#' productive_aa <- productiveSeq(study_table = study_table, aggregate = "aminoAcid")
-#' 
-#' searchPublished(list = productive_aa, db="Adaptive")
-#' @seealso Refer to the LymphoSeqDB package for details regarding the 
-#' publishedTRB database.
 #' @export
-#' @import tidyverse httr jsonlite LymphoSeqDB
+#' @import tidyverse httr jsonlite
 searchIreceptor <- function(...) {
     sequence_row <- tibble(...)
     path <- "https://ipa1.ireceptor.org/v2/sequences_summary?"

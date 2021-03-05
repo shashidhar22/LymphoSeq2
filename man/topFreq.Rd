@@ -4,10 +4,10 @@
 \alias{topFreq}
 \title{Top frequencies}
 \usage{
-topFreq(productive_table, percent = 0.1)
+topFreq(productive_table, frequency = 0.1)
 }
 \arguments{
-\item{percent}{The minimum \% frequency that the sequence appears in any of 
+\item{frequency}{The minimum frequency that the sequence appears in any of 
 the listed samples.}
 
 \item{productive_aa}{A tibble of productive amino acid sequences 
@@ -22,8 +22,7 @@ For T cell receptor beta sequences, additionally reported is the
 \% prevalence that the sequence appears in 55 healthy donor blood samples.  
 Also provided is the antigen specificity of that sequence if known by 
 comparing it to a database of previously reported sequences in the 
-literature.  The prevalenceTRB and publishedTRB databases are located in a 
-separate package called LymphoSeqDB that should be loaded automatically.
+literature.
 }
 \description{
 Creates a data frame of the top productive amino acid sequences that have a 
@@ -33,15 +32,8 @@ across all samples.  For T cell receptor beta sequences, the \% prevalence
 and antigen specificity of that sequence is also provided.
 }
 \examples{
-file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
-
-study_table <- readImmunoSeq(path = file.path)
-
-productive_aaa <- productiveSeq(study_table = study_table, aggregate = "junction_aa")
-
-top_freq <- topFreq(productive_table = productive_aa, percent = 0.1)
-}
-\seealso{
-Refer to the LymphoSeqDB package for details regarding the 
-prevalenceTRB and publishedTRB database.
+file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
+stable <- readImmunoSeq(path = file_path)
+atable <- productiveSeq(study_table = stable, aggregate = "junction_aa")
+top_freq <- topFreq(productive_table = atable, frequency = 0.1)
 }

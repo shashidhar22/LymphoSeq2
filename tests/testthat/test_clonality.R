@@ -6,11 +6,11 @@ test_that("Check if summary statistics for test data are correct", {
   stable <- LymphoSeq2::readImmunoSeq("test_data/015V06013979_CFAR.tsv")
   ctable <- LymphoSeq2::clonality(stable)
   ttseq <- ctable %>%
-           dplyr::pull(totalSequences)
+           dplyr::pull(total_sequences)
   tupseq <- ctable %>%
-            dplyr::pull(uniqueProductiveSequences)
+            dplyr::pull(unique_productive_sequences)
   ttcount <- ctable %>% 
-             dplyr::pull(totalCount)
+             dplyr::pull(total_count)
   tclonality <- ctable %>%
                 dplyr::pull(clonality)
   tsi <- ctable %>%
@@ -18,9 +18,9 @@ test_that("Check if summary statistics for test data are correct", {
   tis <- ctable %>%
          dplyr::pull(inverse_simpson)
   tgc <- ctable %>% 
-         dplyr::pull(giniCoefficient)
+         dplyr::pull(gini_coefficient)
   ttps <- ctable %>%
-          dplyr::pull(topProductiveSequence)
+          dplyr::pull(top_productive_sequence)
   tce <- ctable %>%
          dplyr::pull(chao_estimate)
   tke <- ctable %>% 

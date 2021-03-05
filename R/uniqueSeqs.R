@@ -8,13 +8,10 @@
 #' @return A data frame of unique amino acid sequences from the list of 
 #' data frames aggregated by duplicate_count.
 #' @examples
-#' file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
-#' 
-#' study_table <- readImmunoSeq(path = file.path)
-#' 
-#' productive_table <- productiveSeq(study_table = study_table, aggregate = "junction_aa")
-#' 
-#' unique_seqs <- uniqueSeqs(productive_table = productive_table, unique_type = "junction_aa")
+#' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
+#' stable <- readImmunoSeq(path = file_path)
+#' atable <- productiveSeq(study_table = stable, aggregate = "junction_aa")
+#' unique_seqs <- uniqueSeqs(productive_table = atable, unique_type = "junction_aa")
 #' @export
 uniqueSeqs <- function(productive_table = productive_table, unique_type = "junction_aa") {
     # Add checks to see if the tibble is a prudctive table

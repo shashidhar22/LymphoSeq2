@@ -18,15 +18,15 @@
 #' more samples.
 #' @seealso \code{\link{topSeqs}}
 #' @examples
-#' file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
+#' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
 #' 
-#' study_table <- readImmunoSeq(path = file.path)
+#' stable <- readImmunoSeq(file_path)
 #' 
-#' productive_nt <- productiveSeq(study_table = study_table, aggregate = "junction")
+#' ntable <- productiveSeq(stable, aggregate = "junction")
 #' 
-#' top_seqs <- topSeqs(productive_table = productive_nt, top = 1)
+#' top_seqs <- topSeqs(ntable, top = 1)
 #' 
-#' chordDiagramVDJ(repertoire_id = top_seqs, association = "VJ", colors = c("red", "blue"))
+#' chordDiagramVDJ(top_seq, association = "VJ", colors = c("red", "blue"))
 #' 
 #'
 #' @export

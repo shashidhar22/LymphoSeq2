@@ -36,7 +36,6 @@ readGliph <- function(gliph_path) {
 #' 
 #' @param gliph_path Path to individual GLIPH file
 #' @param progress_bar Progress bar variable
-#' @inheritParams productiveSeq
 getGliphTable <- function(gliph_path, progress_bar) {
   progress_bar$tick()
   sample <- tools::file_path_sans_ext(base::basename(gliph_path))

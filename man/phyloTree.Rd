@@ -38,22 +38,20 @@ Create a phylogenetic tree using neighbor joining tree estimation for amino acid
 junction CDR3 sequences in a list of data frames.
 }
 \examples{
-file.path <- system.file("extdata", "IGH_sequencing", package = "LymphoSeq")
+file_path <- system.file("extdata", "IGH_sequencing", package = "LymphoSeq2")
 
-study_table <- readImmunoSeq(path = file.path)
+stable <- readImmunoSeq(path = file_path)
 
-productive_nt <- productiveSeq(study_table = study_table, aggregate = "junction")
+ntable <- productiveSeq(study_table = stable, aggregate = "junction")
 
-phyloTree(study_table = productive_nt, repertoire_id = "IGH_MVQ92552A_BL", type = "junction", 
+phyloTree(study_table = ntable, repertoire_id = "IGH_MVQ92552A_BL", type = "junction", 
          layout = "rectangular")
 
-phyloTree(study_table = productive_nt, repertoire_id = "IGH_MVQ92552A_BL", type = "junction_aa", 
+phyloTree(study_table = ntable, repertoire_id = "IGH_MVQ92552A_BL", type = "junction_aa", 
          layout = "circular")
          
 # Add scale and title to figure
-library(ggtree)
-library(ggplot2)
-phyloTree(study_table = productive_nt, repertoire_id = "IGH_MVQ92552A_BL", type = "junction_aa", 
+phyloTree(study_table = ntable, repertoire_id = "IGH_MVQ92552A_BL", type = "junction_aa", 
          layout = "rectangular") +
          ggtree::theme_tree2() +
          ggplot2::theme(legend.position = "right", legend.key = element_rect(colour = "white")) +
