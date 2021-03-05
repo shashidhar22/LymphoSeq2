@@ -50,7 +50,6 @@ biocViews: Software,
            MultipleSequenceAlignment, 
            msa, 
            vegan,
-           phyloseq,
-           LymphoSeqDB
+           phyloseq
 NeedsCompilation: no
 Encoding: UTF-8
