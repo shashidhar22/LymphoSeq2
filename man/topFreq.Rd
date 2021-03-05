@@ -32,11 +32,8 @@ across all samples.  For T cell receptor beta sequences, the \% prevalence
 and antigen specificity of that sequence is also provided.
 }
 \examples{
-file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
-
-study_table <- readImmunoSeq(path = file.path)
-
-productive_aaa <- productiveSeq(study_table = study_table, aggregate = "junction_aa")
-
-top_freq <- topFreq(productive_table = productive_aa, percent = 0.1)
+file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
+stable <- readImmunoSeq(path = file_path)
+atable <- productiveSeq(study_table = stable, aggregate = "junction_aa")
+top_freq <- topFreq(productive_table = atable, frequency = 0.1)
 }

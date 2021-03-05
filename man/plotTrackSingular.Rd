@@ -33,3 +33,11 @@ using ggplot2 functions.
 \item \code{highlightPlot}: Highligh a specific amino acid sequence
 }}
 
+\examples{
+file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
+stable <- LymphoSeq2::readImmunoSeq(path = file_path)
+atable <- LymphoSeq2::productiveSeq(stable, aggregate = "junction_aa")
+ctable <- LymphoSeq2::cloneTrack(study_table = atable,
+                                sample_list = c("TRB_CD8_949", "TRB_CD8_CMV_369"))
+LymphoSeq2::plotTrackSingular(ctable)
+}

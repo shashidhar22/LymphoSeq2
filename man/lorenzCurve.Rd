@@ -32,32 +32,35 @@ The plot is made using the package ggplot2 and can be reformatted
 using ggplot2 functions.  See examples below.
 }
 \examples{
-file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
+file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
 
-study_table <- readImmunoSeq(path = study_table)
+stable <- readImmunoSeq(path = file_path)
 
 repertoire_ids <- study_table \%>\% pull(repertoire_id) \%>\% unique()
 
-lorenzCurve(repertoire_ids = repertoire_ids), study_table = study_table)
+lorenzCurve(repertoire_ids = repertoire_ids, study_table = stable)
 
-productive_aa <- productiveSeq(study_table = study_table, aggregate = "junction_aa")
+atable <- productiveSeq(study_table = stable, aggregate = "junction_aa")
 
-repertoire_ids <- productive_aa \%>\% pull(repertoire_id) \%>\% unique()
+repertoire_ids <- atable \%>\% pull(repertoire_id) \%>\% unique()
 
-lorenzCurve(repertoire_ids = repertoire_ids, study_table = productive_aa)
+lorenzCurve(repertoire_ids = repertoire_ids, study_table = atable)
 
 # Change the legend labels, line colors, and add a title
 repertoire_ids <- c("TRB_Unsorted_0", "TRB_Unsorted_32", 
    "TRB_Unsorted_83", "TRB_Unsorted_949", "TRB_Unsorted_1320")
 
-lorenz_curve <- lorenzCurve(repertoire_ids = repertoire_ids, study_table = productive_aa)
+lorenz_curve <- lorenzCurve(repertoire_ids = repertoire_ids, study_table = atable)
 
 labels <- c("Day 0", "Day 32", "Day 83", "Day 949", "Day 1320")
 
 colors <- c("navyblue", "red", "darkgreen", "orange", "purple")
 
-lorenz_curve + ggplot2::scale_color_manual(name = "repertoire_ids", breaks = repertoire_ids, 
-   labels = labels, values = colors) + ggplot2::ggtitle("Figure Title")
+lorenz_curve + 
+ggplot2::scale_color_manual(name = "repertoire_ids", 
+                            breaks = repertoire_ids, 
+                            labels = labels, values = colors) + 
+ggplot2::ggtitle("Figure Title")
 }
 \seealso{
 An excellent resource for examples on how to reformat a ggplot can 

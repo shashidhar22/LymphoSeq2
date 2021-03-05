@@ -21,24 +21,25 @@ The plot is made using the package ggplot2 and can be reformatted
 using ggplot2 functions.  See examples below.
 }
 \examples{
-file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
+file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
 
-study_table <- readImmunoSeq(path = file.path)
+stable <- readImmunoSeq(path = file_path)
 
-productive_aa <- productiveSeq(study_table = study_table, aggregate = "junction_aa")
+atable <- productiveSeq(stable, aggregate = "junction_aa")
 
-similarity_matrix <- scoringMatrix(productive_table = productive_aa, mode="Similarity")
+similarity_matrix <- scoringMatrix(productive_table = atable, mode="Similarity")
 
 pairwisePlot(matrix = similarity_matrix)
 
-bhattacharyya_matrix <- scoringMatrix(productive_table = productive_aa, mode="Bhattacharyya")
+bhattacharyya_matrix <- scoringMatrix(productive_table = atable, mode="Bhattacharyya")
 
 pairwisePlot(matrix = bhattacharyya_matrix)
 
 # Change plot color, title legend, and add title
 pairwisePlot(matrix = similarity.matrix) + 
-   ggplot2::scale_fill_gradient(low = "#deebf7", high = "#3182bd") + 
-   ggplot2::labs(fill = "Similarity score") + ggplot2::ggtitle("Figure Title")
+ggplot2::scale_fill_gradient(low = "#deebf7", high = "#3182bd") + 
+ggplot2::labs(fill = "Similarity score") + 
+ggplot2::ggtitle("Figure Title")
 }
 \seealso{
 An excellent resource for examples on how to reformat a ggplot can 

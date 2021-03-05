@@ -35,12 +35,12 @@ the sequences different by a single amino acid or junction.
 \examples{
 file_path <- system.file("extdata", "IGH_sequencing", package = "LymphoSeq2")
 
-study_table <- readImmunoSeq(path = file_path)
+stable <- readImmunoSeq(path = file_path)
 
-clonal_relatedness <- clonalRelatedness(study_table = study_table, editDistance = 10)
+clonal_relatedness <- clonalRelatedness(stable, editDistance = 10)
 
 # Merge results with clonality table
-clonality <- clonality(study_table)
+clonality <- clonality(stable)
 merged <- full_join(clonality, clonal_relatedness, by = "repertoire_id")
 
 }
