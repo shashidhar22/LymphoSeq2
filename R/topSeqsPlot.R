@@ -13,21 +13,16 @@
 #' @seealso An excellent resource for examples on how to reformat a ggplot can 
 #' be found in the R Graphics Cookbook online (\url{http://www.cookbook-r.com/Graphs/}).
 #' @examples
-#' file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
-#' 
-#' study_table <- readImmunoSeq(path = file.path)
-#' 
-#' productive_aa <- productiveSeq(study_table = study_table, aggregate = "junction_aa")
-#' 
-#' topSeqsPlot(study_table = productive_aa, top = 10)
-#' 
+#' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
+#' stable <- readImmunoSeq(path = file_path)
+#' atable <- productiveSeq(study_table = stable, aggregate = "junction_aa")
+#' topSeqsPlot(study_table = atable, top = 10)
 #' # Display the number of sequences at the top of bar plot and add a title
 #' n <- as.character(nrow(study_table))
-#' 
-#' topSeqsPlot(study_table = productive_aa, top = 10) + 
-#'    ggplot2::annotate("text", x = 1:length(file.list), y = 105, label = n, color = "black") +
-#'    ggplot2::expand_limits(y = c(0, 110)) + ggplot2::ggtitle("Figure Title") + 
-#'    ggplot2::scale_x_discrete(limits = names(file.list))
+#' topSeqsPlot(study_table = atable, top = 10) + 
+#' ggplot2::annotate("text", x = 1:length(file.list), y = 105, label = n, color = "black") +
+#' ggplot2::expand_limits(y = c(0, 110)) + ggplot2::ggtitle("Figure Title") + 
+#' ggplot2::scale_x_discrete(limits = names(file.list))
 #' @export
 #' @import ggplot2
 #' @import tidyverse

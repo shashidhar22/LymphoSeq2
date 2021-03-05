@@ -40,14 +40,6 @@ searchDB <- function(study_table, credential) {
 #' that the published TCR sequence appeared along with additional 
 #' information including disease status, sample type, and PubMed ID 
 #' (PMID) for the reference where the sequence was characterized.  
-#' @examples
-#' file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
-#' 
-#' study_table <- readImmunoSeq(path = file.path)
-#' 
-#' productive_aa <- productiveSeq(study_table = study_table, aggregate = "aminoAcid")
-#' 
-#' searchPublished(list = productive_aa, db="Adaptive")
 #' @export
 #' @import tidyverse httr jsonlite
 searchIreceptor <- function(...) {

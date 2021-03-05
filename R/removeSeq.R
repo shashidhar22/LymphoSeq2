@@ -11,15 +11,11 @@
 #' with the specified amino acid sequence are removed.  The frequencyCount is 
 #' recalculated.
 #' @examples
-#' file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
-#' 
-#' file.list <- readImmunoSeq(path = file.path)
-#' 
-#' searchSeq(list = file.list, sequence = "CASSDLIGNGKLFF")
-#' 
-#' cleansed <- removeSeq(file.list = file.list, sequence = "CASSDLIGNGKLFF")
-#' 
-#' searchSeq(list = cleansed, sequence = "CASSDLIGNGKLFF")
+#' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
+#' stable <- readImmunoSeq(path = file_path)
+#' searchSeq(stable, sequence = "CASSDLIGNGKLFF")
+#' cleansed <- removeSeq(stable, sequence = "CASSDLIGNGKLFF")
+#' searchSeq(cleansed, sequence = "CASSDLIGNGKLFF")
 #' @export
 #' @import  tidyverse
 removeSeq <- function(study_table, sequence) {

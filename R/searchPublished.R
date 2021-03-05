@@ -14,13 +14,10 @@
 #' publishedTRB database is located in a separate package called LymphoSeqDB 
 #' that should be loaded automatically.
 #' @examples
-#' file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
-#' 
-#' study_table <- readImmunoSeq(path = file.path)
-#' 
-#' productive_aa <- productiveSeq(study_table = study_table, aggregate = "junction_aa")
-#' 
-#' searchPublished(list = productive_aa, db="Adaptive")
+#' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
+#' stable <- readImmunoSeq(path = file_path)
+#' atable <- productiveSeq(study_table = stable, aggregate = "junction_aa")
+#' searchPublished(atable)
 #' @seealso Refer to the LymphoSeqDB package for details regarding the 
 #' publishedTRB database.
 #' @export

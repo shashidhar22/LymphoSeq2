@@ -3,23 +3,24 @@
 #' Calculates the Bhattacharyya coefficient of all pairwise comparison from a 
 #' list of data frames.
 #' 
-#' @param productive.seqs A tibble of productive sequences generated 
+#' @param productive_table A tibble of productive sequences generated 
 #' by the LymphoSeq function productiveSeq.  "duplicate_frequency" and "junction_aa" 
 #' are a required columns.
+#' @param mode The mode to use for calculating pairwise similarity. Can take the values
+#' "Bhattacharyya" or "Similarity".
 #' @return A data frame of Bhattacharyya coefficients or Similarity scores calculated from all 
 #' pairwise comparisons from a list of repertoire_id data frames.  Both metrics 
 #' measure the amount of overlap between two samples.  The 
 #' value ranges from 0 to 1 where 1 indicates the sequence frequencies are 
 #' identical in the two samples and 0 indicates no shared frequencies.
 #' @examples
-#' file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
-#' 
-#' study_table <- readImmunoSeq(path = file.path)
-#' 
-#' productive_aa <- productiveSeq(study_table, aggregate = "junction_aa")
-#' 
-#' bhattacharyya_matrix <- scoringMatrix(productive_table = productive_aa, mode = "Bhattacharyya")
-#' similarity_matrix <- scoringMatrix(productive_table = productive_aa, mode = "Similarity")
+#' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
+#' stable <- readImmunoSeq(path = file_path)
+#' atable <- productiveSeq(stable, aggregate = "junction_aa")
+#' bhattacharyya_matrix <- scoringMatrix(productive_table = atable, 
+#'                                       mode = "Bhattacharyya")
+#' similarity_matrix <- scoringMatrix(productive_table = atable, 
+#'                                    mode = "Similarity")
 #' @seealso \code{\link{pairwisePlot}} for plotting results as a heat map.
 #' @export
 #' @import tidyverse

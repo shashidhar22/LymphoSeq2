@@ -26,13 +26,10 @@
 #' that is in frame and does not have an early stop codon.
 #' @examples
 #' file_path <- base::system.file("extdata", "TCRB_study", package = "LymphoSeq2")
-#' 
-#' study_table <- LymphoSeq2::readImmunoSeq(path = file_path)
-#' 
-#' productive_aa <- LymphoSeq2::productiveSeq(study_table = study_table, 
-#'                                            aggregate = "junction_aa", 
-#'                                            prevalence = TRUE)
-#'                                            
+#' stable <- LymphoSeq2::readImmunoSeq(path = file_path)
+#' atable <- LymphoSeq2::productiveSeq(study_table = stable, 
+#'                                     aggregate = "junction_aa", 
+#'                                     prevalence = TRUE)
 #' @export
 #' @import tidyverse 
 productiveSeq <- function(study_table, aggregate = "junction_aa", prevalence = FALSE) {

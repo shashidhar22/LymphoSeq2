@@ -6,17 +6,15 @@
 #'
 #' @param sample_table A tibble consisting antigen receptor sequencing 
 #' data imported by the LymphoSeq function readImmunoSeq. "junction_aa", "duplicate_count", and 
-#' "frequencyCount" are required columns.
+#' "duplicate_frequency" are required columns.
 #' @examples
-#' file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
-#' 
-#' study_table <- readImmunoSeq(path = file.path)
-#' 
-#' productive_aa <- productiveSeq(study_table = study_table, 
-#'   aggregate = "junction_aa", prevalence = TRUE)
-#'
-#' sample_table <- productive_aa %>% filter(repertoire_id == "TRB_Unsorted_1320")
-#'
+#' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
+#' stable <- readImmunoSeq(path = file_path)
+#' atable <- productiveSeq(stable, 
+#'                         aggregate = "junction_aa", 
+#'                         prevalence = TRUE)
+#' atable <- atable %>% filter(repertoire_id == "TRB_Unsorted_1320")
+#' rtable <- runINext(atable)
 #' @export
 #' @import tidyverse
 #' @import iNEXT

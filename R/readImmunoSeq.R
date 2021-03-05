@@ -23,17 +23,16 @@
 #'
 #' @examples
 #' file_path <- base::system.file("extdata", "TCRB_study", package = "LymphoSeq2")
-#' study_table <- LymphoSeq2::readImmunoSeq(path = file_path, 
+#' stable <- LymphoSeq2::readImmunoSeq(path = file_path, 
 #'                                          recursive = FALSE)
-#'                              
 #' file_list <- base::list.files(file_path, 
 #'                               full.name = TRUE,
 #'                               all.files = FALSE,
 #'                               pattern = ".tsv",
 #'                               include.dirs = FALSE)
-#' study_table <- LymphoSeq2::readImmunoSeq(path = file_list[1],
+#' stable <- LymphoSeq2::readImmunoSeq(path = file_list[1],
 #'                                          recursive = FALSE)
-#' study_table <- LymphoSeq2::readImmunoSeq(path = file_list[1:2],
+#' stable <- LymphoSeq2::readImmunoSeq(path = file_list[1:2],
 #'                                          recursive = FALSE)
 #' @export
 #' @rdname readImmunoSeq
