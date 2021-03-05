@@ -37,7 +37,9 @@
 #' @export
 #' @rdname readImmunoSeq
 readImmunoSeq <- function(path, recursive = FALSE) {
-    if (file_test("-d", path)) {
+    if (length(path) > 1) {
+        file_paths <- path
+    } else if (file_test("-d", path)) {
         file_paths <- list.files(path, 
                                  full.names = TRUE, 
                                  all.files = FALSE, 
