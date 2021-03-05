@@ -29,6 +29,7 @@ Imports: Biostrings,
          VennDiagram, 
          pheatmap,
          httr,
+         ggplot2,
          jsonlite,
          reshape,
          vegan
