@@ -51,8 +51,6 @@ phyloTree(study_table = productive_nt, repertoire_id = "IGH_MVQ92552A_BL", type 
          layout = "circular")
          
 # Add scale and title to figure
-library(ggtree)
-library(ggplot2)
 phyloTree(study_table = productive_nt, repertoire_id = "IGH_MVQ92552A_BL", type = "junction_aa", 
          layout = "rectangular") +
          ggtree::theme_tree2() +

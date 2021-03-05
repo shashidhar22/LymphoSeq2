@@ -26,9 +26,7 @@ genes.}
 to each of the data frames giving the prevalence of each CDR3 amino acid 
 sequence in 55 healthy donor peripheral blood samples.  TRUE means the column 
 is added and FALSE means it is not.  Values range from 0 to 100\% where 
-100\% means the sequence appeared in the blood of all 55 individuals.  The 
-prevalenceTRB database is located in a separate package called LymphoSeqDB 
-that should be loaded automatically.}
+100\% means the sequence appeared in the blood of all 55 individuals.}
 }
 \value{
 Returns a list of data frames of productive amino acid sequences with
