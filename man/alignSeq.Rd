@@ -57,7 +57,7 @@ stable <- readImmunoSeq(path = file_path)
 
 ntable <- productiveSeq(stable, aggregate = "junction")
 
-alignSeq(ntablet, repertoire_id = "IGH_MVQ92552A_BL", type = "junction", 
+alignSeq(ntable, repertoire_id = "IGH_MVQ92552A_BL", type = "junction", 
          method = "ClustalW")
 }
 \seealso{
