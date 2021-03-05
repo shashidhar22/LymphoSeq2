@@ -83,7 +83,7 @@ CMV
 A metadata file for the TCR sequencing samples can easily be combined with the `study_table` by reading in the metadata file as a tibble and using the `dplyr::left_join` function to merge the two tables.  In the example below, a metadata file is imported for the example TCRB data set which contains information on the number of days post bone marrow transplant the sample was collected and the cellular phenotype the blood sample was sorted for prior to sequencing.
 
 ```{r loadMeta}
-TCRB_metadata <- dplyr::read.csv(system.file("extdata", "TCRB_metadata.csv", package = "LymphoSeq2"))
+TCRB_metadata <- readr::read_csv(system.file("extdata", "TCRB_metadata.csv", package = "LymphoSeq2"))
 TCRB_metadata
 ```
 
@@ -368,8 +368,8 @@ wordcloud::wordcloud(words = vtable$gene_name,
 ```
 
 ```{r heatmap}
-vvGenes <- LymphoSeq2::geneFreq(ntable, locus = "V", family = TRUE) %>% 
-           dplyr::pivot_wider(id_cols = gene_name, 
+vGenes <- LymphoSeq2::geneFreq(nuc_table, locus = "V", family = TRUE) %>% 
+           tidyr::pivot_wider(id_cols = gene_name, 
                               names_from = repertoire_id, 
                               values_from = gene_frequency, 
                               values_fn = sum,
@@ -380,7 +380,7 @@ vGenes <- vGenes %>%
           dplyr::select(-gene_name) %>% 
           as.matrix()
 rownames(vGenes) <- gene_names
-pheatmap(vGenes, color = "RdBu", scale = "row")
+pheatmap::pheatmap(vGenes, scale = "row")
 ```
 
 ```{r geneFreqPlot}
