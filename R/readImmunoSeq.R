@@ -205,7 +205,7 @@ getFileType <- function(clone_file) {
                                         junction = 'c', 
                                         junction_aa = 'c')
     } else if (all(type10 %in% columns)) {
-        file_type <- "type4"
+        file_type <- "type10"
         header_list <- readr::cols_only(nucleotide = "c", 
                                         aminoAcid = "c", 
                                         count = "i", 
@@ -213,7 +213,7 @@ getFileType <- function(clone_file) {
                                         dGeneName = "c", 
                                         jGeneAllele = "c")
     } else if (all(type11 %in% columns)) {
-        file_type <- "type4"
+        file_type <- "type11"
         header_list <- readr::cols_only(nucleotide = "c", 
                                         aminoAcid = "c", 
                                         count = "i", 
