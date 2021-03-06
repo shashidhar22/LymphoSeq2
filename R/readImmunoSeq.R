@@ -115,6 +115,17 @@ getFileType <- function(clone_file) {
     type9 <- c("duplicate_count", "v_call", "d_call", "j_call", "junction", 
                "junction_aa")
 
+    type10 <- c("nucleotide", "aminoAcid", "count", 
+               "frequencyCount (%)", "vGeneName", "dGeneName", "jGeneName", 
+               "vFamilyName", "dFamilyName", "jFamilyName", "sequenceStatus", 
+                "estimatedNumberGenomes")
+
+    type11 <- c("nucleotide", "aminoAcid", "count", 
+               "frequencyCount", "vGeneName", "dGeneName", "jGeneName", 
+               "vFamilyName", "dFamilyName", "jFamilyName", "sequenceStatus", 
+                "estimatedNumberGenomes")
+
+
     columns <- invisible(colnames(readr::read_tsv(clone_file, 
                                                   n_max = 1, 
                                                   col_types = readr::cols())))
@@ -193,6 +204,22 @@ getFileType <- function(clone_file) {
                                         j_call = 'c', 
                                         junction = 'c', 
                                         junction_aa = 'c')
+    } else if (all(type10 %in% columns)) {
+        file_type <- "type4"
+        header_list <- readr::cols_only(nucleotide = "c", 
+                                        aminoAcid = "c", 
+                                        count = "i", 
+                                        vFamilyName = "c", 
+                                        dGeneName = "c", 
+                                        jGeneAllele = "c")
+    } else if (all(type11 %in% columns)) {
+        file_type <- "type4"
+        header_list <- readr::cols_only(nucleotide = "c", 
+                                        aminoAcid = "c", 
+                                        count = "i", 
+                                        vFamilyName = "c", 
+                                        dGeneName = "c", 
+                                        jGeneAllele = "c")
     }
     ret_val <- list(file_type, header_list)
     return(ret_val)
@@ -241,9 +268,17 @@ getStandard <- function(file_type) {
     type9 <- c(junction = "junction", junction_aa = "junction_aa", duplicate_count = "duplicate_count",
                v_call = "v_call", j_call = "j_call", d_call = "d_call")
 
+    type10 <- c(junction = "nucleotide", junction_aa = "aminoAcid", 
+               duplicate_count = "count", 
+               v_call = "vFamilyName", d_call = "dGeneName", j_call = "jGeneAllele")
+
+    type11 <- c(junction = "nucleotide", junction_aa = "aminoAcid", 
+               duplicate_count = "count", 
+               v_call = "vFamilyName", d_call = "dGeneName", j_call = "jGeneAllele")
+
     type_hash <- list("type1"=type1, "type2"=type2, "type3"=type3, "type4"=type4,
                       "type5"=type5, "type6"=type6, "type7"=type7, "type8"=type8,
-                      "type9"=type9)
+                      "type9"=type9, "type10"=type10, "type11"=type11)
     return(type_hash[[file_type]])
 }
 
