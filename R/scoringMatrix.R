@@ -77,6 +77,7 @@ scoringMatrix <- function(productive_table, mode="Bhattacharyya") {
 #' 
 #' bhattacharyyaCoefficient(sample_list)
 #' @seealso \code{\link{scoringMatrix}}
+#' @import tidyverse
 #' @export
 bhattacharyyaCoefficient <- function(sample_list) {
     sample1 <- sample_list[[1]]
@@ -118,6 +119,7 @@ bhattacharyyaCoefficient <- function(sample_list) {
 #' 
 #' similarityScore(sample_list)
 #' @seealso \code{\link{scoringMatrix}}
+#' @import tidyverse
 #' @export
 similarityScore <- function(sample_list) {
     sample1 <- sample_list[[1]]

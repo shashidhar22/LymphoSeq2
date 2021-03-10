@@ -18,6 +18,6 @@ deploy:
 env:
   global:
     - BIOC_USE_DEVEL="FALSE"  ## Use the current release version
-
+    - TRAVIS_WORKER_DOCKER_MEMORY=8G
 # we need to install BiocInstaller for testing Bioconductor packages
 #bioc_required: true
