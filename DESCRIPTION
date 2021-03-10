@@ -33,7 +33,7 @@ Imports: Biostrings,
          jsonlite,
          reshape,
          vegan
-Remotes: shashidhar22/breakaway
+Remotes: adw96/breakaway
 License: Artistic-2.0
 LazyData: true
 RoxygenNote: 7.1.1
