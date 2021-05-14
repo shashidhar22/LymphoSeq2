@@ -42,9 +42,9 @@ Adapatives’ immuneACCESS portal. As shown in the example below, you can
 specify the path to the example data sets using the command
 
 ``` r
-system.file("extdata", "TCRB_sequencing", package = "LymphoSeq") #For the TCRB files
+system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2") #For the TCRB files
 #> [1] ""
-system.file("extdata", "IGH_sequencing", package = "LymphoSeq") #For the IGH files.
+system.file("extdata", "IGH_sequencing", package = "LymphoSeq2") #For the IGH files.
 #> [1] ""
 ```
 
