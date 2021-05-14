@@ -16,7 +16,7 @@
 #' @details The plot is made using the package ggplot2 and can be reformatted
 #' using ggplot2 functions.  See examples below.
 #' @export
-plotTrack <- function(clone_table, alist = NULL, apal = NULL) {
+plotTrack <- function(clone_table, alist = NULL, apal = NULL, breaks = 2, alphas = 0, breaks_pal = c("#7fc97f", "#beaed4")) {
   set.seed(12345)
   # Identify all common sequences across samples
   acommon <- clone_table %>% 
@@ -47,6 +47,8 @@ plotTrack <- function(clone_table, alist = NULL, apal = NULL) {
     sankey <- ggplot2:: ggplot(clone_table, 
                                aes(x = repertoire_id, y = duplicate_frequency, stratum = junction_aa, 
                                    alluvium=junction_aa, fill=junction_aa, label=junction_aa)) + 
+              geom_rect(xmin = 0, xmax = breaks + 0.5, ymin = -0.5, ymax = Inf, fill = breaks_pal[1], alpha=alphas) +
+              geom_rect(xmin = breaks + 0.5, xmax = Inf, ymin = -0.5, ymax = Inf, fill = breaks_pal[2], alpha=alphas) +
               ggalluvial::geom_alluvium() + 
               ggalluvial::geom_stratum(aes(y=duplicate_frequency)) + 
               ggplot2::xlab("Repertoire ID") +
@@ -59,6 +61,8 @@ plotTrack <- function(clone_table, alist = NULL, apal = NULL) {
     sankey <- ggplot2:: ggplot(clone_table, 
                                aes(x = repertoire_id, y = duplicate_frequency, stratum = junction_aa, 
                                    alluvium=junction_aa, fill=junction_aa, label=junction_aa)) + 
+              geom_rect(xmin = 0, xmax = breaks+0.5, ymin = -0.5, ymax = Inf, fill = breaks_pal[1], alpha=alphas) +
+              geom_rect(xmin = breaks+0.5, xmax = Inf, ymin = -0.5, ymax = Inf, fill = breaks_pal[2], alpha=alphas) +
               ggalluvial::geom_alluvium() + 
               ggalluvial::geom_stratum(aes(y=duplicate_frequency)) + 
               ggplot2::xlab("Repertoire ID") +
