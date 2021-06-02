@@ -124,6 +124,11 @@ getFileType <- function(clone_file) {
                "frequencyCount", "vGeneName", "dGeneName", "jGeneName", 
                "vFamilyName", "dFamilyName", "jFamilyName", "sequenceStatus", 
                 "estimatedNumberGenomes")
+    
+    type12 <- c("rearrangement", "amino_acid", "reads", 
+               "frequency", "v_gene", "d_gene", "j_gene", 
+               "v_family", "d_family", "j_family", "frame_type", 
+                "reads")
 
 
     columns <- invisible(colnames(readr::read_tsv(clone_file, 
@@ -220,6 +225,14 @@ getFileType <- function(clone_file) {
                                         vFamilyName = "c", 
                                         dGeneName = "c", 
                                         jGeneAllele = "c")
+    } else if (all(type12 %in% columns)) {
+        file_type <- "type12"
+        header_list <- readr::cols_only(rearrangement = "c", 
+                                        amino_acid = "c", 
+                                        reads = "i", 
+                                        v_gene = "c", 
+                                        d_gene = "c", 
+                                        j_gene = "c")
     }
     ret_val <- list(file_type, header_list)
     return(ret_val)
@@ -275,10 +288,14 @@ getStandard <- function(file_type) {
     type11 <- c(junction = "nucleotide", junction_aa = "aminoAcid", 
                duplicate_count = "count", 
                v_call = "vFamilyName", d_call = "dGeneName", j_call = "jGeneAllele")
+    
+    type12 <- c(junction = "cdr3_rearrangement", junction_aa = "cdr3_amino_acid", 
+               duplicate_count = "reads", 
+               v_call = "v_gene", d_call = "d_gene", j_call = "j_gene")
 
     type_hash <- list("type1"=type1, "type2"=type2, "type3"=type3, "type4"=type4,
                       "type5"=type5, "type6"=type6, "type7"=type7, "type8"=type8,
-                      "type9"=type9, "type10"=type10, "type11"=type11)
+                      "type9"=type9, "type10"=type10, "type11"=type11, "type12"=type12)
     return(type_hash[[file_type]])
 }
 
