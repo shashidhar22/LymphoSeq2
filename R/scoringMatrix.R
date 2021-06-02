@@ -26,7 +26,7 @@
 #' @import tidyverse
 scoringMatrix <- function(productive_table, mode="Bhattacharyya") {
     sample_list <- productive_table %>% 
-                   dplyr::select(repertoire_id, junction_aa, duplicate_frequency) %>% 
+                   dplyr::select(repertoire_id, junction_aa, duplicate_frequency, duplicate_count) %>% 
                    dplyr::group_by(repertoire_id) %>% 
                    dplyr::group_split()
     if (mode == "Bhattacharyya") {
@@ -45,6 +45,22 @@ scoringMatrix <- function(productive_table, mode="Bhattacharyya") {
                           tidyr::pivot_wider(id_cols=sample1, 
                                             names_from=sample2, 
                                             values_from=similarityScore)
+    } else if ( mode == "Sorensen") {
+        scoring_matrix <- list(sample_list, sample_list) %>% 
+                          purrr::cross() %>% 
+                          purrr::map(sorensenIndex) %>%
+                          dplyr::bind_rows() %>% 
+                          tidyr::pivot_wider(id_cols=sample1, 
+                                            names_from=sample2, 
+                                            values_from=sorensenIndex)
+    } else if ( mode == "PSI") {
+        scoring_matrix <- list(sample_list, sample_list) %>% 
+                          purrr::cross() %>% 
+                          purrr::map(percentSI) %>%
+                          dplyr::bind_rows() %>% 
+                          tidyr::pivot_wider(id_cols=sample1, 
+                                            names_from=sample2, 
+                                            values_from=percentSI)
     }
     row_names <- scoring_matrix$sample1
     scoring_matrix <- scoring_matrix %>% 
@@ -132,9 +148,110 @@ similarityScore <- function(sample_list) {
           dplyr::filter(junction_aa %in% sample1$junction_aa) %>% 
           dplyr::summarise(total = sum(duplicate_count)) %>% 
           base::as.integer()
-    score <- (sample1 + sample2)/ (base::sum(sample1$duplicate_count) + base::sum(sample2$duplicate_count))
+    score <- (s1 + s2)/ (base::sum(sample1$duplicate_count) + base::sum(sample2$duplicate_count))
     similarity_score <- tibble::tibble(sample1=sample1$repertoire_id[1], 
                                        sample2=sample2$repertoire_id[1], 
                                        similarityScore=score)
-    return(score)
+    return(similarity_score)
+}
+#' Sorensen index
+#' 
+#' Calculates the Sorensen index between two groups of repertoires. Similar to 
+#' a Jaccard index, Sorensen index gives a greater weight to shared sequences
+#' over unique sequences.
+#' 
+#' @param sample1 A data frame consisting of frequencies of antigen receptor 
+#' sequences.  "junction_aa" and "duplicate_count" are a required columns.
+#' @param sample2 A data frame consisting of frequencies of antigen receptor 
+#' sequences.  "junction_aa" and "duplicate_count" are a required columns.
+#' @return Returns the similarity score, a measure of the amount of 
+#' overlap between two samples.  The value ranges from 0 to 1 where 1 indicates 
+#' the sequence frequencies are identical in the two samples and 0 
+#' indicates no shared frequencies.
+#' @examples
+#' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
+#' 
+#' stable <- readImmunoSeq(path = file_path)
+#' 
+#' atable <- productiveSeq(stable, aggregate = "junction_aa")
+#' 
+#' sample_list <- atable %>% 
+#'                filter(repertoire_id %in% c("TRB_Unsorted_32", "TRB_Unsorted_83")) %>%
+#'                group_by(repertoire_id) %>% group_split()
+#' 
+#' sorensenIndex(sample_list)
+#' @seealso \code{\link{scoringMatrix}}
+#' @import tidyverse
+#' @export
+sorensenIndex <- function(sample_list) {
+    sample1 <- sample_list[[1]]
+    sample2 <- sample_list[[2]]
+    intersection <- dplyr::inner_join(sample1, sample2, by = "junction_aa", suffix = c("_1", "_2"))
+    unique_sample1 <- dplyr::anti_join(sample1, sample2, by = "junction_aa")
+    unique_sample2 <- dplyr::anti_join(sample2, sample1, by = "junction_aa")
+    a <- intersection %>% 
+         dplyr::pull(junction_aa) %>% 
+         unique() %>% 
+         length()
+    b <- unique_sample1 %>% 
+         dplyr::pull(junction_aa) %>% 
+         unique() %>% 
+         length()
+    c <- unique_sample2 %>% 
+         dplyr::pull(junction_aa) %>% 
+         unique() %>% 
+         length()
+    sorensen_index <- (2 * a)/ ((2*a) + b + c)
+    sorensen_score <- tibble::tibble(sample1=sample1$repertoire_id[1], 
+                                       sample2=sample2$repertoire_id[1], 
+                                       sorensenIndex=sorensen_index)
+    return(sorensen_score)
+}
+#' Percent similarity index
+#' 
+#' Calculates the Percent similarity index between two groups of repertoires. Percent 
+#' similarity index, not only compares the number of similar and dissimilar species 
+#' present between two sites, but also incorporate abundance.
+#' 
+#' @param sample1 A data frame consisting of frequencies of antigen receptor 
+#' sequences.  "junction_aa" and "duplicate_count" are a required columns.
+#' @param sample2 A data frame consisting of frequencies of antigen receptor 
+#' sequences.  "junction_aa" and "duplicate_count" are a required columns.
+#' @return Returns the similarity score, a measure of the amount of 
+#' overlap between two samples.  The value ranges from 0 to 1 where 1 indicates 
+#' the sequence frequencies are identical in the two samples and 0 
+#' indicates no shared frequencies.
+#' @examples
+#' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
+#' 
+#' stable <- readImmunoSeq(path = file_path)
+#' 
+#' atable <- productiveSeq(stable, aggregate = "junction_aa")
+#' 
+#' sample_list <- atable %>% 
+#'                filter(repertoire_id %in% c("TRB_Unsorted_32", "TRB_Unsorted_83")) %>%
+#'                group_by(repertoire_id) %>% group_split()
+#' 
+#' percentSI(sample_list)
+#' @seealso \code{\link{scoringMatrix}}
+#' @import tidyverse
+#' @export
+percentSI <- function(sample_list) {
+    sample1 <- sample_list[[1]]
+    sample2 <- sample_list[[2]]
+    combined <- dplyr::full_join(sample1, sample2, by = "junction_aa", suffix = c("_1", "_2")) %>% 
+                dplyr::select(junction_aa, duplicate_frequency_1, duplicate_frequency_2) %>% 
+                dplyr::mutate(duplicate_frequency_1 = tidyr::replace_na(duplicate_frequency_1, 0), 
+                              duplicate_frequency_2 = tidyr::replace_na(duplicate_frequency_2, 0)) %>% 
+                dplyr::group_by(junction_aa, duplicate_frequency_1, duplicate_frequency_2) %>% 
+                dplyr::summarize(min_count = min(duplicate_frequency_1, duplicate_frequency_2)) %>% 
+                ungroup()
+    min_sum <- combined %>% dplyr::pull(min_count) %>% sum()
+    sum_sample1 <- combined %>% dplyr::pull(duplicate_frequency_1) %>% sum()
+    sum_sample2 <- combined %>% dplyr::pull(duplicate_frequency_2) %>% sum()
+    percent_si <- 200 * sum(min_sum) / (sum_sample1 + sum_sample2)
+    psi_score <- tibble::tibble(sample1=sample1$repertoire_id[1], 
+                                       sample2=sample2$repertoire_id[1], 
+                                       percentSI=percent_si)
+    return(psi_score)
 }
