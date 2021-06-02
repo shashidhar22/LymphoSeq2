@@ -44,6 +44,7 @@ pairwisePlot <- function(matrix) {
               dplyr::arrange(repertoire_id, repertoire_id_y)
     ggplot(data = matrix, aes_string(x = "repertoire_id", y = "repertoire_id_y", fill = "score")) + 
     ggplot2::geom_tile() + 
+    ggplot2::geom_text(aes(repertoire_id, repertoire_id_y, label = sprintf("%0.2f", round(score, digits = 2))), color = "black", size = 4) +
     ggplot2::scale_fill_gradient(low = "#fee8c8", high = "#e34a33") + 
     ggplot2::theme_classic() + 
     ggplot2::labs(x = "", y = "", fill = "") + 
