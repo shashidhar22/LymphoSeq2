@@ -289,7 +289,7 @@ getStandard <- function(file_type) {
                duplicate_count = "count", 
                v_call = "vFamilyName", d_call = "dGeneName", j_call = "jGeneAllele")
     
-    type12 <- c(junction = "cdr3_rearrangement", junction_aa = "cdr3_amino_acid", 
+    type12 <- c(junction = "rearrangement", junction_aa = "amino_acid", 
                duplicate_count = "reads", 
                v_call = "v_gene", d_call = "d_gene", j_call = "j_gene")
 
