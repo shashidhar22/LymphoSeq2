@@ -2,18 +2,18 @@
 % Please edit documentation in R/readImmunoSeq.R
 \name{readImmunoSeq}
 \alias{readImmunoSeq}
-\alias{getFileType}
 \alias{getStandard}
 \alias{readFiles}
+\alias{iReceptorFormat}
 \title{Read ImmunoSeq files}
 \usage{
 readImmunoSeq(path, recursive = FALSE)
 
-getFileType(clone_file)
+getStandard(clone_file, airr_fields, matching_fields)
 
-getStandard(file_type)
+readFiles(clone_file, empty_airr_frame, matching_fields, progress)
 
-readFiles(clone_file, progress = NULL)
+iReceptorFormat(clone_frame)
 }
 \arguments{
 \item{path}{Path to the directory containing tab-delimited files.  Only
@@ -22,44 +22,24 @@ the same as names of the files.}
 
 \item{clone_file}{.tsv file containing results from AIRRSeq pipeline}
 
-\item{file_type}{file type from getFileType method}
+\item{airr_fields}{A character vector of MiAIRR headers}
+
+\item{clone_frame}{An AIRR compliant tibble}
 }
 \value{
 Returns a tibble with MiAIRR headers and repertoire_id
 
-List containing file type and standardized header names
-
-List of standard header names
+Tibble of given data with MiAIRR fields
 
 Tibble in MiAIRR format
+
+Tibble in iReceptor format
 }
 \description{
 Imports tab-separated value (.tsv) files exported by the Adaptive
-Biotechnologies ImmunoSEQ analyzer and stores them as MiAIRR compliant
-tibble.
+Biotechnologies ImmunoSEQ analyzer, BGI IR-SEQ, MiXCR and stores
+them as MiAIRR compliant tibble.
 }
-\details{
-May import tab-delimited files containing antigen receptor
-sequencing from with the following header set.\tabular{lllllll}{
-   MiAIRR field ID \tab Type1 \tab Type2 \tab Type3 \tab Type4 \tab Type5 \tab Type6 \cr
-   junction \tab nucleotide \tab nucleotide \tab nucleotide \tab nucleotide.CDR3.in.lowercase . \tab nucleotide( CDR3   in   lowercase ) \tab nSeqCDR3 \cr
-   junction_aa \tab aminoAcid \tab aminoAcid \tab aminoAcid \tab aminoAcid.CDR3.in.lowercase . \tab aminoAcid( CDR3   in   lowercase ) \tab aaSeqCDR3 \cr
-   duplicate_count \tab count ( reads ) \tab count ( templates / reads ) \tab count ( templates ) \tab cloneCount \tab cloneCount \tab cloneCount \cr
-   v_call \tab vGeneName \tab vGeneName \tab vGeneName \tab vGene \tab vGene \tab allVHitsWithScore \cr
-   d_call \tab dGeneName \tab dGeneName \tab dGeneName \tab dGene \tab dGene \tab allDHitsWithScore \cr
-   j_call \tab jGeneName \tab jGeneName \tab jGeneName \tab jGene \tab jGene \tab allJHitsWithScore \cr
-}
-}
-\section{Creating a study table from path containing AIRRSeq files}{
-
-}
-
-\section{Identify file type}{
-
-
-AIRRSeq results have various formats, this functions identifies six formats
-}
-
 \section{Get standard headers}{
 
 
@@ -72,9 +52,9 @@ Retrives MiAIRR standard compliant fields from the clone files
 Given the path to a single AIRRSeq clone file, generate MiAIRR compliant tibble.
 }
 
-\examples{
-file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
+\section{Get iReceptor standard format}{
 
-study_table <- readImmunoSeq(path = file.path, 
-                             recursive = FALSE)
+
+Returns a tibble that is compliant with the iReceptor repertoire format.
 }
+

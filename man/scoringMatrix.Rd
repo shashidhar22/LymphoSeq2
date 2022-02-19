@@ -2,35 +2,28 @@
 % Please edit documentation in R/scoringMatrix.R
 \name{scoringMatrix}
 \alias{scoringMatrix}
-\title{Bhattacharyya matrix}
+\title{Bhattacharyya, Similarity, Sorensen, or PSI matrix}
 \usage{
 scoringMatrix(productive_table, mode = "Bhattacharyya")
 }
 \arguments{
-\item{productive.seqs}{A tibble of productive sequences generated 
-by the LymphoSeq function productiveSeq.  "frequencyCount" and "aminoAcid" 
+\item{productive_table}{A tibble of productive sequences generated
+by the LymphoSeq function productiveSeq.  "duplicate_frequency" and "junction_aa"
 are a required columns.}
+
+\item{mode}{The mode to use for calculating pairwise similarity. Can take the values
+"Bhattacharyya", "Similarity", "Sorensen", or "PSI". Default is "Bhattacharyya".}
 }
 \value{
-A data frame of Bhattacharyya coefficients or Similarity scores calculated from all 
-pairwise comparisons from a list of sample data frames.  Both metrics 
-measure the amount of overlap between two samples.  The 
-value ranges from 0 to 1 where 1 indicates the sequence frequencies are 
+A data frame of Bhattacharyya coefficients, Similarity scores, Sorensen Index, or
+Percent Similarity Index calculated from all pairwise comparisons from a list of
+repertoire_id data frames.  Both metrics measure the amount of overlap between two samples.
+The value ranges from 0 to 1 where 1 indicates the sequence frequencies are
 identical in the two samples and 0 indicates no shared frequencies.
 }
 \description{
-Calculates the Bhattacharyya coefficient of all pairwise comparison from a 
-list of data frames.
-}
-\examples{
-file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
-
-study_table <- readImmunoSeq(path = file.path)
-
-productive_aa <- productiveSeq(study_table, aggregate = "aminoAcid")
-
-bhattacharyya_matrix <- scoringMatrix(productive_table = productive_aa, mode = "Bhattacharyya")
-similarity_matrix <- scoringMatrix(productive_table = productive_aa, mode = "Similarity")
+Calculates the Bhattacharyya coefficient, Similarity score, Sorensen Index, or
+Percent Similarity Index of all pairwise comparison from a list of data frames.
 }
 \seealso{
 \code{\link{pairwisePlot}} for plotting results as a heat map.

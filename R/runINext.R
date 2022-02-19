@@ -6,23 +6,21 @@
 #'
 #' @param sample_table A tibble consisting antigen receptor sequencing 
 #' data imported by the LymphoSeq function readImmunoSeq. "junction_aa", "duplicate_count", and 
-#' "frequencyCount" are required columns.
+#' "duplicate_frequency" are required columns.
+#' @param color 
 #' @examples
-#' file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
-#' 
-#' study_table <- readImmunoSeq(path = file.path)
-#' 
-#' productive_aa <- productiveSeq(study_table = study_table, 
-#'   aggregate = "junction_aa", prevalence = TRUE)
-#'
-#' sample_table <- productive_aa %>% filter(repertoire_id == "TRB_Unsorted_1320")
-#'
+#' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
+#' stable <- readImmunoSeq(path = file_path)
+#' atable <- productiveSeq(stable, 
+#'                         aggregate = "junction_aa", 
+#'                         prevalence = TRUE)
+#' atable <- atable %>% dplyr::filter(repertoire_id == "TRB_Unsorted_1320")
+#' rtable <- runINext(atable)
 #' @export
 #' @import tidyverse
 #' @import iNEXT
 #' @import purrr
-runINext <- function(sample_table, progress, color="repertoire_id") {
-    progress$tick()$print()
+runINext <- function(sample_table, color="repertoire_id") {
     repertoire_id <- sample_table$repertoire_id[1]
     rarefaction_tables <- sample_table %>% 
                           tidyr::pivot_wider(names_from=repertoire_id, 
@@ -30,6 +28,7 @@ runINext <- function(sample_table, progress, color="repertoire_id") {
                                       values_from=duplicate_count, 
                                       values_fill=list(duplicate_count=0)) %>% 
                           dplyr::select(-junction_aa) %>% as.matrix()
+    
     rarefaction_tables <- iNEXT::iNEXT(rarefaction_tables, 
                                        q=0, 
                                        datatype="abundance", 

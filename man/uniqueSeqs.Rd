@@ -4,26 +4,20 @@
 \alias{uniqueSeqs}
 \title{Unique sequences}
 \usage{
-uniqueSeqs(productive_table = productive_table, unique_type = "aminoAcid")
+uniqueSeqs(productive_table = productive_table, unique_type = "junction_aa")
 }
 \arguments{
-\item{productive_table}{A tibble of productive amino acid sequences 
-imported using the function LymphoSeq function productiveSeq where the 
-aggregate parameter was set to "aminoAcid".}
+\item{productive_table}{A tibble of productive amino acid sequences
+imported using the function LymphoSeq function productiveSeq where the
+aggregate parameter was set to "junction_aa".}
+
+\item{unique_type}{Use "junction_aa" to aggregate by amino acid sequences.
+Use "junction" to aggregate by nucleotide sequences. Default is "junction_aa".}
 }
 \value{
-A data frame of unique amino acid sequences from the list of 
-data frames aggregated by count.
+A data frame of unique amino acid sequences from the list of
+data frames aggregated by duplicate_count.
 }
 \description{
-Aggregates all productive sequences within a list of data frames by count.
-}
-\examples{
-file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
-
-study_table <- readImmunoSeq(path = file.path)
-
-productive_table <- productiveSeq(study_table = study_table, aggregate = "aminoAcid")
-
-unique_seqs <- uniqueSeqs(productive_table = productive_table, unique_type = "aminoAcid")
+Aggregates all productive sequences within a list of data frames by duplicate_count.
 }

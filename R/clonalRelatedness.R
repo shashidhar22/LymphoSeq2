@@ -19,24 +19,25 @@
 #' the sequences different by a single amino acid or junction.
 #' @return Returns a tibble with the calculated clonal relatedness for each repertoire_id.
 #' @examples
-#' file.path <- system.file("extdata", "IGH_sequencing", package = "LymphoSeq")
+#' file_path <- system.file("extdata", "IGH_sequencing", package = "LymphoSeq2")
 #' 
-#' study_table <- readImmunoSeq(path = file.path)
+#' stable <- readImmunoSeq(path = file_path)
 #' 
-#' clonal_relatedness <- clonalRelatedness(study_table = study_table, editDistance = 10)
+#' clonal_relatedness <- clonalRelatedness(stable, editDistance = 10)
 #' 
 #' # Merge results with clonality table
-#' clonality <- clonality(file.list = file.list)
-#' merged <- merge(clonality, clonal.relatedness)
+#' clonality <- clonality(stable)
+#' merged <- dplyr::full_join(clonality, clonal_relatedness, by = "repertoire_id")
 #' 
 #' @export
 #' @importFrom stringdist stringdist
 clonalRelatedness <- function(study_table, editDistance = 10){
     clonal_relatedness  <- study_table %>%
-                           group_by(repertoire_id) %>%
-                           group_split() %>%
-                           map(~getRelatedness(.x, editDistance)) %>% 
-                           reduce(rbind)
+                           dplyr::group_by(repertoire_id) %>%
+                           dplyr::group_split() %>%
+                           purrr::map(~getRelatedness(.x, editDistance)) %>% 
+                           dplyr::bind_rows()
+    return(clonal_relatedness)
 }
 
 #' Calculate relatedness
@@ -55,13 +56,13 @@ clonalRelatedness <- function(study_table, editDistance = 10){
 getRelatedness <- function(sample_table, editDistance=10) {
     repertoire_id <- sample_table$repertoire_id[1]
     top_seq <- sample_table %>% 
-               arrange(desc(duplicate_count)) %>% 
-               top_n(1, wt=duplicate_count) %>% 
-               select(junction) %>% 
-               as.character()
+               dplyr::arrange(desc(duplicate_count)) %>% 
+               dplyr::slice_head(n = 1) %>% 
+               dplyr::select(junction) %>% 
+               base::as.character()
     seq_distance <- stringdist::stringdist(top_seq, sample_table$junction)
     related_seq <- seq_distance[seq_distance <= editDistance]
-    relatedness <- length(related_seq)/nrow(sample_table)
-    related_tbl <- tibble(repertoire_id=repertoire_id, clonalRelatedness=relatedness)
+    relatedness <- base::length(related_seq)/base::nrow(sample_table)
+    related_tbl <- tibble::tibble(repertoire_id=repertoire_id, clonalRelatedness=relatedness)
     return(related_tbl)
 }

@@ -1,0 +1,9 @@
+pandoc: '2.11'
+pkgdown: 2.0.2
+pkgdown_sha: ~
+articles: {}
+last_built: 2022-01-27T21:02Z
+urls:
+  reference: https://elulu3.github.io/LymphoSeqTest/reference
+  article: https://elulu3.github.io/LymphoSeqTest/articles
+

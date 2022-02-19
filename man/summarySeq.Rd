@@ -2,16 +2,16 @@
 % Please edit documentation in R/clonality.R
 \name{summarySeq}
 \alias{summarySeq}
-\title{Get summary statistics for each sample in the analysis}
+\title{Get summary statistics for each repertoire_id in the analysis}
 \usage{
 summarySeq(study_table)
 }
 \arguments{
-\item{sample_table}{immune repertoire tibble for each a sample}
+\item{sample_table}{immune repertoire tibble for each a repertoire_id}
 }
 \value{
-Tibble summarizing the sequence infomration for each sample
+Tibble summarizing the sequence information for each repertoire_id
 }
 \description{
-Get summary statistics for each sample in the analysis
+Get summary statistics for each repertoire_id in the analysis
 }

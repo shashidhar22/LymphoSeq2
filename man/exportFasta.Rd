@@ -6,34 +6,34 @@
 \usage{
 exportFasta(
   study_table,
-  type = "nucleotide",
-  names = c("rank", "aminoAcid", "count")
+  type = "junction",
+  names = c("rank", "junction_aa", "duplicate_count")
 )
 }
 \arguments{
-\item{type}{A character vector indicating whether "aminoAcid" or "nucleotide" sequences
-should be exported.  If "aminoAcid" is specified, then run productiveSeqs first.}
+\item{type}{A character vector indicating whether "junction_aa" or "junction" sequences
+should be exported.  If "junction_aa" is specified, then run productiveSeqs first.}
 
 \item{names}{A character vector of one or more column names to name the sequences.
 If "rank" is specified, then the rank order of the sequences by frequency is used.}
 
-\item{samlpe_table}{A tibble consisting of antigen receptor sequences 
+\item{sample_table}{A tibble consisting of antigen receptor sequences
 imported by the LymphoSeq function readImmunoSeq.}
 }
 \value{
 Exports fasta files to the working directory.
 }
 \description{
-Export nucleotide or amino acid sequences in fasta format.
+Export junction or amino acid sequences in fasta format.
 }
 \examples{
-file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
+file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
 
-study_table <- readImmunoSeq(path = file.path)
+stable <- readImmunoSeq(path = file_path)
 
-exportFasta(study_table = study_table, type = "nucleotide", names = c("rank", "aminoAcid", "count"))
+exportFasta(study_table = stable, type = "junction", names = c("junction_aa", "duplicate_count"))
 
-productive_aa <- productiveSeq(study_table = study_table, aggregate = "aminoAcid")
+atable <- productiveSeq(study_table = stable, aggregate = "junction_aa")
 
-exportFasta(list = productive_aa, type = "aminoAcid", names = "frequencyCount")
+exportFasta(study_table = atable, type = "junction_aa", names = "duplicate_frequency")
 }
