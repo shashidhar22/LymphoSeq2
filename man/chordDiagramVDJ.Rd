@@ -7,40 +7,40 @@
 chordDiagramVDJ(study_table, association = "VJ", colors = c("red", "blue"))
 }
 \arguments{
-\item{association}{A character vector of gene familes to associate.  Options 
-include "VJ" or "DJ".}
-
-\item{colors}{A character vector of 2 colors corresponding to the V/D and J 
-gene colors respectively.}
-
-\item{sample}{A tibble consisting of frequencies of antigen receptor 
-sequences.  "vFamilyName", "jFamilyName", and if applicable, "dFamilyName" 
+\item{study_table}{A tibble consisting of frequencies of antigen receptor
+sequences.  "v_family", "j_family", and if applicable, "d_family"
 are a required columns.  Using output from the LymphoSeq function topSeqs is
 recommended.}
+
+\item{association}{A character vector of gene families to associate.  Options
+include "VJ" or "DJ".}
+
+\item{colors}{A character vector of 2 colors corresponding to the V/D and J
+gene colors respectively.}
 }
 \value{
-Returns a chord diagram showing VJ or DJ gene associations from one or 
+Returns a chord diagram showing VJ or DJ gene associations from one or
 more samples.
 }
 \description{
-Creates a chord diagram showing VJ or DJ gene associations from one or more 
+Creates a chord diagram showing VJ or DJ gene associations from one or more
 samples.
 }
 \details{
-The size of the ribbons connecting VJ or DJ genes correspond to the 
-number of samples or number of sequences that make up that recombination 
+The size of the ribbons connecting VJ or DJ genes correspond to the
+number of samples or number of sequences that make up that recombination
 event.  The thicker the ribbon, the higher the frequency of the recombination.
 }
 \examples{
-file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
+file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
 
-study_table <- readImmunoSeq(path = file.path)
+stable <- readImmunoSeq(file_path)
 
-productive_nt <- productiveSeq(study_table = study_table, aggregate = "nucleotide")
+ntable <- productiveSeq(stable, aggregate = "junction")
 
-top_seqs <- topSeqs(productive_table = productive_nt, top = 1)
+top_seqs <- topSeqs(ntable, top = 1)
 
-chordDiagramVDJ(sample = top_seqs, association = "VJ", colors = c("red", "blue"))
+chordDiagramVDJ(top_seqs, association = "VJ", colors = c("red", "blue"))
 
 
 }

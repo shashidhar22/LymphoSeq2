@@ -2,28 +2,28 @@
 % Please edit documentation in R/runINext.R
 \name{runINext}
 \alias{runINext}
-\title{Run iNEXT on samples}
+\title{Run iNEXT on repertoire_ids}
 \usage{
-runINext(sample_table, progress, color = "sample")
+runINext(sample_table, color = "repertoire_id")
 }
 \arguments{
-\item{sample_table}{A tibble consisting antigen receptor sequencing 
-data imported by the LymphoSeq function readImmunoSeq. "aminoAcid", "count", and 
-"frequencyCount" are required columns.}
+\item{sample_table}{A tibble consisting antigen receptor sequencing
+data imported by the LymphoSeq function readImmunoSeq. "junction_aa", "duplicate_count", and
+"duplicate_frequency" are required columns.}
+
+\item{color}{}
 }
 \description{
-Given a sample table, for each generate rarefaction curves to estimate 
+Given a repertoire_id table, for each generate rarefaction curves to estimate
 repertoire diversity. The method used to generate the rarefaction curve
 is derived from Chao et al., (2014) using the iNEXT library
 }
 \examples{
-file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
-
-study_table <- readImmunoSeq(path = file.path)
-
-productive_aa <- productiveSeq(study_table = study_table, 
-  aggregate = "aminoAcid", prevalence = TRUE)
-
-sample_table <- productive_aa \%>\% filter(sample == "TRB_Unsorted_1320")
-
+file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
+stable <- readImmunoSeq(path = file_path)
+atable <- productiveSeq(stable, 
+                        aggregate = "junction_aa", 
+                        prevalence = TRUE)
+atable <- atable \%>\% dplyr::filter(repertoire_id == "TRB_Unsorted_1320")
+rtable <- runINext(atable)
 }

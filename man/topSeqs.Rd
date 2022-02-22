@@ -7,29 +7,20 @@
 topSeqs(productive_table, top = 1)
 }
 \arguments{
-\item{productive_table}{A tibble of productive sequences generated 
-by the LymphoSeq function productiveSeq.  "frequencyCount" and "aminoAcid" 
+\item{productive_table}{A tibble of productive sequences generated
+by the LymphoSeq function productiveSeq.  "duplicate_frequency" and "junction_aa"
 are a required columns.}
 
-\item{top}{The number of top productive sequences in each data frame to subset 
+\item{top}{The number of top productive sequences in each data frame to subset
 by their frequencies.}
 }
 \value{
-Returns a tibble of a selected number of top productive sequences 
+Returns a tibble of a selected number of top productive sequences
 from a list of data frames.
 }
 \description{
-Creates a tibble of a selected number of top productive sequences 
+Creates a tibble of a selected number of top productive sequences
 from the study table.
-}
-\examples{
-file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
-
-study_table <- readImmunoSeq(path = file.path)
-
-productive_table <- productiveSeq(study_table = study_table, aggregate = "aminoAcid")
-
-top_seqs <- topSeqs(productive_table = productive_table, top = 1)
 }
 \seealso{
 \code{\link{chordDiagramVDJ}}

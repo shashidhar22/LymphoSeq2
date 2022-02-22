@@ -9,7 +9,7 @@
 #' was set to "junction_aa".
 #' @param repertoire_ids The names of two or more repertoire_ids in the productive_aa 
 #' list whose intersections will shown.
-#' @param color+repertoire_id The name of a single repertoire_id in the productive_aa list whose 
+#' @param color_sample The name of a single repertoire_id in the productive_aa list whose 
 #' sequences will be colored in all repertoire_ids that they appear in.
 #' @param color_intersection The names of two or more repertoire_ids in the productive_aa 
 #' list whose intersections will be colored.
@@ -20,51 +20,59 @@
 #' include "yes" or "no".
 #' @return Returns an UpSetR bar plot showing the number of intersecting sequences 
 #' across multiple repertoire_ids.
+#' @seealso \code{\link{commonSeqs}}
 #' @examples
-#' file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
+#' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
 #' 
-#' file.list <- readImmunoSeq(path = file.path)
+#' stable <- readImmunoSeq(path = file_path)
 #' 
-#' productive.aa <- productiveSeq(file.list = file.list, aggregate = "junction_aa")
+#' atable <- productiveSeq(stable, aggregate = "junction_aa")
 #' 
-#' commonSeqsBar(productive.aa = productive.aa, repertoire_ids = c("TRB_CD4_949", "TRB_CD8_949", 
-#' "TRB_Unsorted_949", "TRB_Unsorted_1320"), color.repertoire_id = "TRB_CD8_949")
+#' commonSeqsBar(atable, repertoire_ids = c("TRB_CD4_949", "TRB_CD8_949",
+#' "TRB_Unsorted_949", "TRB_Unsorted_1320"), color_sample = "TRB_CD8_949")
 #' @export
-#' @import UpSetR
 #' @import tidyverse
-commonSeqsBar <- function(productive_aa, repertoire_ids, color_sample = NULL , 
+commonSeqsBar <- function(productive_aa, repertoire_ids, color_sample = NULL,
                          color_intersection = NULL, color = "#377eb8", labels = "no"){
-    unique_seqs <- uniqueSeqs(productive_table = productive_aa)
-    sequence_matrix <- seqMatrix(productive_aa = productive_aa, sequences = unique_seqs) 
-    junction_aa <- rownames(sequence_matrix)
-    sequence_matrix = sequence_matrix[,-c(1)]
+    unique_seqs <- LymphoSeq2::uniqueSeqs(productive_table = productive_aa) %>% pull(junction_aa)
+    sequence_matrix <- LymphoSeq2::seqMatrix(productive_aa = productive_aa, sequences = unique_seqs) 
+    junction_aa <- sequence_matrix %>% 
+                   dplyr::pull(junction_aa)
+    sequence_matrix <- sequence_matrix %>% 
+                      dplyr::select(-junction_aa) %>%
+                      base::as.matrix()
     sample_names <- colnames(sequence_matrix)
     sequence_matrix[sequence_matrix > 0] <- 1
-    sequence_matrix <- sequence_matrix %>% data.frame()
-    colnames(sequence_matrix) <- sample_names
-    sequence_matrix <- cbind(junction_aa, sequence_matrix) 
-
+    sequence_matrix <- sequence_matrix %>% 
+                       base::as.data.frame()
+    sequence_matrix[["junction_aa"]] <- junction_aa
+    
+    
     if(!is.null(color_sample)){
         queryFunction = function(row, sequence) {
-            data <- (row["junction_aa"] %in% sequence)
+            data <- (row[["junction_aa"]] %in% sequence)
         }
-        UpSetR::upset(sequence_matrix,
-              sets = repertoire_ids,
-              nsets = length(repertoire_ids), 
-              nintersects = NA,
-              mainbar.y.label = "Number of intersecting sequences",
-              sets.x.label = "Number of sequences",
-              mb.ratio = c(0.7, 0.3),
-              show.numbers = labels,
-              matrix.dot.alpha = 0,
-              query.legend = "bottom",
-              queries = list(list(query = queryFunction, 
-                                  params = list(productive_aa[[color_sample]]$junction_aa), 
-                                  color = "#377eb8",
-                                  active = TRUE,
-                                  query.name = color_sample)))
+        seq_list <- productive_aa %>% 
+                    dplyr::filter(repertoire_id == color_sample) %>%
+                    dplyr::pull(junction_aa)
+        upplot <- UpSetR::upset(sequence_matrix,
+                                sets = repertoire_ids,
+                                nsets = length(repertoire_ids), 
+                                nintersects = NA,
+                                text.scale = 1,
+                                mainbar.y.label = "Number of intersecting sequences",
+                                sets.x.label = "Number of sequences",
+                                mb.ratio = c(0.7, 0.3),
+                                show.numbers = labels,
+                                matrix.dot.alpha = 0,
+                                query.legend = "bottom",
+                                queries = list(list(query = queryFunction, 
+                                                    params = list(seq_list), 
+                                                    color = "#377eb8",
+                                                    active = TRUE,
+                                                    query.name = color_sample)))
     } else if(!is.null(color_intersection)){
-        UpSetR::upset(sequence_matrix,
+        upplot <- UpSetR::upset(sequence_matrix,
               sets = repertoire_ids,
               nsets = length(repertoire_ids), 
               nintersects = NA,
@@ -73,19 +81,22 @@ commonSeqsBar <- function(productive_aa, repertoire_ids, color_sample = NULL ,
               mb.ratio = c(0.7, 0.3),
               show.numbers = labels,
               matrix.dot.alpha = 0,
-              queries = list(list(query = elements, 
+              text.scale = 1,
+              queries = list(list(query = UpSetR::elements,
                                   params = list(color_intersection), 
                                   color = color,
                                   active = TRUE)))
     } else if(is.null(color_sample) & is.null(color_intersection)){
-        UpSetR::upset(sequence_matrix,
+        upplot <- UpSetR::upset(sequence_matrix,
               sets = repertoire_ids,
               nsets = length(repertoire_ids), 
               nintersects = NA,
+              text.scale = 1,
               mainbar.y.label = "Number of intersecting sequences",
               sets.x.label = "Number of sequences",
               mb.ratio = c(0.7, 0.3),
               show.numbers = labels,
               matrix.dot.alpha = 0)
     }
+    return(upplot)
 }

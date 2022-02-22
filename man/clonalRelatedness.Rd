@@ -7,40 +7,40 @@
 clonalRelatedness(study_table, editDistance = 10)
 }
 \arguments{
-\item{study_table}{A tibble of unproductive or productive nucleotide 
-sequences or productive nucleotide sequences.  Nucleotide and count are 
+\item{study_table}{A tibble of unproductive or productive junction
+sequences or productive junction sequences.  Junction and duplicate_count are
 required columns.}
 
-\item{editDistance}{An integer giving the minimum edit distance that the 
+\item{editDistance}{An integer giving the minimum edit distance that the
 sequence must be less than or equal to. See details below.}
 }
 \value{
-Returns a tibble with the calculated clonal relatedness for each sample.
+Returns a tibble with the calculated clonal relatedness for each repertoire_id.
 }
 \description{
-Calculates the clonal relatedness for each sample in a study.
+Calculates the clonal relatedness for each repertoire_id in a study.
 }
 \details{
-Clonal relatedness is the proportion of nucleotide sequences that
+Clonal relatedness is the proportion of junction sequences that
 are related by a defined edit distance threshold.  The value ranges from 0 to
-1 where 0 indicates no sequences are related and 1 indicates all sequences 
+1 where 0 indicates no sequences are related and 1 indicates all sequences
 are related.
 
-Edit distance is a way of quantifying how dissimilar two sequences 
-are to one another by counting the minimum number of operations required to 
-transform one sequence into the other. For example, an edit distance of 0 
-means the sequences are identical and an edit distance of 1 indicates that 
-the sequences different by a single amino acid or nucleotide.
+Edit distance is a way of quantifying how dissimilar two sequences
+are to one another by counting the minimum number of operations required to
+transform one sequence into the other. For example, an edit distance of 0
+means the sequences are identical and an edit distance of 1 indicates that
+the sequences different by a single amino acid or junction.
 }
 \examples{
-file.path <- system.file("extdata", "IGH_sequencing", package = "LymphoSeq")
+file_path <- system.file("extdata", "IGH_sequencing", package = "LymphoSeq2")
 
-study_table <- readImmunoSeq(path = file.path)
+stable <- readImmunoSeq(path = file_path)
 
-clonal_relatedness <- clonalRelatedness(study_table = study_table, editDistance = 10)
+clonal_relatedness <- clonalRelatedness(stable, editDistance = 10)
 
 # Merge results with clonality table
-clonality <- clonality(file.list = file.list)
-merged <- merge(clonality, clonal.relatedness)
+clonality <- clonality(stable)
+merged <- dplyr::full_join(clonality, clonal_relatedness, by = "repertoire_id")
 
 }

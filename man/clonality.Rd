@@ -7,47 +7,48 @@
 clonality(study_table)
 }
 \arguments{
-\item{study_table}{A tibble consisting of antigen receptor 
-sequencing imported by the LymphoSeq function readImmunoSeq. "aminoAcid", "count", 
-and "frequencyCount" are required columns.  "estimatedNumberGenomes" is optional.  
-Note that clonality is usually calculated from productive nucleotide sequences.  
-Therefore, it is not recommended to run this function using a productive sequence
-list aggregated by amino acids.}
+\item{study_table}{A tibble consisting of antigen receptor
+sequencing imported by the LymphoSeq function readImmunoSeq. "junction_aa", "duplicate_count",
+and "duplicate_frequency" are required columns. Note that clonality is usually calculated from
+productive junction sequences. Therefore, it is not recommended to run this function using a
+productive sequence list aggregated by amino acids.}
 }
 \value{
-Returns a tibble giving the total number of sequences, number of 
-unique productive sequences, number of genomes, clonality, Gini coefficient, 
-and the frequency (\%) of the top productive sequence in each sample.
+Returns a tibble giving the total number of sequences, number of
+unique productive sequences, number of genomes, clonality, Gini coefficient,
+and the frequency (\\%) of the top productive sequence, simpson index,
+inverse simpson index, hill diversity index, chao diversity index, and kemp diversity index
+for each repertoire_id.
 }
 \description{
-Creates a tibble giving the total number of sequences, number of unique 
-productive sequences, number of genomes, entropy, clonality, Gini 
-coefficient, and the frequency (\%) of the top productive sequences form a sample tibble.
+Creates a tibble giving the total number of sequences, number of unique
+productive sequences, number of genomes, entropy, clonality, Gini
+coefficient, and the frequency (\\%) of the top productive sequences form a repertoire_id tibble.
 }
 \details{
-Clonality is derived from the Shannon entropy, which is calculated 
-from the frequencies of all productive sequences divided by the logarithm of 
-the total number of unique productive sequences.  This normalized entropy 
-value is then inverted (1 - normalized entropy) to produce the clonality 
-metric.  
+Clonality is derived from the Shannon entropy, which is calculated
+from the frequencies of all productive sequences divided by the logarithm of
+the total number of unique productive sequences.  This normalized entropy
+value is then inverted (1 - normalized entropy) to produce the clonality
+metric.
 
-The Gini coefficient is an alternative metric used to calculate repertoire 
-diversity and is derived from the Lorenz curve.  The Lorenz curve is drawn 
-such that x-axis represents the cumulative percentage of unique sequences and 
-the y-axis represents the cumulative percentage of reads.  A line passing 
-through the origin with a slope of 1 reflects equal frequencies of all clones.  
-The Gini coefficient is the ratio of the area between the line of equality 
-and the observed Lorenz curve over the total area under the line of equality.  
-Both Gini coefficient and clonality are reported on a scale from 0 to 1 where 
-0 indicates all sequences have the same frequency and 1 indicates the 
+The Gini coefficient is an alternative metric used to calculate repertoire
+diversity and is derived from the Lorenz curve.  The Lorenz curve is drawn
+such that x-axis represents the cumulative percentage of unique sequences and
+the y-axis represents the cumulative percentage of reads.  A line passing
+through the origin with a slope of 1 reflects equal frequencies of all clones.
+The Gini coefficient is the ratio of the area between the line of equality
+and the observed Lorenz curve over the total area under the line of equality.
+Both Gini coefficient and clonality are reported on a scale from 0 to 1 where
+0 indicates all sequences have the same frequency and 1 indicates the
 repertoire is dominated by a single sequence.
 }
 \examples{
-file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
+file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
 
-study_table <- readImmunoSeq(path = file.path)
+stable <- readImmunoSeq(path = file_path)
 
-clonality(study_table = study_table)
+clonality(stable)
 }
 \seealso{
 \code{\link{lorenzCurve}}

@@ -4,40 +4,36 @@
 #' Biotechnologies ImmunoSEQ analyzer, BGI IR-SEQ, MiXCR and stores 
 #' them as MiAIRR compliant tibble. 
 #' 
-#' @details May import tab-delimited files containing antigen receptor 
-#' sequencing from with the following header set.  
-#' 
-#' | MiAIRR field ID | Type1           | Type2                       | Type3               | Type4                          | Type5                               | Type6             |
-#' | --------------- | --------------- | --------------------------- | ------------------- | ------------------------------ | ----------------------------------- | ----------------- |
-#' | junction        | nucleotide      | nucleotide                  | nucleotide          | nucleotide.CDR3.in.lowercase . | nucleotide( CDR3   in   lowercase ) | nSeqCDR3          |
-#' | junction_aa     | aminoAcid       | aminoAcid                   | aminoAcid           | aminoAcid.CDR3.in.lowercase .  | aminoAcid( CDR3   in   lowercase )  | aaSeqCDR3         |
-#' | duplicate_count | count ( reads ) | count ( templates / reads ) | count ( templates ) | cloneCount                     | cloneCount                          | cloneCount        |
-#' | v_call          | vGeneName       | vGeneName                   | vGeneName           | vGene                          | vGene                               | allVHitsWithScore |
-#' | d_call          | dGeneName       | dGeneName                   | dGeneName           | dGene                          | dGene                               | allDHitsWithScore |
-#' | j_call          | jGeneName       | jGeneName                   | jGeneName           | jGene                          | jGene                               | allJHitsWithScore |
-#'
 #' @md
 #' @name readImmunoSeq
-NULL
-#' @describeIn readImmunoSeq Read a set of files 
-#' @param path Path to the directory containing tab-delimited files.  Only 
+#' @describeIn readImmunoSeq Read a set of files
+#' @param path Path to the directory containing tab-delimited files.  Only
 #' files with the extension .tsv are imported.  The names of the data frames are 
 #' the same as names of the files.
 #' 
 #' @return Returns a tibble with MiAIRR headers and repertoire_id
 #'
 #' @examples
-#' file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
+#' file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2
 #' 
-#' study_table <- readImmunoSeq(path = file.path, 
+#' study_table <- readImmunoSeq(path = file.path,
 #'                              recursive = FALSE)
 #' @export
-#' @import tidyverse dplyr
+#' @import tidyverse dplyr stringr
 #' @rdname readImmunoSeq
 readImmunoSeq <- function(path, recursive = FALSE) {
-    file_paths <- list.files(path, full.names = TRUE, all.files = FALSE, 
-                             recursive = recursive, pattern = ".tsv|.txt|.tsv.gz", 
-                             include.dirs = FALSE)
+    if (length(path) > 1) {
+        file_paths <- path
+    } else if (file_test("-d", path)) {
+        file_paths <- list.files(path, 
+                                 full.names = TRUE, 
+                                 all.files = FALSE, 
+                                 recursive = recursive, 
+                                 pattern = ".tsv|.txt|.tsv.gz", 
+                                 include.dirs = FALSE)
+    } else {
+        file_paths <- c(path)
+    }
     file_num <- length(file_paths)
     file_info <- file.info(file_paths)
     file_paths <- rownames(file_info)[file_info$size > 0]
@@ -45,192 +41,146 @@ readImmunoSeq <- function(path, recursive = FALSE) {
         warning("One or more of the files you are trying to import has no sequences and will be ignored.", 
                 call. = FALSE)
     }
-    progress <- dplyr::progress_estimated(length(file_paths))
-    file_list <- file_paths %>% purrr::map(~ readFiles(.x, progress)) %>% 
-                 bind_rows()
-    progress$stop()
+    airr_headers_path <- system.file("extdata", "AIRR_fields.csv", package = "LymphoSeq2")
+    airr_fields <- readr::read_csv(airr_headers_path, trim_ws = TRUE)
+    matching_fields <- c(amino_acid = "sequence_aa", aminoAcid = "sequence_aa",
+                        aminoAcid.CDR3.in.lowercase. = "sequence_aa", cdr1_amino_acid = "cdr1_aa",
+                        cdr1_rearrangement = "cdr1", cdr2_amino_acid = "cdr2_aa",
+                        cdr2_rearrangement = "cdr2", cdr3_amino_acid = "cdr3_aa",
+                        cdr3_rearrangement = "cdr3", d_allele_ties = "d2_call",
+                        dGeneNameTies = "d2_call", count = "duplicate_count",
+                        "count (reads)" = "duplicate_count", "count (templates)" = "duplicate_count",
+                        "count (templates/reads)" = "duplicate_count", d_resolved = "d_call",
+                        dMaxResolved = "d_call", frame_type = "productive", fuction = "productive",
+                        j_resolved = "j_call", jMaxResolved = "j_call", locus = "locus",
+                        nucleotide = "sequence", nucleotide.CDR3.in.lowercase. = "sequence",
+                        v_resolved = "v_call", vMaxResolved = "v_call")
+    progress_bar <- progress::progress_bar$new(format = "Reading AIRR-Seq files [:bar] :percent eta: :eta",
+                                           total = length(file_paths), clear = FALSE, width = 60)
+    progress_bar$tick(0)
+    file_list <- file_paths %>% 
+                 purrr::map(~ readFiles(.x, airr_fields, matching_fields, progress_bar)) %>%
+                 dplyr::bind_rows()
+    progress_bar$terminate()
     return(file_list)
-}
-
-#' @section Identify file type:
-#'
-#' AIRRSeq results have various formats, this functions identifies six formats 
-#' 
-#' @param clone_file .tsv file containing results from AIRRSeq pipeline
-#'
-#' @return List containing file type and standardized header names 
-#'
-#' @import tidyverse
-#' @export
-#' @rdname readImmunoSeq
-getFileType <- function(clone_file) {
-    type1 <- c("nucleotide", "aminoAcid", "count (reads)", "frequencyCount (%)", "vGeneName", 
-        "dGeneName", "jGeneName", "vFamilyName", "dFamilyName", "jFamilyName", "sequenceStatus", 
-        "estimatedNumberGenomes")
-        
-    type2 <- c("nucleotide", "aminoAcid", "count (templates/reads)", "frequencyCount (%)", "vGeneName", 
-        "dGeneName", "jGeneName", "vFamilyName", "dFamilyName", "jFamilyName", "sequenceStatus", 
-        "estimatedNumberGenomes")
-    
-    type3 <- c("nucleotide", "aminoAcid", "count (templates)", "frequencyCount (%)", "vGeneName", 
-        "dGeneName", "jGeneName", "vFamilyName", "dFamilyName", "jFamilyName", "sequenceStatus", 
-        "estimatedNumberGenomes")
-
-    type4 <- c("nucleotide", "aminoAcid", "count", "frequencyCount", "vGeneName", 
-        "dGeneName", "jGeneName", "vFamilyName", "dFamilyName", "jFamilyName", "sequenceStatus", 
-        "estimatedNumberGenomes")
-    
-    type5 <- c("nucleotide.CDR3.in.lowercase.", "aminoAcid.CDR3.in.lowercase.", "cloneCount", 
-        "clonefrequency....", "vGene", "dGene", "jGene", "fuction")
-
-    type6 <- c("nucleotide(CDR3 in lowercase)", "aminoAcid(CDR3 in lowercase)", "cloneCount",
-        "clonefrequency (%)", "vGene", "dGene", "jGene", "fuction")
-    
-    type7 <- c("cloneCount", "cloneFraction", "allVHitsWithScore", "allDHitsWithScore",
-        "allJHitsWithScore", "nSeqCDR3", "aaSeqCDR3")
-
-    type8 <- c("duplicate_count", "v_call", "d_call", "j_call", "junction", "junction_aa")
-
-    columns <- invisible(colnames(readr::read_tsv(clone_file, n_max=1, col_types = cols())))
-    if (all(type1 %in% columns)) {
-        file_type <- "type1"
-        header_list <- readr::cols_only(nucleotide = "c", aminoAcid = "c", `count (reads)` = "i", 
-                vGeneName = "c", dGeneName = "c", jGeneName = "c")
-    } else if (all(type2 %in% columns)) {
-        file_type <- "type2"
-        header_list <- readr::cols_only(nucleotide = "c", aminoAcid = "c", `count (templates/reads)` = "i", 
-                vGeneName = "c", dGeneName = "c", jGeneName = "c")
-    } else if (all(type3 %in% columns)) {
-        file_type <- "type3"
-        header_list <- readr::cols_only(nucleotide = "c", aminoAcid = "c", `count (templates)` = "i", 
-                vGeneName = "c", dGeneName = "c", jGeneName = "c")
-    } else if (all(type4 %in% columns)) {
-        file_type <- "type4"
-        header_list <- readr::cols_only(nucleotide = "c", aminoAcid = "c", `count` = "i", 
-                vGeneName = "c", dGeneName = "c", jGeneName = "c")
-    } else if (all(type5 %in% columns)) {
-        file_type <- "type5"
-        header_list <- readr::cols_only(`nucleotide.CDR3.in.lowercase.` = "c", 
-                `aminoAcid.CDR3.in.lowercase.` = "c", cloneCount = "i", `clonefrequency....` = "d",
-                vGene = "c", dGene = "c", jGene = "c")
-    } else if (all(type6 %in% columns)) {
-        file_type <- "type6"
-        header_list <- readr::cols_only(`nucleotide(CDR3 in lowercase)` = "c", 
-                `aminoAcid(CDR3 in lowercase)` = "c", cloneCount = "i", 
-                `clonefrequency (%)` = "d", vGene = "c", dGene = "c", jGene = "c")
-    } else if (all(type7 %in% columns)) {
-        file_type <- "type7"
-        header_list <- readr::cols_only(cloneCount = 'd', cloneFraction = 'd', 
-                allVHitsWithScore = 'c', allDHitsWithScore = 'c', 
-                allJHitsWithScore = 'c', nSeqCDR3 = 'c', aaSeqCDR3 = 'c')
-    } else if (all(type8 %in% columns)) {
-        file_type <- "type8"
-        header_list <- readr::cols_only(duplicate_count = 'd', 
-                v_call = 'c', d_call = 'c', j_call = 'c', junction = 'c', junction_aa = 'c')
-    }
-    ret_val <- list(file_type, header_list)
-    return(ret_val)
 }
 
 #' @section Get standard headers:
 #'
 #' Retrives MiAIRR standard compliant fields from the clone files
 #'
-#' @param file_type file type from getFileType method
-#'
-#' @return List of standard header names 
+#' @param clone_file A .tsv file to read in and standardize its fields to be MiAIRR compliant
+#' @param airr_fields A character vector of MiAIRR headers
+#' @return Tibble of given data with MiAIRR fields
 #'
 #' @import tidyverse
 #' @export
 #' @rdname readImmunoSeq
-getStandard <- function(file_type) {
-    type1 <- c(junction = "nucleotide", junction_aa = "aminoAcid", 
-               duplicate_count = "count (reads)", v_call = "vGeneName", 
-               d_call = "dGeneName", j_call = "jGeneName")
+getStandard <- function(clone_file, airr_fields, matching_fields) {
+    clone_data <- readr::read_tsv(clone_file, na = c("", "NA", "Nan", "NaN", "unresolved"))
+    existing_match <- airr_fields[airr_fields %in% colnames(clone_data)]
+    if (length(existing_match) == 144) {
+        return(clone_data)
+    }
+    existing_airr_data <- clone_data %>%
+                            dplyr::select(existing_match)
+    match <- matching_fields[colnames(clone_data)] %>%
+             stats::na.omit()
+    renamed_data <- clone_data[names(match)] %>%
+                dplyr::rename(!!! stats::setNames(names(match), match))
+    if ("d2_call" %in% colnames(renamed_data)) {
+        renamed_data <- renamed_data %>% 
+                        tidyr::separate("d2_call", c("d_call_2", "d2_call"), ",") %>% 
+                        dplyr::mutate(d_call = coalesce(d_call, d_call_2)) %>%
+                        dplyr::select(-d_call_2)
+    }
+    clone_data <- dplyr::bind_cols(existing_airr_data, renamed_data)
 
-    type2 <- c(junction = "nucleotide", junction_aa = "aminoAcid", 
-               duplicate_count = "count (templates/reads)",
-               v_call = "vGeneName", d_call = "dGeneName", j_call = "jGeneName")
-
-    type3 <- c(junction = "nucleotide", junction_aa = "aminoAcid", 
-               duplicate_count = "count (templates)", 
-               v_call = "vGeneName", d_call = "dGeneName", j_call = "jGeneName")
-
-    type4 <- c(junction = "nucleotide", junction_aa = "aminoAcid", 
-               duplicate_count = "count", v_call = "vGeneName", d_call = "dGeneName", 
-               j_call = "jGeneName")
-
-    type5 <- c(junction = "nucleotide.CDR3.in.lowercase.", junction_aa = "aminoAcid.CDR3.in.lowercase.", 
-               duplicate_count = "cloneCount", v_call = "vGene", d_call = "dGene", j_call = "jGene")   
+    file_name <- basename(clone_file)
+    file_name <- file_name %>% stringr::str_sub(1, stringr::str_length(file_name) - 4)
     
-    type6 <- c(junction = "nucleotide(CDR3 in lowercase)", junction_aa = "aminoAcid(CDR3 in lowercase)", 
-               duplicate_count = "cloneCount", v_call = "vGene", d_call = "dGene", j_call = "jGene")   
-    
-    type7 <- c(junction = "nSeqCDR3", junction_aa = "aaSeqCDR3", duplicate_count = "cloneCount",
-               v_call = "allVHitsWithScore", j_call = "allJHitsWithScore", d_call = "allDHitsWithScore")
+    clone_data <- clone_data %>% mutate(repertoire_id = file_name)
+    if ("sequence" %in% colnames(clone_data) && "sequence_aa" %in% colnames(clone_data)) {
+        clone_data <- clone_data %>%
+                    dplyr::mutate(junction = sequence,
+                                  junction_aa = sequence_aa)
+    } else {
+        clone_data <- clone_data %>%
+                    dplyr::mutate(sequence = junction,
+                                  sequence_aa = junction_aa)
+    }
+    clone_data <- clone_data %>%
+                    dplyr::mutate(clone_id = junction)
+    unique_nucl <- clone_data %>%
+                    dplyr::select(clone_id) %>%
+                    dplyr::distinct()
+    nucl <- unique_nucl[, "clone_id", drop = TRUE]
+    clone_data <- clone_data %>%
+            dplyr::mutate(clone_id = stringr::str_c(file_name, "_", c(which(nucl == clone_id)))) 
 
-    type8 <- c(junction = "junction", junction_aa = "junction_aa", duplicate_count = "duplicate_count",
-               v_call = "v_call", j_call = "j_call", d_call = "d_call")
-
-    type_hash <- list("type1"=type1, "type2"=type2, "type3"=type3, "type4"=type4,
-                      "type5"=type5, "type6"=type6, "type7"=type7, "type8"=type8)
-    return(type_hash[[file_type]])
+    return(clone_data)
 }
 
 #' @section Read clone file from path:
-#' 
+#'
 #' Given the path to a single AIRRSeq clone file, generate MiAIRR compliant tibble.
 #'
 #' @param clone_file .tsv file containing results from AIRRSeq pipeline
 #'
-#' @return Tibble in MiAIRR format 
+#' @return Tibble in MiAIRR format
 #'
 #' @import tidyverse
 #' @export
 #' @rdname readImmunoSeq
-readFiles <- function(clone_file, progress) {
-    progress$tick()$print()
-    file_info <- getFileType(clone_file)
-    file_type <- file_info[[1]]
-    header_list <- file_info[[2]]
-    col_std <- getStandard(file_type)
-    col_old = header_list
-    file_names <- tools::file_path_sans_ext(basename(clone_file))
+readFiles <- function(clone_file, empty_airr_frame, matching_fields, progress) {
+    progress$tick()
+    file_info <- getStandard(clone_file, colnames(empty_airr_frame), matching_fields)
+    if (ncol(file_info) == 144) {
+        return(file_info)
+    }
+    clone_frame <- dplyr::right_join(empty_airr_frame, file_info)
     options(readr.show_progress = FALSE)
-    clone_frame <- readr::read_tsv(clone_file, col_types = col_old,
-                                    na = c("", "NA", "Nan", "NaN"), trim_ws = TRUE)
-    clone_frame <- clone_frame %>% 
-                   dplyr::rename(!!!col_std)
-    clone_frame <- clone_frame %>% 
-                   dplyr::mutate(reading_frame = dplyr::if_else(stringr::str_detect(junction_aa, "\\*"), 
-                                                                "out-of-frame", "in-frame"),
-                                 junction = dplyr::if_else(stringr::str_detect(junction, "[acgt]+"), 
-                                             toupper(stringr::str_extract(junction, "[acgt]+")), junction),
-                                 junction_aa = dplyr::if_else(stringr::str_detect(junction_aa, "[acdefghiklmnpqrstvwy]+"),
-                                                toupper(stringr::str_extract(junction_aa, "[acdefghiklmnpqrstvwy]+")), junction_aa))
-    clone_frame <- clone_frame %>%
-                   dplyr::mutate(v_call = dplyr::if_else(stringr::str_detect(v_call, "(TRB|TCRB)V\\d+-\\d+\\*\\d+"),
-                                           stringr::str_extract(v_call, "(TRB|TCRB)V\\d+-\\d+\\*\\d+"), v_call),
-                                 j_call = dplyr::if_else(stringr::str_detect(j_call, "(TRB|TCRB)J\\d+-\\d+\\*\\d+"),
-                                           stringr::str_extract(j_call, "(TRB|TCRB)J\\d+-\\d+\\*\\d+"), j_call),
-                                 d_call = dplyr::if_else(stringr::str_detect(d_call, "(TRB|TCRB)D\\d+\\*\\d+"),
-                                           stringr::str_extract(d_call, "(TRB|TCRB)D\\d+\\*\\d+"), d_call))
-    clone_frame <- clone_frame %>%
-                   dplyr::mutate(v_family = dplyr::if_else(stringr::str_detect(v_call, "(TRB|TCRB)V"),
-                                             stringr::str_extract(v_call, "(TRB|TCRB)V\\d+"), "unrecognized"),
-                                 j_family = dplyr::if_else(stringr::str_detect(j_call, "(TRB|TCRB)J"),
-                                             stringr::str_extract(j_call, "(TRB|TCRB)J\\d+"), "unrecognized"),
-                                 d_family = dplyr::if_else(stringr::str_detect(d_call, "(TRB|TCRB)D"),
-                                             stringr::str_extract(d_call, "(TRB|TCRB)D\\d+"), "unrecognized"))
-    clone_frame <- clone_frame %>% 
-                   dplyr::group_by(junction, junction_aa, v_call, j_call, d_call, v_family, j_family, d_family, reading_frame) %>% 
-                   dplyr::summarize(duplicate_count = sum(duplicate_count)) %>% 
-                   dplyr::mutate(duplicate_frequency = duplicate_count / sum(duplicate_count)) %>% 
-                   dplyr::ungroup() %>%
-                   dplyr::mutate(repertoire_id = file_names) %>%
-                   dplyr::select(repertoire_id, everything())
+        clone_frame <- clone_frame %>%
+                    dplyr::mutate(sequence_id = row_number(),
+                        junction_length = stringr::str_length(junction),
+                        junction_aa_length = stringr::str_length(junction_aa),
+                        rev_comp = FALSE,
+                        stop_codon = dplyr::if_else(stringr::str_detect(sequence, "\\*") | stringr::str_detect(sequence_aa, "\\*") | 
+                                                is.na(sequence) | is.na(sequence_aa), TRUE, FALSE),
+                        productive = dplyr::if_else(stringr::str_detect(sequence, "\\*") | stringr::str_detect(sequence_aa, "\\*") | 
+                                                is.na(sequence) | is.na(sequence_aa), FALSE, TRUE),
+                        v_call = dplyr::if_else(stringr::str_detect(v_call, "/"), "unresolved", v_call),
+                        j_call = dplyr::if_else(stringr::str_detect(j_call, "/"), "unresolved", j_call),
+                        complete_vdj = dplyr::if_else(is.na(v_call) | is.na(d_call) | is.na(j_call) | 
+                                                stringr::str_detect(v_call, "unresolved") | stringr::str_detect(d_call, "unresolved") |
+                                                stringr::str_detect(j_call, "unresolved"), FALSE, TRUE),
+                        duplicate_frequency = duplicate_count / sum(duplicate_count),
+                        reading_frame = dplyr::if_else(stringr::str_detect(sequence_aa, "\\*"), "out-of-frame", "in-frame"),
+                        v_family = dplyr::if_else(stringr::str_detect(v_call, "(TRB|TCRB)V"),
+                                                stringr::str_extract(v_call, "(TRB|TCRB)V\\d+"), "unrecognized"),
+                        j_family = dplyr::if_else(stringr::str_detect(j_call, "(TRB|TCRB)J"),
+                                                stringr::str_extract(j_call, "(TRB|TCRB)J\\d+"), "unrecognized"),
+                        d_family = dplyr::if_else(stringr::str_detect(d_call, "(TRB|TCRB)D"),
+                                                stringr::str_extract(d_call, "(TRB|TCRB)D\\d+"), "unrecognized"))
+
     return(clone_frame)
 }
 
 
-
+#' @section Get iReceptor standard format:
+#'
+#' Returns a tibble that is compliant with the iReceptor repertoire format.
+#'
+#' @param clone_frame An AIRR compliant tibble
+#' @return Tibble in iReceptor format
+#'
+#' @import tidyverse
+#' @export
+#' @rdname readImmunoSeq
+iReceptorFormat <- function(clone_frame) {
+    iReceptor_frame <- clone_frame %>%
+                        dplyr::select(-c(repertoire_id, sample_processing_id,
+                            data_processing_id, reading_frame, v_family,
+                            d_family, j_family, duplicate_frequency))
+    return(iReceptor_frame)
+}

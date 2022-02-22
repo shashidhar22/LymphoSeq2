@@ -4,48 +4,38 @@
 #' three repertoire_ids.
 #' 
 #' @param repertoire_ids A character vector of two or three names of repertoire_ids in 
-#' productive.seqs to compare.
+#' productiveSeq table to compare.
 #' @param productive_aa A tibble of amino acid sequences generated
 #' by the LymphoSeq function productiveSeq.
 #' @return Returns a a Venn diagram of the number of common sequences between
 #' two or three repertoire_ids.
 #' @seealso \code{\link{commonSeqs}}
 #' @examples
-#' file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
+#' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
 #' 
-#' study_table <- readImmunoSeq(path = file.path)
+#' stable <- readImmunoSeq(path = file_path)
 #' 
-#' productive_aa <- productiveSeq(study_table = study_table, aggregate = "junction_aa")
+#' atable <- productiveSeq(study_table = stable, aggregate = "junction_aa")
 #' 
 #' # Plot a triple Venn diagram
 #' commonSeqsVenn(repertoire_ids = c("TRB_Unsorted_0", 
 #'    "TRB_Unsorted_32", "TRB_Unsorted_83"), 
-#'    productive_aa = productive_aa)
+#'    productive_aa = atable)
 #' 
 #' # Plot a double Venn diagram
 #' commonSeqsVenn(repertoire_ids = c("TRB_Unsorted_0", 
-#'    "TRB_Unsorted_32"), productive_aa = productive_aa)
+#'    "TRB_Unsorted_32"), productive_aa = atable)
 #' 
-#' # Save Venn diagram as a .png file to working directory
-#' png(filename = "Venn diagram.png", res = 300, units = "in", height = 5, width = 5)
-#' 
-#' commonSeqsVenn(repertoire_ids = c("TRB_Unsorted_0", "TRB_Unsorted_32"), 
-#'    productive_aa = productive_aa)
-#' 
-#' dev.off()
 #' @export
-#' @importFrom VennDiagram draw.pairwise.venn draw.triple.venn
-#' @importFrom grid grid.newpage grid.draw
-#' @import tidyverse
 commonSeqsVenn <- function(repertoire_ids, productive_aa) {
-    if (length(repertoire_ids) > 3 | length(repertoire_ids) < 2) {
+    if (base::length(repertoire_ids) > 3 | base::length(repertoire_ids) < 2) {
         stop("Please enter 2 or 3 repertoire_ids.")
     }
-    if (length(repertoire_ids) == 2) {
+    if (base::length(repertoire_ids) == 2) {
         a <- productive_aa %>% 
-             filter(repertoire_id == repertoire_ids[[1]])
+             dplyr::filter(repertoire_id == repertoire_ids[[1]])
         b <- productive_aa %>% 
-             filter(repertoire_id == repertoire_ids[[2]])
+             dplyr::filter(repertoire_id == repertoire_ids[[2]])
         grid::grid.newpage()
         venn <- VennDiagram::draw.pairwise.venn(area1 = length(a$junction_aa), 
                                                 area2 = length(b$junction_aa), 
@@ -63,13 +53,13 @@ commonSeqsVenn <- function(repertoire_ids, productive_aa) {
                                                 lwd = rep(2, 2))
         grid::grid.draw(venn)
     }
-    if (length(repertoire_ids) == 3) {
+    if (base::length(repertoire_ids) == 3) {
         a <- productive_aa %>% 
-             filter(repertoire_id == repertoire_ids[[1]])
+             dplyr::filter(repertoire_id == repertoire_ids[[1]])
         b <- productive_aa %>% 
-             filter(repertoire_id == repertoire_ids[[2]])
+             dplyr::filter(repertoire_id == repertoire_ids[[2]])
         c <- productive_aa %>% 
-             filter(repertoire_id == repertoire_ids[[3]])
+             dplyr::filter(repertoire_id == repertoire_ids[[3]])
         grid::grid.newpage()
         venn <- VennDiagram::draw.triple.venn(area1 = length(a$junction_aa), 
                                               area2 = length(b$junction_aa), 

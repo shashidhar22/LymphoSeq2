@@ -10,25 +10,12 @@ searchIreceptor(...)
 \item{row_tibble}{A row tibble mapped from searchDB}
 }
 \value{
-Returns a tibble of with sample name and instance in the sample 
-that the published TCR sequence appeared along with additional 
-information including disease status, sample type, and PubMed ID 
+Returns a tibble of with sample name and instance in the sample
+that the published TCR sequence appeared along with additional
+information including disease status, sample type, and PubMed ID
 (PMID) for the reference where the sequence was characterized.
 }
 \description{
-Search for published T cell receptor beta CDR3 amino acid sequences with 
+Search for published T cell receptor beta CDR3 amino acid sequences with
 known antigen specificity in a list of data frames.
-}
-\examples{
-file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
-
-study_table <- readImmunoSeq(path = file.path)
-
-productive_aa <- productiveSeq(study_table = study_table, aggregate = "aminoAcid")
-
-searchPublished(list = productive_aa, db="Adaptive")
-}
-\seealso{
-Refer to the LymphoSeqDB package for details regarding the 
-publishedTRB database.
 }

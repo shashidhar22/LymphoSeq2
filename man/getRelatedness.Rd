@@ -7,13 +7,13 @@
 getRelatedness(sample_table, editDistance = 10)
 }
 \arguments{
-\item{sample_table}{A tibble of unproductive or productive nucleotide 
-sequences or productive nucleotide sequences.  Nucleotide and count are 
+\item{sample_table}{A tibble of unproductive or productive junction
+sequences or productive junction sequences.  junction and duplicate_count are
 required columns.}
 
-\item{editDistance}{An integer giving the minimum edit distance that the 
+\item{editDistance}{An integer giving the minimum edit distance that the
 sequence must be less than or equal to. See details below.}
 }
 \description{
-Calculates the clonal relatedness of a sample.
+Calculates the clonal relatedness of a repertoire_id.
 }

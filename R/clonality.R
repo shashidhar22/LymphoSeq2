@@ -6,13 +6,14 @@
 #' 
 #' @param study_table A tibble consisting of antigen receptor 
 #' sequencing imported by the LymphoSeq function readImmunoSeq. "junction_aa", "duplicate_count", 
-#' and "duplicate_frequency" are required columns.  "estimatedNumberGenomes" is optional.  
-#' Note that clonality is usually calculated from productive junction sequences.  
-#' Therefore, it is not recommended to run this function using a productive sequence
-#' list aggregated by amino acids.
+#' and "duplicate_frequency" are required columns. Note that clonality is usually calculated from 
+#' productive junction sequences. Therefore, it is not recommended to run this function using a 
+#' productive sequence list aggregated by amino acids.
 #' @return Returns a tibble giving the total number of sequences, number of 
 #' unique productive sequences, number of genomes, clonality, Gini coefficient, 
-#' and the frequency (\%) of the top productive sequence in each repertoire_id.
+#' and the frequency (\%) of the top productive sequence, simpson index,
+#' inverse simpson index, hill diversity index, chao diversity index, and kemp diversity index
+#' for each repertoire_id.
 #' @details Clonality is derived from the Shannon entropy, which is calculated 
 #' from the frequencies of all productive sequences divided by the logarithm of 
 #' the total number of unique productive sequences.  This normalized entropy 
@@ -30,20 +31,20 @@
 #' 0 indicates all sequences have the same frequency and 1 indicates the 
 #' repertoire is dominated by a single sequence.
 #' @examples
-#' file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq")
+#' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
 #' 
-#' study_table <- readImmunoSeq(path = file.path)
+#' stable <- readImmunoSeq(path = file_path)
 #' 
-#' clonality(study_table = study_table)
+#' clonality(stable)
 #' @seealso \code{\link{lorenzCurve}}
 #' @export
 #' @importFrom ineq Gini
 clonality <- function(study_table) {
     study_table <- study_table %>% 
-                   group_by(repertoire_id) %>% 
-                   group_split() %>% 
-                   map(summarySeq) %>% 
-                   reduce(rbind)
+                   dplyr::group_by(repertoire_id) %>% 
+                   dplyr::group_split() %>% 
+                   purrr::map(summarySeq) %>% 
+                   dplyr::bind_rows()
     return(study_table)
 }
 
@@ -51,22 +52,35 @@ clonality <- function(study_table) {
 #'
 #' @param sample_table immune repertoire tibble for each a repertoire_id
 #'
-#' @return Tibble summarizing the sequence infomration for each repertoire_id
+#' @return Tibble summarizing the sequence information for each repertoire_id
 #'
 #' @export
-#' @import tidyverse
+#' @import tidyverse breakaway vegan
 
 summarySeq <- function(study_table) {
-    productive <- productiveSeq(study_table, aggregate="junction")
-    frequency <- productive$duplicate_frequency
-    entropy <- -sum(frequency * log2(frequency), na.rm=TRUE)
-    clonality <- 1 - round(entropy/log2(nrow(productive)), digits = 6)
-    study_summary <- tibble(repertoire_id = study_table$repertoire_id[1], 
-                            totalSequences = nrow(study_table), 
-                            uniqueProductiveSequences = nrow(productive),
-                            totalCount = sum(study_table$duplicate_count), 
+    productive <- LymphoSeq2::productiveSeq(study_table, aggregate="junction")
+    frequency <- productive %>%
+                 dplyr::pull(duplicate_frequency)
+    counts <- productive %>%
+              dplyr::pull(duplicate_count)
+    entropy <- -base::sum(frequency * base::log2(frequency), na.rm=TRUE)
+    clonality <- 1 - base::round(entropy/base::log2(base::nrow(productive)), digits = 6)
+    simpson_index <- vegan::diversity(frequency, index = "simpson")
+    inverse_simpson <- vegan::diversity(frequency, index = "invsimpson")
+    chao_estimate <- breakaway::chao1(counts)$estimate
+    kemp_estimate <- breakaway::kemp(counts)$estimate
+    hill_estimate <- breakaway::true_hill(frequency, q = 0)
+    study_summary <- tibble::tibble(repertoire_id = study_table$repertoire_id[1], 
+                                    total_sequences = base::nrow(study_table), 
+                                    unique_productive_sequences = base::nrow(productive),
+                            total_count = base::sum(study_table$duplicate_count), 
                             clonality = clonality, 
-                            giniCoefficient = ineq::Gini(productive$duplicate_frequency), 
-                            topProductiveSequence = max((productive$duplicate_frequency) * 100))
+                            simpson_index = simpson_index,
+                            inverse_simpson = inverse_simpson,
+                            gini_coefficient = ineq::Gini(productive$duplicate_frequency), 
+                            top_productive_sequence = base::max((productive$duplicate_frequency) * 100),
+                            chao_estimate = chao_estimate,
+                            kemp_estimate = kemp_estimate,
+                            hill_estimate = hill_estimate)
     return(study_summary)
 }
