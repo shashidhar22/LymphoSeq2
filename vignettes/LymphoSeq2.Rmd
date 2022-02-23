@@ -1,0 +1,426 @@
+---
+title: "Analysis of Adaptive Immune Receptor Repertoire Sequencing data with LymphoSeq2"
+author: 
+ - "Elena Wu"
+ - "Shashidhar Ravishankar"
+ - "David Coffey"
+date: "`r Sys.Date()`"
+output: 
+    html_document:
+        toc: true
+        toc_float: true
+        theme: cosmo
+        highlight: default
+        df_print: paged
+vignette: >
+  %\VignetteIndexEntry{LymphoSeq2}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+Adaptive Immune Receptor Repertoire Sequencing (AIRR-seq) provides a unique opportunity to interrogate the adaptive
+immune repertoire under various clinical conditions. The utility offered by this technology has quickly garnered interest
+from a community of clinicians and researchers investigating the immunological landscapes of a large spectrum of health
+and disease states. LymphoSeq2 is a toolkit that allows users to import, manipulate and visualize AIRR-Seq data from various 
+AIRR-Seq assays such as Adaptive ImmunoSEQ and BGI-IRSeq, with support for 10X VDJ sequencing coming soon. The platform 
+also supports the importing of AIRR-seq data processed using the MiXCR pipeline. The vignette highlights some of the key features of LymphoSeq2.
+
+# Importing data
+
+The function `readImmunoSeq` imports AIRR-seq receptor files from Adaptive ImmunoSEQ assay as well well as BGI-IRSeq assay. The sequences can be (.tsv) files processed using one of the three following platforms: Adaptive Biotechnologies ImmunoSEQ analyzer, BGI IR-SEQ iMonitor platform, and the MiXCR pipeline for AIRR-seq data analysis. The function has the ability to identify file type based on the headers provided in the (.tsv) file, accordingly the data is transformed into a format that is compatible AIRR-Community guidelines  (https://github.com/airr-community/airr-standards). 
+
+To explore the features of LymphoSeq, this package includes 2 example data sets. The first is a data set of T cell receptor beta (TCRB) sequencing from 10 blood samples acquired serially from a single patient who underwent a bone marrow transplant (Kanakry, C.G., et al. JCI Insight 2016;1(5):pii: e86252). The second, is a data set of B cell receptor immunoglobulin heavy (IGH) chain sequencing from Burkitt lymphoma tumor biopsies acquired from 10 different individuals (Lombardo, K.A., et al. Blood Advances 2017 1:535-544). To improve performance, both data sets contain only the top 1,000 most frequent sequences. The complete data sets are publicly available through Adapatives’ immuneACCESS portal. As shown in the example below, you can specify the path to the example data sets using the command 
+
+```{r data}
+system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2") #For the TCRB files
+system.file("extdata", "IGH_sequencing", package = "LymphoSeq2") #For the IGH files.
+```
+
+`readImmunoSeq` can take as input, a single file name, a list of files or the path to a directory containing AIRR-seq data. The columns are renamed to follow AIRR-community guidelines based on the input file type. The function returns a tibble with individual file names set as the `repertoire_id`. The CDR3 nucleotide and amino acid sequences are denoted by the `junction` and `junction_aa` fields respectively. The counts of the CDR3 sequeneces observed, and their frequency in each individual repertoire is denoted by the `duplicate_count` and `duplicate_frequency` field respectively.
+
+```{r readImmuno}
+library(LymphoSeq2)
+library(tidyverse)
+study_files <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2") 
+study_table <- LymphoSeq2::readImmunoSeq(study_files)
+```
+
+Looking at the `study_table` we see a tibble with 12 columns and 9334 rows
+
+```{r showStudyTable}
+study_table
+```
+Since the study table is a tibble, we can use tidyverse syntax to extract a list of sample names
+
+```{r getSamplesNames}
+study_table %>% 
+dplyr::pull(repertoire_id) %>% 
+unique()
+```
+
+# Subsetting Data
+
+The tibble structure of the TCR data allows for easy subsampling of data. To select the TCR sequences from any given samples in the dataset, the `filter` function from the `dplyr` package can be used.
+
+```{r subSample}
+TRB_Unsorted_0 <- study_table %>% filter(repertoire_id == "TRB_Unsorted_0")
+TRB_Unsorted_0
+```
+The `str_detect` function from `stringr` package can be used in conjunction with the `filter` to find samples using a pattern
+
+```{r subSamplePattern}
+CMV <- study_table %>% 
+       dplyr::filter(str_detect(repertoire_id, "CMV"))
+CMV
+```
+
+A metadata file for the TCR sequencing samples can easily be combined with the `study_table` by reading in the metadata file as a tibble and using the `dplyr::left_join` function to merge the two tables.  In the example below, a metadata file is imported for the example TCRB data set which contains information on the number of days post bone marrow transplant the sample was collected and the cellular phenotype the blood sample was sorted for prior to sequencing.
+
+```{r loadMeta}
+TCRB_metadata <- readr::read_csv(system.file("extdata", "TCRB_metadata.csv", package = "LymphoSeq2"))
+TCRB_metadata
+```
+
+```{r mergeMeta}
+study_table <- dplyr::left_join(study_table, TCRB_metadata, by = c("repertoire_id" = "samples"))
+study_table
+```
+Now the metadata information can be used to further subset the data. For instance to select all "Unsorted" samples collected more than 300 days after bone marrow transplant, we would use the following code
+
+```{r metaFilter}
+unsorted_300 <- study_table %>% 
+                dplyr::filter(day > 300 & phenotype == "Unsorted")
+unsorted_300
+```
+
+# Extracting productive sequences
+
+When AIRR-seq samples are derived from genomic DNA rather than complimentary DNA made from RNA, then you will find productive and unproductive sequences. Productive sequences are defined as in-frame sequences without any early stop codons. To filter out these productive sequences, you can use the `productiveSeq` to remove unproductive sequences and recompute the duplicate_frequency to reflect the productive amino acid or nucleotide sequence frequencies.
+
+If you are interested in just the complementarity determining region 3 (CDR3) amino acid sequences, then set aggregate to `junction_aa` and the `duplicate_count` for duplicate amino acid sequences will be summed. The resulting tibble will have `junction_aa`, `duplicate_count`, `duplicate_frequency`,  `reading_frame`, and the most frequent VDJ gene combinations for each of the duplicated amino acid sequences and the corresponding gene family names. These gene names are only kept for consistency of the tibble structure, but since a single amino acid sequence can be generated from different VDJ combinations, it is inadvisable to use these values for downstream analysis
+
+```{r readAmino}
+aa_table <- LymphoSeq2::productiveSeq(study_table = study_table, aggregate = "junction_aa", 
+                          prevalence = FALSE)
+  aa_table
+```
+
+Alternatively you can aggregate by `junction` to group sequences by CDR3 nucleotide sequences. This option will produce a tibble similar to the output of `readImmunoSeq`. Many of the functions within LymphoSeq2 use the results from `productiveSeq` function. Please be sure to check the function documentation.
+
+```{r readNucleotide}
+nuc_table <- LymphoSeq2::productiveSeq(study_table = study_table, aggregate = "junction", 
+                          prevalence = FALSE)
+nuc_table
+```
+
+If the parameter prevalence is set to TRUE, then a new column is added to each of the data frames giving the prevalence (%) of each TCR beta CDR3 amino acid sequence in 55 healthy donor peripheral blood samples. Values range from 0 to 100% where 100% means the sequence appeared in the blood of all 55 individuals. 
+
+Notice in the example below that there are no amino acid sequences given in the first and fourth row of the study_table table for sample “TRB_Unsorted_949”. This is because the nucleotide sequence is out of frame and does not produce a productively transcribed amino acid sequence. If an asterisk (*) appears in the amino acid sequences, this would indicate an early stop codon.
+
+```{r showUnprod}
+study_table %>% 
+dplyr::filter(repertoire_id == "TRB_Unsorted_0") 
+```
+
+After `productiveSeq` is run, the unproductive sequences are removed and the `duplicate_frequency` is recalculated for each sequence. If there were two identical amino acid sequences that differed in their nucleotide sequence, they would be combined and their counts added together.
+
+```{r showProdAA}
+aa_table %>% 
+dplyr::filter(repertoire_id == "TRB_Unsorted_0")
+```
+# Create a table of summary statistics
+
+To create a table summarizing the total number of sequences, number of unique productive sequences, number of genomes, clonality, Gini coefficient, and the frequency (%) of the top productive sequence, Simpson index, Inverse Simpson index, Hill diversity index, Chao1 index and Kemp index in each imported file, use the function `clonality`.
+
+```{r showSummary}
+LymphoSeq2::clonality(study_table = study_table)
+```
+
+The clonality score is derived from the Shannon entropy, which is calculated from the frequencies of all productive sequences divided by the logarithm of the total number of unique productive sequences. This normalized entropy value is then inverted (1 - normalized entropy) to produce the clonality metric.
+
+The Gini coefficient, Chao1 estimate, Kemp estimate, Hill estimate, Simpson index and Inverse Simpson index are alternative metric to measure sequence diversity within the immune repertoire. 
+
+The Gini coefficient is an alternative metric used to calculate repertoire diversity and is derived from the Lorenz curve. The Lorenz curve is drawn such that x-axis represents the cumulative percentage of unique sequences and the y-axis represents the cumulative percentage of reads. A line passing through the origin with a slope of 1 reflects equal frequencies of all clones. The Gini coefficient is the ratio of the area between the line of equality and the observed Lorenz curve over the total area under the line of equality.
+
+# Calculate clonal relatedness
+
+One of the drawbacks of the clonality metric is that it does not take into account sequence similarity. This is particularly important when studying affinity maturation or B cell malignancies(Lombardo, K.A., et al. Blood Advances 2017 1:535-544). Clonal relatedness is a useful metric that takes into account sequence similarity without regard for clonal frequency. It is defined as the proportion of nucleotide sequences that are related by a defined edit distance threshold. The value ranges from 0 to 1 where 0 indicates no sequences are related and 1 indicates all sequences are related. Edit distance is a way of quantifying how dissimilar two sequences are to one another by counting the minimum number of operations required to transform one sequence into the other. For example, an edit distance of 0 means the sequences are identical and an edit distance of 1 indicates that the sequences different by a single amino acid or nucleotide.
+
+```{r readIGH}
+IGH_path <- system.file("extdata", "IGH_sequencing", package = "LymphoSeq2")
+IGH_table <- LymphoSeq2::readImmunoSeq(path = IGH_path)
+LymphoSeq2::clonalRelatedness(study_table = IGH_table, editDistance = 10)
+```
+
+# Draw a phylogenetic tree
+
+A phylogenetic tree is a useful way to visualize the similarity between sequences. The `phyloTree` function create a phylogenetic tree of a single sample using neighbor joining tree estimation for amino acid or nucleotide CDR3 sequences. Each leaf in the tree represents a sequence color coded by the V, D, and J gene usage. The number next to each leaf refers to the sequence count. A triangle shaped leaf indicates the most frequent sequence. The distance between leaves on the horizontal axis corresponds to the sequence similarity (i.e. the further apart the leaves are horizontally, the less similar the sequences are to one another).
+
+```{r getIGHProd, fig.width = 7, fig.height = 10, comment = ""}
+nuc_IGH_table <- LymphoSeq2::productiveSeq(study_table = IGH_table, aggregate = "junction")
+LymphoSeq2::phyloTree(study_table = nuc_IGH_table, 
+                      repertoire_ids = "IGH_MVQ92552A_BL", 
+                      type = "junction", 
+                      layout = "rectangular")
+```
+
+# Multiple sequence alignment
+
+In LymphoSeq2, you can perform a multiple sequence alignment using one of three methods provided by the Bioconductor msa package (ClustalW, ClustalOmega, or Muscle), the chaange in functionality however is, now the function returns a `msa` S4 object. One may perform the alignment of all amino acid or nucleotide sequences in a single sample. Alternatively, one may search for a given sequence within a list of samples using an edit distance threshold.
+
+```{r alignSeq, results='asis'}
+alignment <- LymphoSeq2::alignSeq(study_table = nuc_IGH_table, 
+                                  repertoire_ids = "IGH_MVQ92552A_BL", 
+                                  type = "junction_aa", 
+                                  method = "ClustalW")
+msa::msaPrettyPrint(alignment, output = "asis")
+```
+
+# Searching for sequences
+
+To search for one or more amino acid or nucleotide CDR3 sequences in a list of data frames, use the function `searchSeq`. The function allows sequence search with a edit distance threshold. For example, an edit distance of 0 means the sequences are identical and an edit distance of 1 indicates that the sequences differ by a single amino acid or nucleotide. Match options include "global" matching which performs end-to-end matching of sequences. "partial" matching allows searching for sub strings with CDR3 sequences.
+
+```{r searchSeq}
+LymphoSeq2::searchSeq(study_table = aa_table, 
+                      sequence = "CASSPVSNEQFF", 
+                      seq_type = "junction_aa", 
+                      match = "global", 
+                      edit_distance = 0)
+```
+
+# Searching for published sequences
+
+To search your entire list of data frames for a published amino acid CDR3 TCRB sequence with known antigen specificity, use the function `searchPublished`.
+
+```{r searchPublished}
+LymphoSeq2::searchPublished(study_table = aa_table) %>% 
+dplyr::filter(!is.na(PMID))
+```
+
+For each found sequence, a table is provides listing the antigen, epitope, HLA type, PubMed ID (PMID), and prevalence (%) of the sequence among 55 healthy donor blood samples. 
+
+# Visualizing repertoire diversity
+
+Antigen receptor repertoire diversity can be characterized by a number such as clonality or Gini coefficient calculated by the `clonality` function. Alternatively, you can visualize the repertoire diversity by plotting the Lorenz curve for each sample as defined above. In this plot, the more diverse samples will appear near the dotted diagonal line (the line of equality) whereas the more clonal samples will appear to have a more bowed shape.
+
+```{r plotLorenz}
+samples <- aa_table %>% 
+           dplyr::pull(repertoire_id) %>% unique()
+LymphoSeq2::lorenzCurve(repertoire_ids = samples, study_table = aa_table)
+```
+
+Alternatively, you can get a feel for the repertoire diversity by plotting the cumulative frequency of a selected number of the top most frequent clones using the function `topSeqsPlot`. In this case, each of the top sequences are represented by a different color and all less frequent clones will be assigned a single color (violet).
+
+```{r topSeqPlot}
+LymphoSeq2::topSeqsPlot(study_table = aa_table, top = 10)
+```
+
+Both of these functions are built using the ggplot2 package. You can reformat the plot using ggplot2 functions. Please refer to the `lorenzCurve` and `topSeqsPlot` manual for specific examples.
+
+# Comparing samples
+
+To compare the T or B cell repertoires of all samples in a pairwise fashion, use the `bhattacharyyaMatrix` or `similarityMatrix` functions. Both the Bhattacharyya coefficient and similarity score are measures of the amount of overlap between two samples. The value for each ranges from 0 to 1 where 1 indicates the sequence frequencies are identical in the two samples and 0 indicates no shared frequencies. The Bhattacharyya coefficient differs from the similarity score in that it involves weighting each shared sequence in the two distributions by the arithmetic mean of the frequency of each sequence, while calculating the similarity scores involves weighting each shared sequence in the two distributions by the geometric mean of the frequency of each sequence in the two distributions.
+
+```{r bhattacharyya}
+bhattacharyya_matrix <- LymphoSeq2::scoringMatrix(aa_table, mode = "Bhattacharyya")
+LymphoSeq2::pairwisePlot(bhattacharyya_matrix)
+```
+
+To view sequences shared between two or more samples, use the function `commonSeqs`. This function requires that a productive amino acid list be specified.
+
+```{r commonSeq}
+common <- LymphoSeq2::commonSeqs(study_table = aa_table, 
+                                 repertoire_ids =  c("TRB_Unsorted_0", "TRB_Unsorted_32"))
+common
+```
+
+To visualize the number of overlapping sequences between two or three samples in the form of a Venn diagram, use the function `commonSeqVenn`
+
+```{r commonVenn, fig.height=5, fig.width=5}
+LymphoSeq2::commonSeqsVenn(repertoire_ids = c("TRB_Unsorted_32", "TRB_Unsorted_83"), 
+                           productive_aa = aa_table)
+```
+
+```{r commonVennT, fig.height=5, fig.width=5}
+LymphoSeq2::commonSeqsVenn(repertoire_ids = c("TRB_Unsorted_0", "TRB_Unsorted_32", "TRB_Unsorted_83"), 
+                           productive_aa = aa_table)
+```
+
+To compare the frequency of sequences between two samples as a scatter plot, use the function `commonSeqsPlot`.
+
+```{r commonSeqPlot}
+LymphoSeq2::commonSeqsPlot("TRB_Unsorted_32", "TRB_Unsorted_83", 
+                           productive_aa = aa_table, show = "common")
+```
+
+If you have more than 3 samples to compare, use the `commonSeqBar` function. You can chose to color a single sample with the `color.sample` argument or a desired intersection with the `color.intersection` argument.
+
+```{r commonBar}
+LymphoSeq2::commonSeqsBar(productive_aa = aa_table, 
+                          repertoire_ids = c("TRB_CD4_949", "TRB_CD8_949", 
+                                             "TRB_Unsorted_949", "TRB_Unsorted_1320"), 
+                          color_sample = "TRB_CD8_949",
+                          labels = "no")
+```
+# Differential abundance
+
+When comparing a sample from two different time points, it is useful to identify sequences that are significantly more or less abundant in one versus the other time point (DeWitt, W.S., et al. Journal of Virology 2015 89(8):4517-4526). The `differentialAbundance` function uses a Fisher exact test to calculate differential abundance of each sequence in two time points and reports the log2 transformed fold change, P value and adjusted P value.
+
+```{r diffAbund}
+LymphoSeq2::differentialAbundance(study_table = aa_table, 
+                                  repertoire_ids =c("TRB_Unsorted_949", 
+                                                    "TRB_Unsorted_1320"), 
+                                  type = "junction_aa", q = 0.01)
+```
+
+# Finding recurring sequences
+
+To create a tibble of unique, productive amino acid sequences as rows and sample names as headers use the `seqMatrix` function. Each value in the data frame represents the frequency that each sequence appears in the sample. You can specify your own list of sequences or all unique sequences in the list using the output of the function `uniqueSeqs.` The `uniqueSeqs` function creates a tibble of all unique, productive sequences and reports the total count in all samples.
+
+```{r uniqueSeq}
+unique_seqs <- LymphoSeq2::uniqueSeqs(productive_table = aa_table)
+unique_seqs
+```
+
+```{r seqMatrix}
+sequence_matrix <- LymphoSeq2::seqMatrix(productive_aa = aa_table, sequences = unique_seqs$junction_aa, )
+sequence_matrix
+```
+
+If just the top clones with a frequency greater than a specified amount are of interest to you, then use the `topFreq` function. This creates a tibble of the top productive amino acid sequences having a minimum specified frequency and reports the minimum, maximum, and mean frequency that the sequence appears in a list of samples. For TCRB sequences, the prevalence (%) and the published antigen specificity of that sequence are also provided.
+
+```{r topFreq}
+top_freq <- LymphoSeq2::topFreq(productive_table = aa_table, frequency = 0.001)
+top_freq
+```
+
+One very useful thing to do is merge the output of `seqMatrix` and `topFreq`.
+
+```{r mergeData}
+top_freq_matrix <- dplyr::full_join(top_freq, sequence_matrix)
+top_freq_matrix
+```
+
+# Tracking sequences across samples
+
+To visually track the frequency of sequences across multiple samples, use the function `cloneTrack` This function takes the output from the `seqMatrix` function. You can specify a character vector of amino acid sequences using the parameter track to highlight those sequences with a different color. Alternatively, you can highlight all of the sequences from a given sample using the parameter map. If the mapping feature is use, then you must specify a productive amino acid list and a character vector of labels to title the mapped samples.
+
+```{r cloneTrack}
+ctable <- LymphoSeq2::cloneTrack(study_table = aa_table,
+                                 sample_list = c("TRB_CD8_949", "TRB_CD8_CMV_369"))
+LymphoSeq2::plotTrack(ctable)
+```
+
+You can track particular sequences across samples by providing an optional list of CDR3 amino acid sequences.
+
+```{r plotCloneSet}
+ttable <- LymphoSeq2::topSeqs(aa_table, top = 10)
+ctable <- LymphoSeq2::cloneTrack(ttable)
+LymphoSeq2::plotTrack(ctable, alist = c("CASSESAGSTGELFF", "CASSLAGDSQETQYF")) + theme(legend.position = "bottom")
+```
+
+Alternatively you can use the function `plotTrackSingular` to retrieve a list of alluvial diagrams each tracking one single amino acid from the clone track table. Considering that a plot is generated for each unique CDR3 sequence, we recommend running this feature on a clone track table derived from only the top sequences from each repertoire as described in the example above.
+
+```{r plotSingular}
+lalluvial <- LymphoSeq2::plotTrackSingular(ctable)
+lalluvial[[1]]
+```
+
+
+# Comparing V(D)J gene usage
+
+To compare the V, D, and J gene usage across samples, start by creating a data frame of V, D, and J gene counts and frequencies using the function `geneFreq`. You can specify if you are interested in the “VDJ”, “DJ”, “VJ”, “DJ”, “V”, “D”, or “J” loci using the locus parameter. Set family to TRUE if you prefer the family names instead of the gene names as reported by ImmunoSeq.
+
+```{r geneFreq}
+vGenes <- LymphoSeq2::geneFreq(productive_nt = nuc_table, locus = "V", family = TRUE)
+vGenes
+```
+
+
+To create a chord diagram showing VJ or DJ gene associations from one or more more samples, combine the output of `geneFreq` with the function `chordDiagramVDJ`. This function works well the `topSeqs` function that creates a data frame of a selected number of top productive sequences. In the example below, a chord diagram is made showing the association between V and J genes of just the single dominant clones in each sample. The size of the ribbons connecting VJ genes correspond to the number of samples that have that recombination event. The thicker the ribbon, the higher the frequency of the recombination.
+
+```{r chordDiagram}
+top_seqs <- LymphoSeq2::topSeqs(productive_table = nuc_table, top = 1)
+LymphoSeq2::chordDiagramVDJ(study_table = top_seqs, 
+                            association = "VJ", 
+                            colors = c("darkred", "navyblue"))
+```
+
+
+You can also visualize the results of `geneFreq` as a heat map, word cloud, our cumulative frequency bar plot with the support of additional R packages as shown below.
+
+```{r wordcloud}
+vGenes <- LymphoSeq2::geneFreq(productive_nt = nuc_table, locus = "V", family = TRUE)
+library(RColorBrewer)
+library(grDevices)
+RedBlue <- grDevices::colorRampPalette(rev(RColorBrewer::brewer.pal(11, "RdBu")))(256)
+library(wordcloud)
+vtable <- vGenes %>% dplyr::filter(repertoire_id == "TRB_Unsorted_83")
+wordcloud::wordcloud(words = vtable$gene_name, 
+                     freq = vtable$gene_frequency, 
+                     colors = RedBlue)
+```
+
+```{r heatmap}
+vGenes <- LymphoSeq2::geneFreq(nuc_table, locus = "V", family = TRUE) %>% 
+           tidyr::pivot_wider(id_cols = gene_name, 
+                              names_from = repertoire_id, 
+                              values_from = gene_frequency, 
+                              values_fn = sum,
+                              values_fill = 0)
+gene_names <- vGenes %>% 
+              dplyr::pull(gene_name)
+vGenes <- vGenes %>% 
+          dplyr::select(-gene_name) %>% 
+          as.matrix()
+rownames(vGenes) <- gene_names
+pheatmap::pheatmap(vGenes, scale = "row")
+```
+
+```{r geneFreqPlot}
+vGenes <- LymphoSeq2::geneFreq(productive_nt = nuc_table, locus = "V", family = TRUE)
+multicolors <- grDevices::colorRampPalette(rev(RColorBrewer::brewer.pal(9, "Set1")))(28)
+ggplot2::ggplot(vGenes, aes(x = repertoire_id, y = gene_frequency, fill = gene_name)) +
+  ggplot2::geom_bar(stat = "identity") +
+  ggplot2::theme_minimal() + 
+  ggplot2::scale_y_continuous(expand = c(0, 0)) + 
+  ggplot2::guides(fill = guide_legend(ncol = 2)) +
+  ggplot2::scale_fill_manual(values = multicolors) + 
+  ggplot2::labs(y = "Frequency (%)", x = "", fill = "") +
+  ggplot2::theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
+```
+
+# Removing sequences
+
+Occasionally you may identify one or more sequences in your data set that appear to be contamination. You can remove an amino acid sequence from all data frames using the function removeSeq and recompute `frequencyCount` for all remaining sequences.
+
+```{r searchSequences}
+LymphoSeq2::searchSeq(study_table = aa_table, sequence = "CASSESAGSTGELFF", seq_type = "junction_aa")
+```
+
+```{r removeSeq}
+cleansed <- LymphoSeq2::removeSeq(study_table = aa_table, sequence = "CASSESAGSTGELFF")
+LymphoSeq2::searchSeq(study_table = cleansed, sequence = "CASSESAGSTGELFF", seq_type = "junction_aa")
+```
+
+# Rarefaction curves
+
+Rarefaction and extrapolation curves allow for comparison of TCR diversity across repertoires given a ideal sequencing depth. Rarefaction and extrapolation curves are drawn by sampling a sequencing dataset to various depths to understand the trajectory of sequence diversity and then extrapolating the curve to an ideal depth.
+
+```{r rarefation, warning=FALSE}
+LymphoSeq2::plotRarefactionCurve(study_table = aa_table)
+```
+
+
+# Session info
+
+```{r sessionInfo}
+sessionInfo()
+```
