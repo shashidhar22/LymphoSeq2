@@ -36,9 +36,9 @@ topFreq <- function(productive_table, frequency = 0.1) {
                                  numberSamples = length(duplicate_frequency > 0)) %>%
                 dplyr::arrange(desc(numberSamples), desc(meanFrequency))
     
-    top_freq <- dplyr::left_join(top_freq, LymphoSeq2revalenceTRB, by=c("junction_aa" = "aminoAcid")) %>% 
+    top_freq <- dplyr::left_join(top_freq, LymphoSeq2::prevalenceTRB, by=c("junction_aa" = "aminoAcid")) %>% 
                 dplyr::mutate(prevalence = tidyr::replace_na(0))
-    antigen_table <- LymphoSeq2ublishedTRB %>% 
+    antigen_table <- LymphoSeq2::publishedTRB %>% 
         dplyr::as_tibble() %>% 
         dplyr::select(aminoAcid, antigen)
     top_freq <- dplyr::left_join(top_freq, antigen_table, by=c("junction_aa" = "aminoAcid"))  
