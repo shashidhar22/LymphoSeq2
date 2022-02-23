@@ -1,8 +1,9 @@
 ---
 title: "Analysis of Adaptive Immune Receptor Repertoire Sequencing data with LymphoSeq2"
 author: 
- - "David Coffey"
+ - "Elena Wu"
  - "Shashidhar Ravishankar"
+ - "David Coffey"
 date: "`r Sys.Date()`"
 output: 
     html_document:
