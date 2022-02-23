@@ -6,7 +6,6 @@
 #' 
 #' @md
 #' @name readImmunoSeq
-#' @describeIn readImmunoSeq Read a set of files
 #' @param path Path to the directory containing tab-delimited files.  Only
 #' files with the extension .tsv are imported.  The names of the data frames are 
 #' the same as names of the files.
@@ -14,7 +13,8 @@
 #' @return Returns a tibble with MiAIRR headers and repertoire_id
 #'
 #' @examples
-#' file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2
+#' file.path <- system.file("extdata", "TCRB_sequencing", 
+#'  package = "LymphoSeq2")
 #' 
 #' study_table <- readImmunoSeq(path = file.path,
 #'                              recursive = FALSE)

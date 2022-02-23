@@ -13,7 +13,8 @@
 #' @seealso An excellent resource for examples on how to reformat a ggplot can 
 #' be found in the R Graphics Cookbook online (\url{http://www.cookbook-r.com/Graphs/}).
 #' @examples
-#' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2
+#' file_path <- system.file("extdata", "TCRB_sequencing", 
+#'  package = "LymphoSeq2")
 #' stable <- readImmunoSeq(path = file_path)
 #' atable <- productiveSeq(study_table = stable, aggregate = "junction_aa")
 #' topSeqsPlot(study_table = atable, top = 10)

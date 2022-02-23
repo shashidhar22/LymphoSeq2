@@ -16,7 +16,8 @@
 #' rows and the \% frequency it appears in each repertoire_id as columns.
 #' @seealso \code{\link{topSeqs}} and \code{\link{uniqueSeqs}}
 #' @examples
-#' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2
+#' file_path <- system.file("extdata", "TCRB_sequencing", 
+#'  package = "LymphoSeq2")
 #' stable <- readImmunoSeq(path = file_path)
 #' atable <- productiveSeq(stable,
 #'                         aggregate = "junction_aa")
