@@ -18,7 +18,10 @@
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="active nav-item">
+      <ul class="navbar-nav me-auto"><li class="nav-item">
+  <a class="nav-link" href="../articles/LymphoSeq2.html">Get started</a>
+</li>
+<li class="active nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
 </li>
       </ul><form class="form-inline my-2 my-lg-0" role="search">
@@ -227,7 +230,6 @@ be found in the R Graphics Cookbook online (<a href="http://www.cookbook-r.com/G
 <span class="r-in"><span class="va">atable</span> <span class="op">&lt;-</span> <span class="fu"><a href="productiveSeq.html">productiveSeq</a></span><span class="op">(</span>study_table <span class="op">=</span> <span class="va">stable</span>, aggregate <span class="op">=</span> <span class="st">"junction_aa"</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="va">top_freq</span> <span class="op">&lt;-</span> <span class="fu"><a href="topFreq.html">topFreq</a></span><span class="op">(</span><span class="va">atable</span>, frequency <span class="op">=</span> <span class="fl">0.001</span><span class="op">)</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in is.data.frame(y):</span> object 'LymphoSeq2revalenceTRB' not found</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># Track clones without mapping or tracking specific sequences</span></span>
 <span class="r-in"><span class="fu">cloneTrack</span><span class="op">(</span><span class="va">atable</span><span class="op">)</span></span>
@@ -250,12 +252,50 @@ be found in the R Graphics Cookbook online (<a href="http://www.cookbook-r.com/G
 <span class="r-in"><span class="co"># Track top 20 clones mapping to the CD4 and CD8 samples</span></span>
 <span class="r-in"><span class="fu">cloneTrack</span><span class="op">(</span><span class="va">atable</span>, sample_list <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"TRB_CD4_949"</span>, <span class="st">"TRB_CD8_949"</span><span class="op">)</span>,</span>
 <span class="r-in">   sequence_track <span class="op">=</span> <span class="va">top_freq</span><span class="op">$</span><span class="va">junction_aa</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">20</span><span class="op">]</span>, unassigned <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> </span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in cloneTrack(atable, sample_list = c("TRB_CD4_949", "TRB_CD8_949"),     sequence_track = top_freq$junction_aa[1:20], unassigned = TRUE):</span> object 'top_freq' not found</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 20 × 12</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    repertoire_id junction_aa     v_call d_call j_call v_family d_family j_family</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> TRB_CD4_949   CASSWEQGTNYGYTF TCRBV… TCRBD… TCRBJ… TCRBV28  TCRBD01  TCRBJ01 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> TRB_CD8_949   CAIKMETPNGEQYF  TCRBV… TCRBD… TCRBJ… TCRBV10  TCRBD01  TCRBJ02 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> TRB_CD8_949   CASRDGQGSGNTIYF TCRBV… TCRBD… TCRBJ… TCRBV06  TCRBD01  TCRBJ01 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> TRB_CD8_949   CASSEALPGMVPLHF TCRBV… TCRBD… TCRBJ… TCRBV02  TCRBD01  TCRBJ01 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> TRB_CD8_949   CASSGGVAAFSSYN… TCRBV… TCRBD… TCRBJ… TCRBV05  TCRBD01  TCRBJ01 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> TRB_CD8_949   CASSLAGDSQETQYF TCRBV… TCRBD… TCRBJ… TCRBV28  TCRBD01  TCRBJ02 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> TRB_CD8_949   CASSLQGREKLFF   TCRBV… TCRBD… TCRBJ… TCRBV27  TCRBD01  TCRBJ01 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> TRB_CD8_949   CASSLSPYEQYF    TCRBV… TCRBD… TCRBJ… TCRBV06  TCRBD02  TCRBJ02 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> TRB_CD8_949   CASSPFDRGPDTEA… TCRBV… TCRBD… TCRBJ… TCRBV28  TCRBD01  TCRBJ01 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> TRB_CD8_949   CASSPGTGTYGYTF  TCRBV… TCRBD… TCRBJ… TCRBV10  TCRBD01  TCRBJ01 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">11</span> TRB_CD8_949   CASSPLDGLTNEQFF TCRBV… TCRBD… TCRBJ… TCRBV28  TCRBD01  TCRBJ02 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">12</span> TRB_CD8_949   CASSPPTGERDTQYF TCRBV… TCRBD… TCRBJ… TCRBV07  TCRBD02  TCRBJ02 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">13</span> TRB_CD8_949   CASSPSRNTEAFF   TCRBV… TCRBD… TCRBJ… TCRBV04  TCRBD02  TCRBJ01 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">14</span> TRB_CD8_949   CASSQDLGQAFSPL… TCRBV… TCRBD… TCRBJ… TCRBV04  TCRBD01  TCRBJ01 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">15</span> TRB_CD8_949   CASSQDLMTVDSLF… TCRBV… TCRBD… TCRBJ… TCRBV04  TCRBD01  TCRBJ02 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">16</span> TRB_CD8_949   CASSQDRTGQYGYTF TCRBV… TCRBD… TCRBJ… TCRBV04  TCRBD01  TCRBJ01 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">17</span> TRB_CD8_949   CASSQDSSDTEAFF  TCRBV… TCRBD… TCRBJ… TCRBV04  TCRBD01  TCRBJ01 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">18</span> TRB_CD8_949   CASSQDWERLGEQFF TCRBV… TCRBD… TCRBJ… TCRBV14  TCRBD02  TCRBJ02 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">19</span> TRB_CD8_949   CASSREGDQPQHF   TCRBV… TCRBD… TCRBJ… TCRBV05  TCRBD01  TCRBJ01 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">20</span> TRB_CD8_949   CASSSWDNEQFF    TCRBV… TCRBD… TCRBJ… TCRBV05  TCRBD01  TCRBJ02 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 4 more variables: reading_frame &lt;chr&gt;, duplicate_count &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   duplicate_frequency &lt;dbl&gt;, seen &lt;int&gt;</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># Track the top 10 clones from top.freq</span></span>
 <span class="r-in"><span class="fu">cloneTrack</span><span class="op">(</span>study_table <span class="op">=</span> <span class="va">atable</span>, sequence_track <span class="op">=</span> <span class="va">top_freq</span><span class="op">$</span><span class="va">junction_aa</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span>, </span>
 <span class="r-in">           unassigned <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> </span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in cloneTrack(study_table = atable, sequence_track = top_freq$junction_aa[1:10],     unassigned = FALSE):</span> object 'top_freq' not found</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 75 × 12</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    repertoire_id junction_aa     v_call d_call j_call v_family d_family j_family</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> TRB_CD8_949   CAIKMETPNGEQYF  TCRBV… TCRBD… TCRBJ… TCRBV10  TCRBD01  TCRBJ02 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> TRB_CD8_949   CASRDGQGSGNTIYF TCRBV… TCRBD… TCRBJ… TCRBV06  TCRBD01  TCRBJ01 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> TRB_CD8_949   CASSLQGREKLFF   TCRBV… TCRBD… TCRBJ… TCRBV27  TCRBD01  TCRBJ01 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> TRB_CD8_949   CASSPFDRGPDTEA… TCRBV… TCRBD… TCRBJ… TCRBV28  TCRBD01  TCRBJ01 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> TRB_CD8_949   CASSPGTGTYGYTF  TCRBV… TCRBD… TCRBJ… TCRBV10  TCRBD01  TCRBJ01 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> TRB_CD8_949   CASSQDLGQAFSPL… TCRBV… TCRBD… TCRBJ… TCRBV04  TCRBD01  TCRBJ01 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> TRB_CD8_949   CASSQDLMTVDSLF… TCRBV… TCRBD… TCRBJ… TCRBV04  TCRBD01  TCRBJ02 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> TRB_CD8_949   CASSQDRTGQYGYTF TCRBV… TCRBD… TCRBJ… TCRBV04  TCRBD01  TCRBJ01 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> TRB_CD8_949   CASSQDSSDTEAFF  TCRBV… TCRBD… TCRBJ… TCRBV04  TCRBD01  TCRBJ01 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> TRB_CD8_949   CASSREGDQPQHF   TCRBV… TCRBD… TCRBJ… TCRBV05  TCRBD01  TCRBJ01 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 65 more rows, and 4 more variables: reading_frame &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   duplicate_count &lt;dbl&gt;, duplicate_frequency &lt;dbl&gt;, seen &lt;int&gt;</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># Track clones mapping to the CD4 and CD8 samples while ignoring all others</span></span>
 <span class="r-in"><span class="fu">cloneTrack</span><span class="op">(</span>study_table <span class="op">=</span> <span class="va">atable</span>, sample_list <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"TRB_CD4_949"</span>, <span class="st">"TRB_CD8_949"</span><span class="op">)</span>,</span>
