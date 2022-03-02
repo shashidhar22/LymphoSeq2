@@ -51,10 +51,10 @@ readImmunoSeq <- function(path, recursive = FALSE) {
                         dGeneNameTies = "d2_call", count = "duplicate_count",
                         "count (reads)" = "duplicate_count", "count (templates)" = "duplicate_count",
                         "count (templates/reads)" = "duplicate_count", d_resolved = "d_call",
-                        dMaxResolved = "d_call", frame_type = "productive", fuction = "productive",
-                        j_resolved = "j_call", jMaxResolved = "j_call", locus = "locus",
+                        dGeneName = "d_call", frame_type = "productive", fuction = "productive",
+                        j_resolved = "j_call", jGeneName = "j_call", locus = "locus",
                         nucleotide = "sequence", nucleotide.CDR3.in.lowercase. = "sequence",
-                        v_resolved = "v_call", vMaxResolved = "v_call")
+                        v_resolved = "v_call", vGeneName = "v_call")
     progress_bar <- progress::progress_bar$new(format = "Reading AIRR-Seq files [:bar] :percent eta: :eta",
                                            total = length(file_paths), clear = FALSE, width = 60)
     progress_bar$tick(0)
