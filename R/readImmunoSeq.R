@@ -6,7 +6,6 @@
 #' 
 #' @md
 #' @name readImmunoSeq
-#' @describeIn readImmunoSeq Read a set of files
 #' @param path Path to the directory containing tab-delimited files.  Only
 #' files with the extension .tsv are imported.  The names of the data frames are 
 #' the same as names of the files.
@@ -14,7 +13,8 @@
 #' @return Returns a tibble with MiAIRR headers and repertoire_id
 #'
 #' @examples
-#' file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2
+#' file.path <- system.file("extdata", "TCRB_sequencing", 
+#'  package = "LymphoSeq2")
 #' 
 #' study_table <- readImmunoSeq(path = file.path,
 #'                              recursive = FALSE)
@@ -45,15 +45,17 @@ readImmunoSeq <- function(path, recursive = FALSE) {
     airr_fields <- readr::read_csv(airr_headers_path, trim_ws = TRUE)
     matching_fields <- c(amino_acid = "sequence_aa", aminoAcid = "sequence_aa",
                         aminoAcid.CDR3.in.lowercase. = "sequence_aa", cdr1_amino_acid = "cdr1_aa",
-                        cdr1_rearrangement = "cdr1", cdr2_amino_acid = "cdr2_aa",
-                        cdr2_rearrangement = "cdr2", cdr3_amino_acid = "cdr3_aa",
-                        cdr3_rearrangement = "cdr3", d_allele_ties = "d2_call",
-                        dGeneNameTies = "d2_call", count = "duplicate_count",
+                        cdr1_rearrangement = "cdr1", cdr1_amino_acid = "cdr1_aa",
+                        cdr2_rearrangement = "cdr2", cdr2_amino_acid = "cdr2_aa",
+                        cdr3_rearrangement = "cdr3", cdr3_amino_acid = "cdr3_aa", 
+                        d_allele_ties = "d2_call", dGeneNameTies = "d2_call",
+                        count = "duplicate_count",
                         "count (reads)" = "duplicate_count", "count (templates)" = "duplicate_count",
                         "count (templates/reads)" = "duplicate_count", d_resolved = "d_call",
                         dMaxResolved = "d_call", frame_type = "productive", fuction = "productive",
                         j_resolved = "j_call", jMaxResolved = "j_call", locus = "locus",
                         nucleotide = "sequence", nucleotide.CDR3.in.lowercase. = "sequence",
+                        rearrangement = "sequence",
                         v_resolved = "v_call", vMaxResolved = "v_call")
     progress_bar <- progress::progress_bar$new(format = "Reading AIRR-Seq files [:bar] :percent eta: :eta",
                                            total = length(file_paths), clear = FALSE, width = 60)
@@ -78,18 +80,22 @@ readImmunoSeq <- function(path, recursive = FALSE) {
 #' @rdname readImmunoSeq
 getStandard <- function(clone_file, airr_fields, matching_fields) {
     clone_data <- readr::read_tsv(clone_file, na = c("", "NA", "Nan", "NaN", "unresolved"))
+    # if (c("clone_id", "cell_id") %in% colnames(clone_data)) {
+        
+    # }
     existing_match <- airr_fields[airr_fields %in% colnames(clone_data)]
     if (length(existing_match) == 144) {
         return(clone_data)
     }
     existing_airr_data <- clone_data %>%
                             dplyr::select(existing_match)
+
     match <- matching_fields[colnames(clone_data)] %>%
              stats::na.omit()
     renamed_data <- clone_data[names(match)] %>%
                 dplyr::rename(!!! stats::setNames(names(match), match))
     if ("d2_call" %in% colnames(renamed_data)) {
-        renamed_data <- renamed_data %>% 
+        renamed_data <- renamed_data %>%
                         tidyr::separate("d2_call", c("d_call_2", "d2_call"), ",") %>% 
                         dplyr::mutate(d_call = coalesce(d_call, d_call_2)) %>%
                         dplyr::select(-d_call_2)
