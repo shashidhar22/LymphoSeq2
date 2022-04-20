@@ -22,12 +22,16 @@
 #' @import purrr
 runINext <- function(sample_table, color="repertoire_id") {
     repertoire_id <- sample_table$repertoire_id[1]
-    rarefaction_tables <- sample_table %>% 
-                          tidyr::pivot_wider(names_from=repertoire_id, 
-                                      id_cols=junction_aa, 
-                                      values_from=duplicate_count, 
-                                      values_fill=list(duplicate_count=0)) %>% 
-                          dplyr::select(-junction_aa) %>% as.matrix()
+    rarefaction_tables <- sample_table %>%
+                          dplyr::group_by(junction_aa, repertoire_id) %>%
+                          dplyr::summarise(duplicate_count = sum(duplicate_count)) %>%
+                          tidyr::pivot_wider(names_from=repertoire_id,
+                                      id_cols=junction_aa,
+                                      values_from=duplicate_count,
+                                      values_fill=list(duplicate_count=0)) %>%
+                          dplyr::ungroup() %>%
+                          dplyr::select(-junction_aa) %>%
+                          as.matrix()
     
     rarefaction_tables <- iNEXT::iNEXT(rarefaction_tables, 
                                        q=0, 

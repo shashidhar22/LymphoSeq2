@@ -10,7 +10,7 @@
 #' @examples
 #' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
 #' stable <- readImmunoSeq(path = file_path)
-#'
+#' plotRarefactionCurve(stable)
 #'
 #' @export
 plotRarefactionCurve <- function(study_table) {
