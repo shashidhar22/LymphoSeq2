@@ -27,7 +27,7 @@
 #'                              mode = "PSI")
 #' @seealso \code{\link{pairwisePlot}} for plotting results as a heat map.
 #' @export
-#' @import tidyverse tictoc
+#' @import tidyverse
 scoringMatrix <- function(productive_table, mode="Bhattacharyya") {
     sample_list <- productive_table %>% 
                    dplyr::select(repertoire_id, junction_aa, duplicate_frequency, duplicate_count) %>% 

@@ -13,7 +13,7 @@
 #'
 #' stable <- readImmunoSeq(path = file_path)
 #'
-#' countKmer(study_table = stable, k = 5, separate = TRUE)
+#' kmer_table <- countKmer(study_table = stable, k = 5, separate = TRUE)
 #'
 #' @export
 #' @import tidyverse Biostrings
@@ -27,13 +27,13 @@ countKmer <- function(study_table, k, separate = TRUE) {
         kmer_counts <- study_table %>%
                         dplyr::group_by(repertoire_id) %>%
                         dplyr::group_split() %>%
-                        purrr::map(~countKmer(.x, k))
+                        purrr::map(~calculateCounts(.x, k))
         kmer_counts <- purrr::map2(kmer_counts, c(repertoire_id_names), ~dplyr::rename(.x, !!.y := Count)) %>%
                         purrr::reduce(inner_join, by = "Kmer")
         return(kmer_counts)
     }
     if (!separate) {
-        kmer_counts <- countKmer(study_table, k)
+        kmer_counts <- calculateCounts(study_table, k)
         return(kmer_counts)
     }
 }
@@ -51,19 +51,36 @@ calculateCounts <- function(study_table, k) {
     return(kmer_counts)
 }
 
+#' Plot kmer distributions
+#'
+#' Plot kmer distributions by repertoire id
+#'
+#' @param kmer_table A tibble output from the countKmer function.
+#' @param top The number of top kmers to show
+#' @return A stacked bar chart showing kmer distributions
+#' @examples
+#' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
+#'
+#' stable <- readImmunoSeq(path = file_path)
+#'
+#' kmer_table <- countKmer(study_table = stable, k = 5, separate = TRUE)
+#' 
+#' kmer_distributions <- kmerPlot(kmer_table, top = 10)
+#'
+#' @export
+#' @import tidyverse Biostrings
 
-
-kmerPlot <- function(study_table, top = 10) {
-    study_table <- study_table %>%
+kmerPlot <- function(kmer_table, top = 10) {
+    kmer_table <- kmer_table %>%
                     tidyr::pivot_longer(!Kmer, names_to = "repertoire_id", values_to = "count")
-    rep_num <- length(unique(study_table$repertoire_id))
-    study_table <- study_table %>%
+    rep_num <- length(unique(kmer_table$repertoire_id))
+    kmer_table <- kmer_table %>%
                     dplyr::group_by(Kmer) %>%
-                    dplyr::arrange(desc(count), .by_group = TRUE) %>%
-                    dplyr::ungroup() %>%
+                    dplyr::mutate(total = sum(count)) %>%
+                    dplyr::arrange(desc(total)) %>%
                     head(top * rep_num)
 
-    bar <- ggplot(study_table, aes(fill = repertoire_id, y = count, x = Kmer)) +
+    bar <- ggplot(kmer_table, aes(fill = repertoire_id, y = count, x = Kmer)) +
                 geom_bar(position = "stack", stat = "identity") + 
                 theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
     return(bar)
