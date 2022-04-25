@@ -19,7 +19,7 @@
 #' study_table <- readImmunoSeq(path = file.path,
 #'                              recursive = FALSE)
 #' @export
-#' @import tidyverse dplyr stringr
+#' @import tidyverse dplyr stringr scRepertoire
 #' @rdname readImmunoSeq
 readImmunoSeq <- function(path, recursive = FALSE) {
     if (length(path) > 1) {
@@ -80,9 +80,11 @@ readImmunoSeq <- function(path, recursive = FALSE) {
 #' @rdname readImmunoSeq
 getStandard <- function(clone_file, airr_fields, matching_fields) {
     clone_data <- readr::read_tsv(clone_file, na = c("", "NA", "Nan", "NaN", "unresolved"))
-    # if (c("clone_id", "cell_id") %in% colnames(clone_data)) {
-        
-    # }
+    if (c("clone_id", "cell_id") %in% colnames(clone_data)) {
+        clone_data <- read10x(clone_data)
+        matching_fields <- matching_fields %>%
+                            append(c(clone_id = "clone_id", cell_id = "cell_id"))
+    }
     existing_match <- airr_fields[airr_fields %in% colnames(clone_data)]
     if (length(existing_match) == 144) {
         return(clone_data)
@@ -189,4 +191,26 @@ iReceptorFormat <- function(clone_frame) {
                             data_processing_id, reading_frame, v_family,
                             d_family, j_family, duplicate_frequency))
     return(iReceptor_frame)
+}
+
+read10x <- function(clone_data) {
+    combined_data <- clone_data %>%
+                    dplyr::mutate(barcode = cell_id,
+                                  length = junction_length,
+                                  chain = if_else(stringr::str_detect(v_call, "TRB"), "TRB", "TRA"),
+                                  v_gene = v_call,
+                                  d_gene = d_call,
+                                  j_gene = j_call,
+                                  c_gene = c_call,
+                                  cdr3 = junction_aa,
+                                  cdr3_nt = junction,
+                                  raw_clonotype_id = clone_id)
+    file_name <- basename(clone_file)
+    file_name <- file_name %>% stringr::str_sub(1, stringr::str_length(file_name) - 4)
+    combined_data <- scRepertoire::combineTCR(combined_data, samples = file_name, cells = "T-AB")
+    combined_data <- combined_data[[file_name]] %>%
+                        as_tibble() %>%
+                        dplyr::mutate(cell_id = barcode)
+    combined_data <- dplyr::full_join(clone_data, combined_data)
+    return(combined_data)
 }
