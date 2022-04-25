@@ -44,18 +44,20 @@ readImmunoSeq <- function(path, recursive = FALSE) {
     airr_headers_path <- system.file("extdata", "AIRR_fields.csv", package = "LymphoSeq2")
     airr_fields <- readr::read_csv(airr_headers_path, trim_ws = TRUE)
     matching_fields <- c(amino_acid = "sequence_aa", aminoAcid = "sequence_aa",
-                        aminoAcid.CDR3.in.lowercase. = "sequence_aa", cdr1_amino_acid = "cdr1_aa",
+                        aminoAcid.CDR3.in.lowercase. = "sequence_aa",
+                        nucleotide = "sequence", nucleotide.CDR3.in.lowercase. = "sequence",
+                        rearrangement = "sequence",
                         cdr1_rearrangement = "cdr1", cdr1_amino_acid = "cdr1_aa",
                         cdr2_rearrangement = "cdr2", cdr2_amino_acid = "cdr2_aa",
                         cdr3_rearrangement = "cdr3", cdr3_amino_acid = "cdr3_aa", 
-                        d_allele_ties = "d2_call", dGeneNameTies = "d2_call",
                         count = "duplicate_count",
                         "count (reads)" = "duplicate_count", "count (templates)" = "duplicate_count",
-                        "count (templates/reads)" = "duplicate_count", d_resolved = "d_call",
-                        dMaxResolved = "d_call", frame_type = "productive", fuction = "productive",
-                        j_resolved = "j_call", jMaxResolved = "j_call", locus = "locus",
-                        nucleotide = "sequence", nucleotide.CDR3.in.lowercase. = "sequence",
-                        rearrangement = "sequence",
+                        "count (templates/reads)" = "duplicate_count",
+                        frame_type = "productive", fuction = "productive",
+                        locus = "locus",
+                        d_resolved = "d_call", dMaxResolved = "d_call",
+                        d_allele_ties = "d2_call", dGeneNameTies = "d2_call",
+                        j_resolved = "j_call", jMaxResolved = "j_call",
                         v_resolved = "v_call", vMaxResolved = "v_call")
     progress_bar <- progress::progress_bar$new(format = "Reading AIRR-Seq files [:bar] :percent eta: :eta",
                                            total = length(file_paths), clear = FALSE, width = 60)
