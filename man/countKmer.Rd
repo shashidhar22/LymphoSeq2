@@ -26,6 +26,6 @@ file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
 
 stable <- readImmunoSeq(path = file_path)
 
-countKmer(study_table = stable, k = 5, separate = TRUE)
+kmer_table <- countKmer(study_table = stable, k = 5, separate = TRUE)
 
 }

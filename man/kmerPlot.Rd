@@ -7,7 +7,7 @@
 kmerPlot(kmer_table, top = 10)
 }
 \arguments{
-\item{kmer_table}{A tibble outputed from the countKmer function.}
+\item{kmer_table}{A tibble output from the countKmer function.}
 
 \item{top}{The number of top kmers to show}
 }
