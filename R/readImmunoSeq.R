@@ -19,7 +19,7 @@
 #' study_table <- readImmunoSeq(path = file.path,
 #'                              recursive = FALSE)
 #' @export
-#' @import tidyverse dplyr stringr scRepertoire
+#' @import tidyverse dplyr stringr
 #' @rdname readImmunoSeq
 readImmunoSeq <- function(path, recursive = FALSE) {
     if (length(path) > 1) {
@@ -82,10 +82,8 @@ readImmunoSeq <- function(path, recursive = FALSE) {
 #' @rdname readImmunoSeq
 getStandard <- function(clone_file, airr_fields, matching_fields) {
     clone_data <- readr::read_tsv(clone_file, na = c("", "NA", "Nan", "NaN", "unresolved"))
-    if (c("clone_id", "cell_id") %in% colnames(clone_data)) {
+    if (c("is_cell") %in% colnames(clone_data)) {
         clone_data <- read10x(clone_data)
-        matching_fields <- matching_fields %>%
-                            append(c(clone_id = "clone_id", cell_id = "cell_id"))
     }
     existing_match <- airr_fields[airr_fields %in% colnames(clone_data)]
     if (length(existing_match) == 144) {
@@ -107,18 +105,21 @@ getStandard <- function(clone_file, airr_fields, matching_fields) {
     clone_data <- dplyr::bind_cols(existing_airr_data, renamed_data)
 
     file_name <- basename(clone_file)
-    file_name <- file_name %>% stringr::str_sub(1, stringr::str_length(file_name) - 4)
+    file_name <- file_name %>% 
+                    stringr::str_sub(1, stringr::str_length(file_name) - 4)
     
-    clone_data <- clone_data %>% mutate(repertoire_id = file_name)
+    clone_data <- clone_data %>%
+                    dplyr::mutate(repertoire_id = file_name)
     if ("sequence" %in% colnames(clone_data) && "sequence_aa" %in% colnames(clone_data)) {
         clone_data <- clone_data %>%
-                    dplyr::mutate(junction = sequence,
+                        dplyr::mutate(junction = sequence,
                                   junction_aa = sequence_aa)
     } else {
         clone_data <- clone_data %>%
                     dplyr::mutate(sequence = junction,
                                   sequence_aa = junction_aa)
     }
+    if (!("clone_id" %in% colnames(clone_data))) {
     clone_data <- clone_data %>%
                     dplyr::mutate(clone_id = junction)
     unique_nucl <- clone_data %>%
@@ -126,8 +127,8 @@ getStandard <- function(clone_file, airr_fields, matching_fields) {
                     dplyr::distinct()
     nucl <- unique_nucl[, "clone_id", drop = TRUE]
     clone_data <- clone_data %>%
-            dplyr::mutate(clone_id = stringr::str_c(file_name, "_", c(which(nucl == clone_id)))) 
-
+                    dplyr::mutate(clone_id = stringr::str_c(file_name, "_", c(which(nucl == clone_id)))) 
+    }
     return(clone_data)
 }
 
@@ -196,23 +197,61 @@ iReceptorFormat <- function(clone_frame) {
 }
 
 read10x <- function(clone_data) {
-    combined_data <- clone_data %>%
-                    dplyr::mutate(barcode = cell_id,
-                                  length = junction_length,
-                                  chain = if_else(stringr::str_detect(v_call, "TRB"), "TRB", "TRA"),
-                                  v_gene = v_call,
-                                  d_gene = d_call,
-                                  j_gene = j_call,
-                                  c_gene = c_call,
-                                  cdr3 = junction_aa,
-                                  cdr3_nt = junction,
-                                  raw_clonotype_id = clone_id)
-    file_name <- basename(clone_file)
-    file_name <- file_name %>% stringr::str_sub(1, stringr::str_length(file_name) - 4)
-    combined_data <- scRepertoire::combineTCR(combined_data, samples = file_name, cells = "T-AB")
-    combined_data <- combined_data[[file_name]] %>%
-                        as_tibble() %>%
-                        dplyr::mutate(cell_id = barcode)
-    combined_data <- dplyr::full_join(clone_data, combined_data)
-    return(combined_data)
+    # double_fields <- c(v_sequence_start, v_sequence_end,
+    #                     d_sequence_start, d_sequence_end,
+    #                     j_sequence_start, j_sequence_end,
+    #                     c_sequence_start, c_sequence_end,
+    #                     junction_length, junction_aa_length,
+    #                     consensus_count, duplicate_count)
+        double_fields <- c("v_sequence_start", "v_sequence_end",
+                        "d_sequence_start", "d_sequence_end",
+                        "j_sequence_start", "j_sequence_end",
+                        "c_sequence_start", "c_sequence_end",
+                        "junction_length", "junction_aa_length",
+                        "consensus_count", "duplicate_count")
+    collapsed_data <- clone_data %>%
+                        dplyr::group_by(cell_id, clone_id) %>%
+                        dplyr::mutate_all(~paste(., collapse = ";")) %>%
+                        dplyr::distinct() %>%
+                        dplyr::mutate(v_sequence_start = as.double(v_sequence_start),
+                                      v_sequence_end = as.double(v_sequence_end),
+                                      d_sequence_start = as.double(d_sequence_start),
+                                      d_sequence_end = as.double(d_sequence_end),
+                                      j_sequence_start = as.double(j_sequence_start),
+                                      j_sequence_end = as.double(j_sequence_end),
+                                      c_sequence_start = as.double(c_sequence_start),
+                                      c_sequence_end = as.double(c_sequence_end),
+                                      junction_length = as.double(junction_length),
+                                      junction_aa_length = as.double(junction_aa_length),
+                                      consensus_count = as.double(consensus_count),
+                                      duplicate_count = as.double(duplicate_count))
+
+    # clone_data <- clone_data %>%
+    #                 dplyr::select(cell_id, v_call, d_call, j_call) %>%
+    #                 dplyr::group_by(cell_id) %>%
+    #                 dplyr::filter(n() > 2)
+
+    # collapse_data < collapse_data %>%
+    #                     purrr::map()
+
+    # combined_data <- clone_data %>%
+    #                 dplyr::mutate(barcode = cell_id,
+    #                               length = junction_length,
+    #                               chain = if_else(stringr::str_detect(v_call, "TRB"), "TRB", "TRA"),
+    #                               v_gene = v_call,
+    #                               d_gene = d_call,
+    #                               j_gene = j_call,
+    #                               c_gene = c_call,
+    #                               cdr3 = junction_aa,
+    #                               cdr3_nt = junction,
+    #                               raw_clonotype_id = clone_id)
+    # file_name <- basename(clone_file)
+    # file_name <- file_name %>% stringr::str_sub(1, stringr::str_length(file_name) - 4)
+    # combined_data <- scRepertoire::combineTCR(combined_data, samples = file_name, cells = "T-AB")
+    # combined_data <- combined_data[[file_name]] %>%
+    #                     as_tibble() %>%
+    #                     dplyr::mutate(cell_id = barcode)
+    # combined_data <- dplyr::full_join(clone_data, combined_data)
+    # return(combined_data)
+    return(collapsed_data)
 }
