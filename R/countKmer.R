@@ -31,8 +31,7 @@ countKmer <- function(study_table, k, separate = TRUE) {
         kmer_counts <- purrr::map2(kmer_counts, c(repertoire_id_names), ~dplyr::rename(.x, !!.y := Count)) %>%
                         purrr::reduce(inner_join, by = "Kmer")
         return(kmer_counts)
-    }
-    if (!separate) {
+    } else {
         kmer_counts <- calculateCounts(study_table, k)
         return(kmer_counts)
     }
