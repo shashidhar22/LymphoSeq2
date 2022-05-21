@@ -67,9 +67,9 @@ summarySeq <- function(study_table) {
     clonality <- 1 - base::round(entropy/base::log2(base::nrow(productive)), digits = 6)
     simpson_index <- vegan::diversity(frequency, index = "simpson")
     inverse_simpson <- vegan::diversity(frequency, index = "invsimpson")
-    chao_estimate <- breakaway::chao1(counts)$estimate
-    kemp_estimate <- breakaway::kemp(counts)$estimate
-    hill_estimate <- breakaway::true_hill(frequency, q = 0)
+    # chao_estimate <- breakaway::chao1(counts)$estimate
+    # kemp_estimate <- breakaway::kemp(counts)$estimate
+    # hill_estimate <- breakaway::true_hill(frequency, q = 0)
     study_summary <- tibble::tibble(repertoire_id = study_table$repertoire_id[1], 
                                     total_sequences = base::nrow(study_table), 
                                     unique_productive_sequences = base::nrow(productive),
@@ -79,8 +79,9 @@ summarySeq <- function(study_table) {
                             inverse_simpson = inverse_simpson,
                             gini_coefficient = ineq::Gini(productive$duplicate_frequency), 
                             top_productive_sequence = base::max((productive$duplicate_frequency) * 100),
-                            chao_estimate = chao_estimate,
-                            kemp_estimate = kemp_estimate,
-                            hill_estimate = hill_estimate)
+                            # chao_estimate = chao_estimate,
+                            # kemp_estimate = kemp_estimate,
+                            # hill_estimate = hill_estimate
+                            )
     return(study_summary)
 }
