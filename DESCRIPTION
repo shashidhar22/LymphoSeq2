@@ -36,8 +36,6 @@ Imports: Biostrings,
          stringr,
          progress,
          dtplyr,
-         scRepertoire,
-Remotes: adw96/breakaway
 License: Artistic-2.0
 LazyData: true
 Encoding: UTF-8
