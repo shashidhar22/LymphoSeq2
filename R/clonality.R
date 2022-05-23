@@ -55,7 +55,7 @@ clonality <- function(study_table) {
 #' @return Tibble summarizing the sequence information for each repertoire_id
 #'
 #' @export
-#' @import tidyverse breakaway vegan
+#' @import tidyverse vegan
 
 summarySeq <- function(study_table) {
     productive <- LymphoSeq2::productiveSeq(study_table, aggregate="junction")

@@ -59,9 +59,8 @@ Returns a tibble that is compliant with the iReceptor repertoire format.
 }
 
 \examples{
-file.path <- system.file("extdata", "TCRB_sequencing", 
- package = "LymphoSeq2")
+file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
 
-study_table <- readImmunoSeq(path = file.path,
-                             recursive = FALSE)
+study_table <- readImmunoSeq(path = file.path, recursive = FALSE)
+
 }
