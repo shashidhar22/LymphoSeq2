@@ -7,7 +7,6 @@
 #' @param sample_table A tibble consisting antigen receptor sequencing 
 #' data imported by the LymphoSeq function readImmunoSeq. "junction_aa", "duplicate_count", and 
 #' "duplicate_frequency" are required columns.
-#' @param color 
 #' @examples
 #' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
 #' stable <- readImmunoSeq(path = file_path)
@@ -20,28 +19,28 @@
 #' @import tidyverse
 #' @import iNEXT
 #' @import purrr
-runINext <- function(sample_table, color="repertoire_id") {
+runINext <- function(sample_table) {
     repertoire_id <- sample_table$repertoire_id[1]
     rarefaction_tables <- sample_table %>%
                           dplyr::group_by(junction_aa, repertoire_id) %>%
                           dplyr::summarise(duplicate_count = sum(duplicate_count)) %>%
-                          tidyr::pivot_wider(names_from=repertoire_id,
-                                      id_cols=junction_aa,
-                                      values_from=duplicate_count,
-                                      values_fill=list(duplicate_count=0)) %>%
+                          tidyr::pivot_wider(names_from = repertoire_id,
+                                             id_cols = junction_aa,
+                                             values_from = duplicate_count,
+                                             values_fill = list(duplicate_count = 0)) %>%
                           dplyr::ungroup() %>%
                           dplyr::select(-junction_aa) %>%
                           as.matrix()
-    
-    rarefaction_tables <- iNEXT::iNEXT(rarefaction_tables, 
-                                       q=0, 
-                                       datatype="abundance", 
-                                       endpoint=100000, 
-                                       se=TRUE, 
-                                       conf=0.95, 
-                                       nboot=10)
-    rarefaction_tables <- rarefaction_tables$iNextEst[[repertoire_id]] %>% 
-                          dplyr::as_tibble() %>% 
+
+    rarefaction_tables <- iNEXT::iNEXT(rarefaction_tables,
+                                       q = 0,
+                                       datatype = "abundance",
+                                       endpoint = 100000,
+                                       se = RUE,
+                                       conf = 0.95,
+                                       nboot = 10)
+    rarefaction_tables <- rarefaction_tables$iNextEst[[repertoire_id]] %>%
+                          dplyr::as_tibble() %>%
                           dplyr::mutate(repertoire_id = repertoire_id)
     return(rarefaction_tables)
 }

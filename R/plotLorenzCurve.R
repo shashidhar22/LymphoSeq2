@@ -3,7 +3,7 @@
 #' Plots a Lorenz curve derived from the frequency of the amino acid sequences.
 #' 
 #' @param repertoire_ids A character vector of repertoire_id names in list.
-#' @param study_table A tibble generated using the LymphoSeq function readImmunoSeq 
+#' @param study_table A tibble generated using the LymphoSeq2 function readImmunoSeq 
 #' or productiveSeq.  "duplicate_frequency" is a required column.
 #' @return Returns a Lorenz curve.
 #' @details The Gini coefficient is an alternative metric used to calculate 

@@ -4,12 +4,12 @@
 #' their frequencies in each.
 #' 
 #' @param study_table A list of productive amino acid sequences generated
-#' by the LymphoSeq function productiveSeq where aggregate = "junction_aa".
+#' by the LymphoSeq2 function productiveSeq where aggregate = "junction_aa".
 #' @param repertoire_ids A character vector of two or more repertoire_id names in 
-#' productive.aa.
+#' study_table.
 #' @return Returns a data frame of the common sequences between two or more files 
 #' displaying their frequencies in each.
-#' @seealso \code{\link{commonSeqsVenn}} \code{\link{commonSeqsPlot}} \code{\link{commonSeqsBar}}
+#' @seealso \code{\link{productiveSeq}} \code{\link{commonSeqsVenn}} \code{\link{commonSeqsPlot}} \code{\link{commonSeqsBar}}
 #' @examples
 #' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
 #' 

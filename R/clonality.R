@@ -1,18 +1,18 @@
-#' Clonality
+#' Clonality (summary statistics)
 #' 
-#' Creates a tibble giving the total number of sequences, number of unique 
-#' productive sequences, number of genomes, entropy, clonality, Gini 
-#' coefficient, and the frequency (\%) of the top productive sequences form a repertoire_id tibble.
+#' Creates a tibble giving the total number of sequences, number of unique
+#' productive sequences, number of genomes, entropy, clonality, Gini
+#' coefficient, simpson index, inverse simpson index, and the 
+#' frequency (\%) of the top productive sequences form a repertoire_id tibble.
 #' 
-#' @param study_table A tibble consisting of antigen receptor 
-#' sequencing imported by the LymphoSeq function readImmunoSeq. "junction_aa", "duplicate_count", 
-#' and "duplicate_frequency" are required columns. Note that clonality is usually calculated from 
-#' productive junction sequences. Therefore, it is not recommended to run this function using a 
+#' @param study_table A tibble consisting of antigen receptor
+#' sequencing imported by the LymphoSeq2 function readImmunoSeq. "junction_aa", "duplicate_count",
+#' and "duplicate_frequency" are required columns. Note that clonality is usually calculated from
+#' productive junction sequences. Therefore, it is not recommended to run this function using a
 #' productive sequence list aggregated by amino acids.
-#' @return Returns a tibble giving the total number of sequences, number of 
-#' unique productive sequences, number of genomes, clonality, Gini coefficient, 
-#' and the frequency (\%) of the top productive sequence, simpson index,
-#' inverse simpson index, hill diversity index, chao diversity index, and kemp diversity index
+#' @return Returns a tibble giving the total number of sequences, number of
+#' unique productive sequences, number of genomes, clonality, Gini coefficient,
+#' simpson index, inverse simpson index, and the frequency (\%) of the top productive sequence.
 #' for each repertoire_id.
 #' @details Clonality is derived from the Shannon entropy, which is calculated 
 #' from the frequencies of all productive sequences divided by the logarithm of 
