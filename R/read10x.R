@@ -1,8 +1,13 @@
+#' Read 10x Genomics data containing alpha and beta chains
+#' 
+#' Read in 10x Genomics data and collapse alpha and beta
+#' chains appropriately.
+#' 
 #' @param clone_data
 #'
-#' @return 
+#' @return A tibble with alpha and beta chains collapsed
 #'
-#'
+#' @export
 read10x <- function(clone_data) {
     double_fields <- c("v_sequence_start", "v_sequence_end",
                         "d_sequence_start", "d_sequence_end",
@@ -25,6 +30,19 @@ read10x <- function(clone_data) {
     return(collapsed_data)
 }
 
+#' Select the most frequent chain
+#' 
+#' [description]
+#' 
+#' @param barcode_data A tibble that holds data for one barcode
+#' identifier
+#' @param clone_data A tibble 
+#' @param chain The chain to examine to select the most frequently
+#' occurring one. Values given can only be "TRA" or "TRB" to indicate
+#' alpha or beta chain respectively.
+#' 
+#' @return A tibble with one row of data that contains the most
+#' frequently occuring chain.
 selectChain <- function(barcode_data, clone_data, chain = "TRA") {
     if (chain == "TRA") {
         opp_chain <- "TRB"
@@ -58,12 +76,17 @@ selectChain <- function(barcode_data, clone_data, chain = "TRA") {
     return(barcode_data)
 }
 
-#' @param barcode_data
+#' Selecting the alpha and beta chains
+#' 
+#' Select the most frequently occurring alpha and beta chains
+#' for each barcode
+#' 
+#' @param barcode_data A tibble that holds data for one barcode
+#' identifier
 #' @param clone_data
 #'
-#' @return 
-#'
-#'
+#' @return A tibble containing the most frequent alpha chain and
+#' the most frequent beta chain.
 mostPrevalent <- function(barcode_data, clone_data) {
     ab_chains <- barcode_data %>%
                     dplyr::pull(v_call)
