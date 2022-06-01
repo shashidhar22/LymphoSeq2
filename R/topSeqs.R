@@ -4,7 +4,7 @@
 #' from the study table.
 #' 
 #' @param productive_table A tibble of productive sequences generated 
-#' by the LymphoSeq function productiveSeq.  "duplicate_frequency" and "junction_aa" 
+#' by the LymphoSeq2 function productiveSeq.  "duplicate_frequency" and "junction_aa" 
 #' are a required columns.
 #' @param top The number of top productive sequences in each data frame to subset 
 #' by their frequencies.

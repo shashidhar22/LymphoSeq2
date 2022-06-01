@@ -3,8 +3,8 @@
 #' Create a cumulative frequency bar plot of a specified number of top 
 #' sequences.
 #' 
-#' @param study_table A study tibble imported using the LymphoSeq function readImmunoSeq 
-#' or productiveSeq.
+#' @param study_table A study tibble imported using the LymphoSeq2 function
+#' readImmunoSeq or productiveSeq.
 #' @param top The number of top sequences to be colored in the bar plot.  All 
 #' other, less frequent sequences are colored violet.
 #' @return Returns a cumulative frequency bar plot of the top sequences.

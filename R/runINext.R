@@ -5,8 +5,8 @@
 #' is derived from Chao et al., (2014) using the iNEXT library
 #'
 #' @param sample_table A tibble consisting antigen receptor sequencing 
-#' data imported by the LymphoSeq function readImmunoSeq. "junction_aa", "duplicate_count", and 
-#' "duplicate_frequency" are required columns.
+#' data imported by the LymphoSeq2 function readImmunoSeq. "junction_aa",
+#' "duplicate_count", and "duplicate_frequency" are required columns.
 #' @examples
 #' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
 #' stable <- readImmunoSeq(path = file_path)

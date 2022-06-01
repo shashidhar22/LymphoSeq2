@@ -3,7 +3,7 @@
 #' Aggregates all productive sequences within a list of data frames by duplicate_count.
 #' 
 #' @param productive_table A tibble of productive amino acid sequences 
-#' imported using the function LymphoSeq function productiveSeq where the 
+#' imported using the function LymphoSeq2 function productiveSeq where the 
 #' aggregate parameter was set to "junction_aa".
 #' @param unique_type Use "junction_aa" to aggregate by amino acid sequences.
 #' Use "junction" to aggregate by nucleotide sequences. Default is "junction_aa".

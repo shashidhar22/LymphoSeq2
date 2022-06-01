@@ -7,7 +7,7 @@
 #' and antigen specificity of that sequence is also provided.
 #' 
 #' @param productive_table A tibble of productive amino acid sequences 
-#' imported using the function LymphoSeq function productiveSeq where the 
+#' imported using the function LymphoSeq2 function productiveSeq where the 
 #' aggregate parameter was set to "junction_aa".  
 #' @param frequency The minimum frequency that the sequence appears in any of 
 #' the listed samples.
