@@ -39,7 +39,7 @@ read10x <- function(path, recursive = FALSE) {
 #' Read in 10x Genomics data and collapse alpha and beta
 #' chains appropriately.
 #' 
-#' @param clone_file
+#' @param clone_file A single .txv file from 10x Genomics
 #' @return A tibble with alpha and beta chains collapsed
 #' @export
 collpase_chains <- function(clone_file) {
@@ -73,7 +73,8 @@ collpase_chains <- function(clone_file) {
 #' 
 #' @param barcode_data A tibble that holds data for one barcode
 #' identifier
-#' @param clone_data A tibble 
+#' @param clone_data A tibble that holds data for one repertoire_id
+#' (one file)
 #' @param chain The chain to examine to select the most frequently
 #' occurring one. Values given can only be "TRA" or "TRB" to indicate
 #' alpha or beta chain respectively.
@@ -119,7 +120,8 @@ selectChain <- function(barcode_data, clone_data, chain = "TRA") {
 #' 
 #' @param barcode_data A tibble that holds data for one barcode
 #' identifier
-#' @param clone_data
+#' @param clone_data A tibble that holds data for one repertoire_id
+#' (one file)
 #' @return A tibble containing the most frequent alpha chain and
 #' the most frequent beta chain.
 mostPrevalent <- function(barcode_data, clone_data) {

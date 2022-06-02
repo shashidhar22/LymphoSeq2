@@ -12,7 +12,7 @@
 #' from a list of data frames.
 #' @seealso \code{\link{chordDiagramVDJ}}
 #' @examples
-#' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2
+#' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
 #' stable <- readImmunoSeq(path = file_path)
 #' atable <- productiveSeq(study_table = stable, aggregate = "junction_aa")
 #' top_seqs <- topSeqs(productive_table = atable, top = 1)
