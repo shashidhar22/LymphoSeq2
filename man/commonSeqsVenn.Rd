@@ -11,7 +11,7 @@ commonSeqsVenn(repertoire_ids, productive_aa)
 productiveSeq table to compare.}
 
 \item{productive_aa}{A tibble of amino acid sequences generated
-by the LymphoSeq function productiveSeq.}
+by the LymphoSeq2 function productiveSeq.}
 }
 \value{
 Returns a a Venn diagram of the number of common sequences between
@@ -39,5 +39,5 @@ commonSeqsVenn(repertoire_ids = c("TRB_Unsorted_0",
 
 }
 \seealso{
-\code{\link{commonSeqs}}
+\code{\link{productiveSeq}} \code{\link{commonSeqsVenn}} \code{\link{commonSeqsPlot}} \code{\link{commonSeqsBar}}
 }
