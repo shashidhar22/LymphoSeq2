@@ -36,6 +36,7 @@ Imports: Biostrings,
          stringr,
          progress,
          dtplyr,
+         igraph
 License: Artistic-2.0
 LazyData: true
 Encoding: UTF-8
