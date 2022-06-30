@@ -7,7 +7,7 @@
 #' and antigen specificity of that sequence is also provided.
 #' 
 #' @param productive_table A tibble of productive amino acid sequences 
-#' imported using the function LymphoSeq function productiveSeq where the 
+#' imported using the function LymphoSeq2 function productiveSeq where the 
 #' aggregate parameter was set to "junction_aa".  
 #' @param frequency The minimum frequency that the sequence appears in any of 
 #' the listed samples.
@@ -20,8 +20,7 @@
 #' comparing it to a database of previously reported sequences in the 
 #' literature. 
 #' @examples
-#' file_path <- system.file("extdata", "TCRB_sequencing", 
-#'  package = "LymphoSeq2")
+#' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
 #' stable <- readImmunoSeq(path = file_path)
 #' atable <- productiveSeq(study_table = stable, aggregate = "junction_aa")
 #' top_freq <- topFreq(productive_table = atable, frequency = 0.1)

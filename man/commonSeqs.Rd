@@ -8,10 +8,10 @@ commonSeqs(study_table, repertoire_ids = NULL)
 }
 \arguments{
 \item{study_table}{A list of productive amino acid sequences generated
-by the LymphoSeq function productiveSeq where aggregate = "junction_aa".}
+by the LymphoSeq2 function productiveSeq where aggregate = "junction_aa".}
 
 \item{repertoire_ids}{A character vector of two or more repertoire_id names in
-productive.aa.}
+study_table.}
 }
 \value{
 Returns a data frame of the common sequences between two or more files
@@ -32,5 +32,5 @@ commonSeqs(repertoire_ids = c("TRB_Unsorted_0", "TRB_Unsorted_32"),
    study_table = atable)
 }
 \seealso{
-\code{\link{commonSeqsVenn}} \code{\link{commonSeqsPlot}} \code{\link{commonSeqsBar}}
+\code{\link{productiveSeq}} \code{\link{commonSeqsVenn}} \code{\link{commonSeqsPlot}} \code{\link{commonSeqsBar}}
 }

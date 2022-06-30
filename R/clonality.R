@@ -1,18 +1,18 @@
-#' Clonality
+#' Clonality (summary statistics)
 #' 
-#' Creates a tibble giving the total number of sequences, number of unique 
-#' productive sequences, number of genomes, entropy, clonality, Gini 
-#' coefficient, and the frequency (\%) of the top productive sequences form a repertoire_id tibble.
+#' Creates a tibble giving the total number of sequences, number of unique
+#' productive sequences, number of genomes, entropy, clonality, Gini
+#' coefficient, simpson index, inverse simpson index, and the 
+#' frequency (\%) of the top productive sequences form a repertoire_id tibble.
 #' 
-#' @param study_table A tibble consisting of antigen receptor 
-#' sequencing imported by the LymphoSeq function readImmunoSeq. "junction_aa", "duplicate_count", 
-#' and "duplicate_frequency" are required columns. Note that clonality is usually calculated from 
-#' productive junction sequences. Therefore, it is not recommended to run this function using a 
+#' @param study_table A tibble consisting of antigen receptor
+#' sequencing imported by the LymphoSeq2 function readImmunoSeq. "junction_aa", "duplicate_count",
+#' and "duplicate_frequency" are required columns. Note that clonality is usually calculated from
+#' productive junction sequences. Therefore, it is not recommended to run this function using a
 #' productive sequence list aggregated by amino acids.
-#' @return Returns a tibble giving the total number of sequences, number of 
-#' unique productive sequences, number of genomes, clonality, Gini coefficient, 
-#' and the frequency (\%) of the top productive sequence, simpson index,
-#' inverse simpson index, hill diversity index, chao diversity index, and kemp diversity index
+#' @return Returns a tibble giving the total number of sequences, number of
+#' unique productive sequences, number of genomes, clonality, Gini coefficient,
+#' simpson index, inverse simpson index, and the frequency (\%) of the top productive sequence.
 #' for each repertoire_id.
 #' @details Clonality is derived from the Shannon entropy, which is calculated 
 #' from the frequencies of all productive sequences divided by the logarithm of 
@@ -55,7 +55,7 @@ clonality <- function(study_table) {
 #' @return Tibble summarizing the sequence information for each repertoire_id
 #'
 #' @export
-#' @import tidyverse breakaway vegan
+#' @import tidyverse vegan
 
 summarySeq <- function(study_table) {
     productive <- LymphoSeq2::productiveSeq(study_table, aggregate="junction")
@@ -67,9 +67,9 @@ summarySeq <- function(study_table) {
     clonality <- 1 - base::round(entropy/base::log2(base::nrow(productive)), digits = 6)
     simpson_index <- vegan::diversity(frequency, index = "simpson")
     inverse_simpson <- vegan::diversity(frequency, index = "invsimpson")
-    chao_estimate <- breakaway::chao1(counts)$estimate
-    kemp_estimate <- breakaway::kemp(counts)$estimate
-    hill_estimate <- breakaway::true_hill(frequency, q = 0)
+    # chao_estimate <- breakaway::chao1(counts)$estimate
+    # kemp_estimate <- breakaway::kemp(counts)$estimate
+    # hill_estimate <- breakaway::true_hill(frequency, q = 0)
     study_summary <- tibble::tibble(repertoire_id = study_table$repertoire_id[1], 
                                     total_sequences = base::nrow(study_table), 
                                     unique_productive_sequences = base::nrow(productive),
@@ -79,8 +79,9 @@ summarySeq <- function(study_table) {
                             inverse_simpson = inverse_simpson,
                             gini_coefficient = ineq::Gini(productive$duplicate_frequency), 
                             top_productive_sequence = base::max((productive$duplicate_frequency) * 100),
-                            chao_estimate = chao_estimate,
-                            kemp_estimate = kemp_estimate,
-                            hill_estimate = hill_estimate)
+                            # chao_estimate = chao_estimate,
+                            # kemp_estimate = kemp_estimate,
+                            # hill_estimate = hill_estimate
+                            )
     return(study_summary)
 }

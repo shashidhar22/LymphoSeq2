@@ -4,13 +4,14 @@
 #' repertoire diversity. The method used to generate the rarefaction curve
 #' is derived from Chao et al., (2014) using the iNEXT library
 #'
-#' @param study_table A tibble consisting antigen receptor sequencing 
-#' data imported by the LymphoSeq function readImmunoSeq. "aminoAcid", "count", and 
-#' "frequencyCount" are required columns.
+#' @param study_table A tibble consisting antigen receptor sequencing
+#' data imported by the LymphoSeq2 function readImmunoSeq. "junction_aa",
+#' "duplicate_count", and "duplicate_frequency" are required columns.
+#' @seealso \code{\link{runINext}}
 #' @examples
 #' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
 #' stable <- readImmunoSeq(path = file_path)
-#'
+#' plotRarefactionCurve(stable)
 #'
 #' @export
 plotRarefactionCurve <- function(study_table) {

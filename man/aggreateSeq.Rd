@@ -8,12 +8,12 @@ aggreateSeq(study_table, aggregate, prevalence, progress_bar)
 }
 \arguments{
 \item{study_table}{A tibble consisting antigen receptor sequencing
-data imported by the LymphoSeq function readImmunoSeq. "junction_aa", "duplicate_count", and
+data imported by the LymphoSeq2 function readImmunoSeq. "junction_aa", "duplicate_count", and
 "duplicate_frequency" are required columns.}
 
-\item{aggregate}{Indicates whether the values of "duplicate_count", "duplicate_frequency",
-and "esimatedNumberGenomes" should be aggregated by amino acid or junction
-sequence.  Acceptable values are "junction_aa" or "junction".  If "junction_aa"
+\item{aggregate}{Indicates whether the values of "duplicate_count" and
+"duplicate_frequency" should be aggregated by amino acid or junction sequence.
+Acceptable values are "junction_aa" or "junction".  If "junction_aa"
 is selected, then resulting data frame will have columns corresponding to
 junction_aa, duplicate_count, and duplicate_frequency.
 If "junction" is selected then all columns in the

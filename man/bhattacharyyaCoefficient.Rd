@@ -18,8 +18,12 @@ A tibble with one row and three columns sample1, sample2, bhattacharyyaCoefficie
 Calculates the Bhattacharyya coefficient of two samples.
 }
 \examples{
+<<<<<<< HEAD
 file_path <- system.file("extdata", "TCRB_sequencing", 
  package = "LymphoSeq2")
+=======
+file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
+>>>>>>> 8c93adc60131706d11b3a560be853bb3173513c5
 
 stable <- readImmunoSeq(path = file_path)
 

@@ -3,15 +3,14 @@
 #' Aggregates all productive sequences within a list of data frames by duplicate_count.
 #' 
 #' @param productive_table A tibble of productive amino acid sequences 
-#' imported using the function LymphoSeq function productiveSeq where the 
+#' imported using the function LymphoSeq2 function productiveSeq where the 
 #' aggregate parameter was set to "junction_aa".
 #' @param unique_type Use "junction_aa" to aggregate by amino acid sequences.
 #' Use "junction" to aggregate by nucleotide sequences. Default is "junction_aa".
 #' @return A data frame of unique amino acid sequences from the list of 
 #' data frames aggregated by duplicate_count.
 #' @examples
-#' file_path <- system.file("extdata", "TCRB_sequencing", 
-#'  package = "LymphoSeq2")
+#' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
 #' stable <- readImmunoSeq(path = file_path)
 #' atable <- productiveSeq(study_table = stable, aggregate = "junction_aa")
 #' unique_seqs <- uniqueSeqs(productive_table = atable, unique_type = "junction_aa")
