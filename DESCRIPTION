@@ -10,7 +10,6 @@ Description: This R package analyzes high-throughput sequencing of T
         exported from the ImmunoSEQ analyzer.
 Depends: R (>= 4.1.0), data.table
 Imports: Biostrings,
-         breakaway, 
          circlize,
          ggalluvial,
          ggtree,
@@ -37,8 +36,8 @@ Imports: Biostrings,
          dplyr,
          stringr,
          progress,
-         dtplyr
-Remotes: adw96/breakaway
+         dtplyr,
+         igraph
 License: Artistic-2.0
 LazyData: true
 Encoding: UTF-8

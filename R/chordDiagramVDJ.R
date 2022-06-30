@@ -1,19 +1,19 @@
 #' Chord diagram of VJ or DJ gene associations
 #' 
-#' Creates a chord diagram showing VJ or DJ gene associations from one or more 
+#' Creates a chord diagram showing VJ or DJ gene associations from one or more
 #' samples.
 #' 
-#' @param study_table A tibble consisting of frequencies of antigen receptor 
-#' sequences.  "v_family", "j_family", and if applicable, "d_family" 
-#' are a required columns.  Using output from the LymphoSeq function topSeqs is
+#' @param study_table A tibble consisting of frequencies of antigen receptor
+#' sequences.  "v_family", "j_family", and if applicable, "d_family"
+#' are required columns.  Using output from the LymphoSeq2 function topSeqs is
 #' recommended.
-#' @param association A character vector of gene families to associate.  Options 
+#' @param association A character vector of gene families to associate. Options
 #' include "VJ" or "DJ".
-#' @param colors A character vector of 2 colors corresponding to the V/D and J 
+#' @param colors A character vector of 2 colors corresponding to the V/D and J
 #' gene colors respectively.
-#' @details The size of the ribbons connecting VJ or DJ genes correspond to the 
-#' number of samples or number of sequences that make up that recombination 
-#' event.  The thicker the ribbon, the higher the frequency of the recombination.
+#' @details The size of the ribbons connecting VJ or DJ genes correspond to the
+#' number of samples or number of sequences that make up that recombination
+#' event. The thicker the ribbon, the higher the frequency of the recombination.
 #' @return Returns a chord diagram showing VJ or DJ gene associations from one or 
 #' more samples.
 #' @seealso \code{\link{topSeqs}}

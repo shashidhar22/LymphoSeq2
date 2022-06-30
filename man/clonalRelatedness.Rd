@@ -30,7 +30,7 @@ Edit distance is a way of quantifying how dissimilar two sequences
 are to one another by counting the minimum number of operations required to
 transform one sequence into the other. For example, an edit distance of 0
 means the sequences are identical and an edit distance of 1 indicates that
-the sequences different by a single amino acid or junction.
+the sequences differ by a single amino acid or junction.
 }
 \examples{
 file_path <- system.file("extdata", "IGH_sequencing", package = "LymphoSeq2")

@@ -25,8 +25,7 @@
 #' @return Returns the rows for every instance in the list of data frames where 
 #' the searched sequence(s) appeared.
 #' @examples
-#' file_path <- system.file("extdata", "TCRB_sequencing", 
-#'  package = "LymphoSeq2")
+#' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
 #' stable <- readImmunoSeq(path = file_path)
 #' aa1 <- "CASSPVSNEQFF"
 #' aa2 <- "CASSQEVPPYQAFF"

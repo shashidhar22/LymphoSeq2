@@ -9,7 +9,7 @@ lorenzCurve(repertoire_ids, study_table)
 \arguments{
 \item{repertoire_ids}{A character vector of repertoire_id names in list.}
 
-\item{study_table}{A tibble generated using the LymphoSeq function readImmunoSeq
+\item{study_table}{A tibble generated using the LymphoSeq2 function readImmunoSeq
 or productiveSeq.  "duplicate_frequency" is a required column.}
 }
 \value{

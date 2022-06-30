@@ -2,13 +2,13 @@
 % Please edit documentation in R/clonality.R
 \name{clonality}
 \alias{clonality}
-\title{Clonality}
+\title{Clonality (summary statistics)}
 \usage{
 clonality(study_table)
 }
 \arguments{
 \item{study_table}{A tibble consisting of antigen receptor
-sequencing imported by the LymphoSeq function readImmunoSeq. "junction_aa", "duplicate_count",
+sequencing imported by the LymphoSeq2 function readImmunoSeq. "junction_aa", "duplicate_count",
 and "duplicate_frequency" are required columns. Note that clonality is usually calculated from
 productive junction sequences. Therefore, it is not recommended to run this function using a
 productive sequence list aggregated by amino acids.}
@@ -16,14 +16,14 @@ productive sequence list aggregated by amino acids.}
 \value{
 Returns a tibble giving the total number of sequences, number of
 unique productive sequences, number of genomes, clonality, Gini coefficient,
-and the frequency (\\%) of the top productive sequence, simpson index,
-inverse simpson index, hill diversity index, chao diversity index, and kemp diversity index
+simpson index, inverse simpson index, and the frequency (\\%) of the top productive sequence.
 for each repertoire_id.
 }
 \description{
 Creates a tibble giving the total number of sequences, number of unique
 productive sequences, number of genomes, entropy, clonality, Gini
-coefficient, and the frequency (\\%) of the top productive sequences form a repertoire_id tibble.
+coefficient, simpson index, inverse simpson index, and the
+frequency (\\%) of the top productive sequences form a repertoire_id tibble.
 }
 \details{
 Clonality is derived from the Shannon entropy, which is calculated

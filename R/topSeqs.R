@@ -4,7 +4,7 @@
 #' from the study table.
 #' 
 #' @param productive_table A tibble of productive sequences generated 
-#' by the LymphoSeq function productiveSeq.  "duplicate_frequency" and "junction_aa" 
+#' by the LymphoSeq2 function productiveSeq.  "duplicate_frequency" and "junction_aa" 
 #' are a required columns.
 #' @param top The number of top productive sequences in each data frame to subset 
 #' by their frequencies.
@@ -12,8 +12,7 @@
 #' from a list of data frames.
 #' @seealso \code{\link{chordDiagramVDJ}}
 #' @examples
-#' file_path <- system.file("extdata", "TCRB_sequencing", 
-#'  package = "LymphoSeq2")
+#' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
 #' stable <- readImmunoSeq(path = file_path)
 #' atable <- productiveSeq(study_table = stable, aggregate = "junction_aa")
 #' top_seqs <- topSeqs(productive_table = atable, top = 1)

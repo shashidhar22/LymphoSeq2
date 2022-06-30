@@ -6,10 +6,10 @@
 #' @param repertoire_ids A character vector of two or three names of repertoire_ids in 
 #' productiveSeq table to compare.
 #' @param productive_aa A tibble of amino acid sequences generated
-#' by the LymphoSeq function productiveSeq.
+#' by the LymphoSeq2 function productiveSeq.
 #' @return Returns a a Venn diagram of the number of common sequences between
 #' two or three repertoire_ids.
-#' @seealso \code{\link{commonSeqs}}
+#' @seealso \code{\link{productiveSeq}} \code{\link{commonSeqsVenn}} \code{\link{commonSeqsPlot}} \code{\link{commonSeqsBar}}
 #' @examples
 #' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
 #' 

@@ -4,20 +4,22 @@
 #' two samples and reports the log2 transformed fold change, P value and adjusted P value.
 #' 
 #' @param study_table A tibble consisting of antigen receptor sequences 
-#' imported by the LymphoSeq function readImmunoSeq.
+#' imported by the LymphoSeq2 function readImmunoSeq.
 #' @param repertoire_ids A character vector of two repertoire_ids in study_table 
 #' to be compared. If NULL, the first two repertoire_ids from study_table will be used.
-#' @param abundance The input value for the Fisher exact test.  "duplicate_count"
-#' is recommend but "duplicate_count" may also be used.
+#' @param abundance The input value for the Fisher exact test. "duplicate_count"
+#' is the default value and is also the recommended value.
 #' @param type A character vector indicating whether "junction_aa" or "junction" sequences
 #' should be used.  If "junction_aa" is specified, then run productiveSeqs first.
+#' The default value is "junction_aa".
 #' @param q A numeric value between 0.0 and 1.0 indicating the threshold Holms adjusted 
-#' P value (also knowns as the false discovery rate or q value) to subset the results with.  
+#' P value (also knowns as the false discovery rate or q value) to subset the results with.
 #' Any sequences with a q value greater than this value will not be shown.
 #' @param zero A numeric value to set all zero values to when calculating the log2
-#' transformed fold change between samples 1 and 2.  This does not apply to the 
+#' transformed fold change between samples 1 and 2. This does not apply to the
 #' p and q value calculations.
 #' @param parallel A boolean indicating wheter parallel processing should be used or not.
+#' The default value is FALSE.
 #' @return Returns a data frame with columns corresponding to the frequency of the abudance
 #' measure in samples 1 and 2, the P value, Q value (Holms adjusted P value, also knowns as 
 #' the false discovery rate), and log2 transformed fold change.

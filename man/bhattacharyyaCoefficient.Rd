@@ -17,6 +17,14 @@ A tibble with one row and three columns sample1, sample2, bhattacharyyaCoefficie
 \description{
 Calculates the Bhattacharyya coefficient of two samples.
 }
+\examples{
+file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
+
+stable <- readImmunoSeq(path = file_path)
+
+atable <- productiveSeq(stable, aggregate = "junction_aa")
+
+}
 \seealso{
 \code{\link{scoringMatrix}}
 }
