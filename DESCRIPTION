@@ -23,7 +23,7 @@ Imports: Biostrings,
          RColorBrewer,
          stats,
          stringdist,
-         tidyverse,
+         magrittr,
          UpSetR,
          utils,
          VennDiagram, 
@@ -37,7 +37,8 @@ Imports: Biostrings,
          stringr,
          progress,
          dtplyr,
-         igraph
+         igraph,
+         vroom
 License: Artistic-2.0
 LazyData: true
 Encoding: UTF-8
