@@ -20,7 +20,7 @@
 #' 
 #' exportFasta(study_table = atable, type = "junction_aa", names = "duplicate_frequency")
 #' @export
-#' @import tidyverse
+#' @import magrittr
 #' @importFrom Biostrings DNAStringSet
 #' @importFrom Biostrings AAStringSet
 #' @importFrom Biostrings writeXStringSet
@@ -28,23 +28,21 @@ exportFasta <- function(study_table, type = "junction",
                         names = c("rank", "junction_aa", "duplicate_count")) {
     if (type == "junction") {
         study_table <- study_table %>% 
-                       arrange(repertoire_id, desc(duplicate_frequency)) %>% 
-                       tibble::rowid_to_column() %>% 
-                    #    rename(rowid = rank) %>%
-                       mutate(sequences = junction) %>%
-                       tidyr::unite(fasta_name, names)
+            dplyr::arrange(repertoire_id, desc(duplicate_frequency)) %>% 
+            tibble::rowid_to_column() %>% 
+            dplyr::mutate(sequences = junction) %>%
+            tidyr::unite(fasta_name, names)
     } else if (type == "junction_aa") {
         study_table <- productiveSeq(study_table)
         study_table <- study_table %>% 
-                       arrange(repertoire_id, desc(duplicate_frequency)) %>% 
-                       tibble::rowid_to_column() %>% 
-                    #    rename(rowid = rank) %>%
-                       mutate(sequences = junction_aa) %>%
-                       tidyr::unite(fasta_name, names) 
+            dplyr::arrange(repertoire_id, desc(duplicate_frequency)) %>% 
+            tibble::rowid_to_column() %>% 
+            dplyr::mutate(sequences = junction_aa) %>%
+            tidyr::unite(fasta_name, names) 
     }
     study_table %>% 
-    group_by(repertoire_id) %>% 
-    group_split() %>% 
+    dplyr::group_by(repertoire_id) %>% 
+    dplyr::group_split() %>% 
     purrr::map(~writeFasta(.x, type))
     message(paste("Fasta files saved to", getwd()))
 }

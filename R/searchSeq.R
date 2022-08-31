@@ -55,7 +55,7 @@
 #'           seq_type = "junction",
 #'           edit_distance = 0)
 #' @export
-#' @import tidyverse
+#' @import magrittr
 searchSeq <- function(study_table, sequence, seq_type = "junction", edit_distance = 0, match = "global") {
     query_list <- study_table %>% 
                   dplyr::filter(!is.na(!!base::as.symbol(seq_type))) %>%

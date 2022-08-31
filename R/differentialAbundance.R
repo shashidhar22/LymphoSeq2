@@ -33,35 +33,31 @@
 #' differentialAbundance(study_table = atable, repertoire_ids = c("TRB_Unsorted_949", "TRB_Unsorted_1320"), 
 #'                       type = "junction_aa", q = 0.01, zero = 0.001)
 #' @export
-#' @import tidyverse
-differentialAbundance <- function(study_table, repertoire_ids = NULL, abundance = "duplicate_count", 
-                                  type = "junction_aa", q = 1, zero = 1, parallel = FALSE) {
+#' @import magrittr
+differentialAbundance <- function(study_table, repertoire_ids = NULL, 
+        abundance = "duplicate_count", type = "junction_aa", q = 1, zero = 1, 
+        parallel = FALSE) {
     if (base::is.null(repertoire_ids)) {
         repertoire_ids <- study_table %>% 
-                          dplyr::pull(repertoire_id) 
+            dplyr::pull(repertoire_id) 
         repertoire_ids <- repertoire_ids[1:3]
     }
     fisher_table <- study_table %>%
-                    dplyr::filter(repertoire_id %in% repertoire_ids) %>%
-                    LymphoSeq2::seqMatrix(by = "duplicate_count") %>%
-                    dplyr::mutate(not_x = base::sum(!!base::as.name(repertoire_ids[1])) - !!base::as.name(repertoire_ids[1]),
-                                  not_y = base::sum(!!base::as.name(repertoire_ids[2])) - !!base::as.name(repertoire_ids[2])) %>%
-              
-                    dplyr::rowwise() %>%
-                    dplyr::mutate(fisher = list(LymphoSeq2::fisherFunction(!!base::as.name(repertoire_ids[1]), 
-                                                                       !!base::as.name(repertoire_ids[2]), 
-                                                                       not_x, 
-                                                                       not_y)))  %>%
-                    tidyr::unnest_wider(fisher) %>%
-                    dplyr::select(junction_aa,
-                                 !!base::as.name(repertoire_ids[1]),
-                                 !!base::as.name(repertoire_ids[2]),
-                                 p, q, l2fc)
-    
-    
+        dplyr::filter(repertoire_id %in% repertoire_ids) %>%
+        LymphoSeq2::seqMatrix(by = "duplicate_count") %>%
+        dplyr::mutate(not_x = base::sum(!!base::as.name(repertoire_ids[1])) - !!base::as.name(repertoire_ids[1]),
+            not_y = base::sum(!!base::as.name(repertoire_ids[2])) - !!base::as.name(repertoire_ids[2])) %>%
+        dplyr::rowwise() %>%
+        dplyr::mutate(fisher = list(
+            LymphoSeq2::fisherFunction(!!base::as.name(repertoire_ids[1]), 
+            !!base::as.name(repertoire_ids[2]), 
+            not_x, 
+            not_y)))  %>%
+        tidyr::unnest_wider(fisher) %>%
+        dplyr::select(junction_aa, !!base::as.name(repertoire_ids[1]),
+            !!base::as.name(repertoire_ids[2]), p, q, l2fc)
     return(fisher_table)
 }
-
 #' 
 #' @export
 fisherFunction <- function(x, y, not_x, not_y) {

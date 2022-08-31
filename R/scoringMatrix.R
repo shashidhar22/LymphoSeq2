@@ -27,7 +27,7 @@
 #'                              mode = "PSI")
 #' @seealso \code{\link{pairwisePlot}} for plotting results as a heat map.
 #' @export
-#' @import tidyverse
+#' @import magrittr
 scoringMatrix <- function(productive_table, mode="Bhattacharyya") {
     sample_list <- productive_table %>% 
                    dplyr::select(repertoire_id, junction_aa, duplicate_frequency, duplicate_count) %>% 
@@ -92,7 +92,7 @@ scoringMatrix <- function(productive_table, mode="Bhattacharyya") {
 #' atable <- productiveSeq(stable, aggregate = "junction_aa")
 #'
 #' @seealso \code{\link{scoringMatrix}}
-#' @import tidyverse
+#' @import magrittr
 #' @export
 bhattacharyyaCoefficient <- function(sample_list) {
     sample1 <- sample_list[[1]]
@@ -129,7 +129,7 @@ bhattacharyyaCoefficient <- function(sample_list) {
 #' atable <- productiveSeq(stable, aggregate = "junction_aa")
 #' 
 #' @seealso \code{\link{scoringMatrix}}
-#' @import tidyverse
+#' @import magrittr
 #' @export
 similarityScore <- function(sample_list) {
     sample1 <- sample_list[[1]]
@@ -170,7 +170,7 @@ similarityScore <- function(sample_list) {
 #' atable <- productiveSeq(stable, aggregate = "junction_aa")
 #'
 #' @seealso \code{\link{scoringMatrix}}
-#' @import tidyverse
+#' @import magrittr
 #' @export
 sorensenIndex <- function(sample_list) {
     sample1 <- sample_list[[1]]
@@ -218,7 +218,7 @@ sorensenIndex <- function(sample_list) {
 #' atable <- productiveSeq(stable, aggregate = "junction_aa")
 #' 
 #' @seealso \code{\link{scoringMatrix}}
-#' @import tidyverse
+#' @import magrittr
 #' @export
 percentSI <- function(sample_list) {
     sample1 <- sample_list[[1]]

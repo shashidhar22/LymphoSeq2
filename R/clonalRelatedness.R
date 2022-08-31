@@ -31,6 +31,7 @@
 #' 
 #' @export
 #' @importFrom stringdist stringdist
+#' @import magrittr
 clonalRelatedness <- function(study_table, editDistance = 10){
     clonal_relatedness  <- study_table %>%
                            dplyr::group_by(repertoire_id) %>%
@@ -52,14 +53,14 @@ clonalRelatedness <- function(study_table, editDistance = 10){
 #' 
 #' @export
 #' @importFrom stringdist stringdist 
-#' @import tidyverse  
+#' @import magrittr  
 getRelatedness <- function(sample_table, editDistance=10) {
     repertoire_id <- sample_table$repertoire_id[1]
     top_seq <- sample_table %>% 
-               dplyr::arrange(desc(duplicate_count)) %>% 
-               dplyr::slice_head(n = 1) %>% 
-               dplyr::select(junction) %>% 
-               base::as.character()
+        dplyr::arrange(desc(duplicate_count)) %>% 
+        dplyr::slice_head(n = 1) %>% 
+        dplyr::select(junction) %>% 
+        base::as.character()
     seq_distance <- stringdist::stringdist(top_seq, sample_table$junction)
     related_seq <- seq_distance[seq_distance <= editDistance]
     relatedness <- base::length(related_seq)/base::nrow(sample_table)
