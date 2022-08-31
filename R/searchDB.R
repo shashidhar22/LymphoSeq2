@@ -21,7 +21,7 @@
 #' top_seqs <- topSeqs(productive_table = productive_aa, top = 1)
 #' searchDB(study_table = top_seqs)
 #' @export
-#' @import tidyverse httr jsonlite 
+#' @import magrittr httr jsonlite 
 searchDB <- function(study_table) {
     study_table <- study_table %>% 
                    dplyr::filter(!is.na(sequence_aa)) %>%
@@ -41,7 +41,7 @@ searchDB <- function(study_table) {
 #' information including disease status, sample type, and PubMed ID 
 #' (PMID) for the reference where the sequence was characterized.  
 #' @export
-#' @import tidyverse httr jsonlite
+#' @import magrittr httr jsonlite
 searchIreceptor <- function(...) {
     sequence_row <- tibble(...)
     path <- "https://ipa1.ireceptor.org/v2/sequences_summary?"

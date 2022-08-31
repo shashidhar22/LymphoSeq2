@@ -32,7 +32,7 @@
 #' ggplot2::labs(fill = "Similarity score") + 
 #' ggplot2::ggtitle("Figure Title")
 #' @export
-#' @import tidyverse
+#' @import magrittr
 pairwisePlot <- function(matrix) {
     samples <- rownames(matrix)
     matrix[base::lower.tri(matrix)] <- NA

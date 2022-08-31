@@ -8,7 +8,7 @@
 #' files with the .tsv extension are imported.
 #' @return Returns a tibble with MiAIRR headers and repertoire_id
 #' @export
-#' @import tidyverse
+#' @import magrittr
 read10x <- function(path, recursive = FALSE) {
     if (length(path) > 1) {
         file_paths <- path

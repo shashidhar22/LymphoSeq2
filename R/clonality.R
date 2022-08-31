@@ -39,12 +39,13 @@
 #' @seealso \code{\link{lorenzCurve}}
 #' @export
 #' @importFrom ineq Gini
+#' @import magrittr
 clonality <- function(study_table) {
     study_table <- study_table %>% 
-                   dplyr::group_by(repertoire_id) %>% 
-                   dplyr::group_split() %>% 
-                   purrr::map(summarySeq) %>% 
-                   dplyr::bind_rows()
+        dplyr::group_by(repertoire_id) %>% 
+        dplyr::group_split() %>% 
+        purrr::map(summarySeq) %>% 
+        dplyr::bind_rows()
     return(study_table)
 }
 
@@ -55,33 +56,22 @@ clonality <- function(study_table) {
 #' @return Tibble summarizing the sequence information for each repertoire_id
 #'
 #' @export
-#' @import tidyverse vegan
+#' @import magrittr vegan
 
 summarySeq <- function(study_table) {
     productive <- LymphoSeq2::productiveSeq(study_table, aggregate="junction")
     frequency <- productive %>%
-                 dplyr::pull(duplicate_frequency)
+        dplyr::pull(duplicate_frequency)
     counts <- productive %>%
-              dplyr::pull(duplicate_count)
+        dplyr::pull(duplicate_count)
     entropy <- -base::sum(frequency * base::log2(frequency), na.rm=TRUE)
     clonality <- 1 - base::round(entropy/base::log2(base::nrow(productive)), digits = 6)
-    simpson_index <- vegan::diversity(frequency, index = "simpson")
-    inverse_simpson <- vegan::diversity(frequency, index = "invsimpson")
-    # chao_estimate <- breakaway::chao1(counts)$estimate
-    # kemp_estimate <- breakaway::kemp(counts)$estimate
-    # hill_estimate <- breakaway::true_hill(frequency, q = 0)
     study_summary <- tibble::tibble(repertoire_id = study_table$repertoire_id[1], 
-                                    total_sequences = base::nrow(study_table), 
-                                    unique_productive_sequences = base::nrow(productive),
-                            total_count = base::sum(study_table$duplicate_count), 
-                            clonality = clonality, 
-                            simpson_index = simpson_index,
-                            inverse_simpson = inverse_simpson,
-                            gini_coefficient = ineq::Gini(productive$duplicate_frequency), 
-                            top_productive_sequence = base::max((productive$duplicate_frequency) * 100),
-                            # chao_estimate = chao_estimate,
-                            # kemp_estimate = kemp_estimate,
-                            # hill_estimate = hill_estimate
-                            )
+        total_sequences = base::nrow(study_table), 
+        unique_productive_sequences = base::nrow(productive),
+        total_count = base::sum(study_table$duplicate_count), 
+        clonality = clonality, 
+        gini_coefficient = ineq::Gini(productive$duplicate_frequency), 
+        top_productive_sequence = base::max((productive$duplicate_frequency) * 100))
     return(study_summary)
 }

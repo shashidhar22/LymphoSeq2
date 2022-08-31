@@ -20,15 +20,16 @@
 #' commonSeqs(repertoire_ids = c("TRB_Unsorted_0", "TRB_Unsorted_32"),
 #'    study_table = atable)
 #' @export
+#' @import magrittr
 commonSeqs <- function(study_table, repertoire_ids = NULL) {
-    if (base::is.null(repertoire_ids)) {
-      repertoire_ids <- study_table %>%
-                        dplyr::pull(repertoire_id) %>%
-                        base::unique()
-    }
-    common_seqs <- study_table %>% 
-                   LymphoSeq2::cloneTrack(sample_list = repertoire_ids) %>%
-                   dplyr::filter(seen > 1) %>%
-                   LymphoSeq2::seqMatrix()
-    return(common_seqs)
+		if (base::is.null(repertoire_ids)) {
+			repertoire_ids <- study_table %>%
+				dplyr::pull(repertoire_id) %>%
+				base::unique()
+		}
+		common_seqs <- study_table %>% 
+			LymphoSeq2::cloneTrack(sample_list = repertoire_ids) %>%
+			dplyr::filter(seen > 1) %>%
+			LymphoSeq2::seqMatrix()
+		return(common_seqs)
 }

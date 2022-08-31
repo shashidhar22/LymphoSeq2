@@ -51,7 +51,7 @@
 #'                             labels = labels, values = colors) + 
 #' ggplot2::ggtitle("Figure Title")
 #' @export
-#' @import tidyverse
+#' @import magrittr
 #' @importFrom RColorBrewer brewer.pal
 #' @importFrom ineq Lc
 lorenzCurve <- function(repertoire_ids, study_table) {

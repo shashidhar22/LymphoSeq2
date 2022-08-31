@@ -32,7 +32,7 @@
 #' sequence_matrix <- seqMatrix(atable, sequences = top_freq$junction_aa)
 #' top_freq_matrix <- merge(top_freq, sequence_matrix)
 #' @export
-#' @import tidyverse
+#' @import magrittr
 seqMatrix <- function(productive_aa, sequences = NULL, by = "duplicate_frequency") {
     if (is.null(sequences)) {
         sequences <- productive_aa %>%

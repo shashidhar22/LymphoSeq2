@@ -16,7 +16,7 @@
 #' atable <- atable %>% dplyr::filter(repertoire_id == "TRB_Unsorted_1320")
 #' rtable <- runINext(atable)
 #' @export
-#' @import tidyverse
+#' @import magrittr
 #' @import iNEXT
 #' @import purrr
 runINext <- function(sample_table) {
@@ -36,7 +36,7 @@ runINext <- function(sample_table) {
                                        q = 0,
                                        datatype = "abundance",
                                        endpoint = 100000,
-                                       se = RUE,
+                                       se = TRUE,
                                        conf = 0.95,
                                        nboot = 10)
     rarefaction_tables <- rarefaction_tables$iNextEst[[repertoire_id]] %>%

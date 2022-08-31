@@ -17,7 +17,7 @@
 #' atable <- productiveSeq(study_table = stable, aggregate = "junction_aa")
 #' top_seqs <- topSeqs(productive_table = atable, top = 1)
 #' @export
-#' @import tidyverse dtplyr
+#' @import magrittr dtplyr
 topSeqs <- function(productive_table, top = 1) {
     top_seqs <- productive_table %>%
                 dtplyr::lazy_dt() %>%

@@ -46,58 +46,55 @@
 #' @export
 phyloTree <- function(study_table, repertoire_ids, type = "junction", layout = "rectangular", label = TRUE) {
     sample_table <- study_table %>% 
-                    dplyr::filter(repertoire_id == repertoire_ids)
+        dplyr::filter(repertoire_id == repertoire_ids)
     if(base::nrow(study_table) < 3){
         stop("Cannot draw phlogenetic tree with less than 3 sequences.", call. = FALSE)
     }
     if(type == "junction") {
         sample_table <- sample_table %>% 
-                        dplyr::filter(base::nchar(junction) >= 9)
+            dplyr::filter(base::nchar(junction) >= 9)
         distance <- utils::adist(sample_table$junction, sample_table$junction)
         colnames(distance) <- rownames(distance) <- sample_table$junction
         names <- sample_table$junction
     }
     if(type == "junction_aa") {
         sample_table <- sample_table %>% 
-                        dplyr::filter(base::nchar(junction_aa) >= 9)
+            dplyr::filter(base::nchar(junction_aa) >= 9)
         distance <- utils::adist(sample_table$junction_aa, sample_table$junction_aa)
         colnames(distance) <- rownames(distance) <- sample_table$junction_aa
         names <- sample_table$junction_aa
     }
     tree <- phangorn::NJ(distance)
     geneFamilies <- sample_table %>% 
-                    dplyr::mutate(v_family = stringr::str_replace(v_family, "IGH|IGL|IGK|TCRB|TCRA", ""),
-                                  v_family = stringr::str_replace(v_family, "unresolved", "UNR"),
-                                  v_family = stringr::str_replace_na(v_family, "UNR"),
-                                  d_family = stringr::str_replace(d_family, "IGH|IGL|IGK|TCRB|TCRA", ""),
-                                  d_family = stringr::str_replace(d_family, "unresolved", "UNR"),
-                                  d_family = stringr::str_replace_na(d_family, "UNR"),
-                                  j_family = stringr::str_replace(j_family, "IGH|IGL|IGK|TCRB|TCRA", ""),
-                                  j_family = stringr::str_replace(j_family, "unresolved", "UNR"),
-                                  j_family = stringr::str_replace_na(j_family, "UNR"),
-                                  gene_families = paste(v_family, d_family, j_family)) %>%
-                    dplyr::pull(gene_families)
+        dplyr::mutate(v_family = stringr::str_replace(v_family, "IGH|IGL|IGK|TCRB|TCRA", ""),
+            v_family = stringr::str_replace(v_family, "unresolved", "UNR"),
+            v_family = stringr::str_replace_na(v_family, "UNR"),
+            d_family = stringr::str_replace(d_family, "IGH|IGL|IGK|TCRB|TCRA", ""),
+            d_family = stringr::str_replace(d_family, "unresolved", "UNR"),
+            d_family = stringr::str_replace_na(d_family, "UNR"),
+            j_family = stringr::str_replace(j_family, "IGH|IGL|IGK|TCRB|TCRA", ""),
+            j_family = stringr::str_replace(j_family, "unresolved", "UNR"),
+            j_family = stringr::str_replace_na(j_family, "UNR"),
+            gene_families = paste(v_family, d_family, j_family)) %>%
+        dplyr::pull(gene_families)
     tree_annotation <- tibble(names = names, 
-                              duplicate_count = sample_table$duplicate_count, 
-                              geneFamilies = geneFamilies, 
-                              junction_aa = sample_table$junction_aa,
-                              duplicate_frequency = base::round(sample_table$duplicate_frequency, digits = 2), 
-                              dominant = c("Yes", rep("No", base::nrow(sample_table) - 1)))
+        duplicate_count = sample_table$duplicate_count, 
+        geneFamilies = geneFamilies, 
+        junction_aa = sample_table$junction_aa,
+        duplicate_frequency = base::round(sample_table$duplicate_frequency, digits = 2), 
+        dominant = c("Yes", rep("No", base::nrow(sample_table) - 1)))
     getPalette <- grDevices::colorRampPalette(RColorBrewer::brewer.pal(9, "Set1"))
     tree_plot <- ggtree::ggtree(tree, layout = layout) %<+% tree_annotation + 
-            ggtree::geom_tippoint(aes_string(color = "geneFamilies", shape = "dominant"), size = 3) + 
-            ggplot2::scale_color_manual(values = getPalette(length(unique(geneFamilies)))) + 
-            ggplot2::guides(shape = FALSE) + 
-            ggplot2::theme(legend.position = "bottom", legend.key = element_rect(colour = "white")) + 
-            ggplot2::labs(color = "")
+        ggtree::geom_tippoint(aes_string(color = "geneFamilies", shape = "dominant"), size = 3) + 
+        ggplot2::scale_color_manual(values = getPalette(length(unique(geneFamilies)))) + 
+        ggplot2::guides(shape = FALSE) + 
+        ggplot2::theme(legend.position = "bottom", legend.key = element_rect(colour = "white")) + 
+        ggplot2::labs(color = "")
     if(label == TRUE){
         tree_plot <- tree_plot + 
-                ggplot2::geom_text(aes_string(label="duplicate_count"), 
-                                   nudge_x = 0.5, 
-                                   hjust = 0, 
-                                   size = 2.5, 
-                                   na.rm = TRUE, 
-                                   check_overlap = TRUE)
+            ggplot2::geom_text(aes_string(label="duplicate_count"), 
+                nudge_x = 0.5, hjust = 0, size = 2.5, na.rm = TRUE, 
+                check_overlap = TRUE)
     }
     return(tree_plot)
 }

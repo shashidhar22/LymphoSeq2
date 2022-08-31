@@ -17,7 +17,7 @@
 #' cleansed <- removeSeq(stable, sequence = "CASSDLIGNGKLFF")
 #' searchSeq(cleansed, sequence = "CASSDLIGNGKLFF")
 #' @export
-#' @import  tidyverse
+#' @import  magrittr
 removeSeq <- function(study_table, sequence) {
     study_table <- study_table %>% 
                    dplyr::filter(!junction_aa %in% sequence) %>% 

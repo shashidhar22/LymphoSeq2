@@ -31,7 +31,7 @@
 #'                         aggregate = "junction_aa",
 #'                         prevalence = TRUE)
 #' @export
-#' @import tidyverse dtplyr 
+#' @import magrittr dtplyr 
 #' 
 productiveSeq <- function(study_table, aggregate = "junction_aa", prevalence = FALSE) {
     if (aggregate == "junction" & prevalence) {

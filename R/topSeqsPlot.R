@@ -25,7 +25,7 @@
 #' ggplot2::scale_x_discrete(limits = names(n))
 #' @export
 #' @import ggplot2
-#' @import tidyverse
+#' @import magrittr
 #' @importFrom RColorBrewer brewer.pal
 topSeqsPlot <- function(study_table, top = 10) {
     dominant <- study_table %>% 
