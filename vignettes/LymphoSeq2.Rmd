@@ -48,6 +48,7 @@ system.file("extdata", "IGH_sequencing", package = "LymphoSeq2") #For the IGH fi
 ```{r readImmuno}
 library(LymphoSeq2)
 library(tidyverse)
+library(vroom)
 study_files <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2") 
 study_table <- LymphoSeq2::readImmunoSeq(study_files)
 ```
@@ -290,7 +291,7 @@ unique_seqs
 ```
 
 ```{r seqMatrix}
-sequence_matrix <- LymphoSeq2::seqMatrix(productive_aa = aa_table, sequences = unique_seqs$junction_aa, )
+sequence_matrix <- LymphoSeq2::seqMatrix(productive_aa = aa_table, sequences = unique_seqs$junction_aa)
 sequence_matrix
 ```
 
