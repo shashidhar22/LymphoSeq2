@@ -21,13 +21,13 @@ plotRarefactionCurve <- function(study_table) {
                           purrr::map(runINext) %>% 
                           dplyr::bind_rows()
     rarefaction_tables <- rarefaction_tables %>% 
-                          dplyr::mutate(method = recode(method, observed = "Interpolated", 
-                                        interpolated = "Interpolated", extrapolated = "Extrapolated")) 
+                          dplyr::mutate(Method = dplyr::recode(Method, Observed = "Interpolated", 
+                                        Rarefaction = "Interpolated", Extrapolation = "Extrapolated")) 
     rarefaction_curves <- ggplot2::ggplot(rarefaction_tables, aes(x=m, y=qD, fill=repertoire_id)) + 
-                          ggplot2::geom_line(aes(linetype=method, color=repertoire_id), size=1.5) +  
+                          ggplot2::geom_line(aes(linetype=Method, color=repertoire_id), size=1.5) +  
                           ggplot2::geom_ribbon(aes(ymin = qD.LCL, ymax = qD.UCL), alpha=0.5) +
                           ggplot2::scale_linetype_manual(values=c("dashed", "solid"),  
-                                                         labels=c("Extrapolated", "Intrapolated")) + 
+                                                         labels=c("Extrapolated", "Interpolated")) + 
                           ggplot2::theme_classic() +
                           ggplot2::xlab("Total number of sequences") +
                           ggplot2::ylab("TCR diversity") + 
