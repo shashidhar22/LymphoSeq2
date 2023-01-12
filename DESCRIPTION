@@ -12,7 +12,6 @@ Depends: R (>= 4.1.0), data.table
 Imports: Biostrings,
          circlize,
          ggalluvial,
-         ggtree,
          grid,
          ineq,
          iNEXT,
@@ -58,12 +57,13 @@ biocViews: Software,
            Technology, 
            Sequencing, 
            TargetedResequencing, 
-           Alignment, 
+           Alignment,
+           ggtree, 
            MultipleSequenceAlignment, 
            msa, 
            vegan,
            phyloseq
 NeedsCompilation: no
-URL: https://github.com/elulu3/LymphoSeq2,
-    https://elulu3.github.io/LymphoSeq2
-BugReports: https://github.com/elulu3/LymphoSeq2/issues
+URL: https://github.com/shashidhar22/LymphoSeq2,
+    https://shashidhar22.github.io/LymphoSeq2
+BugReports: https://github.com/shashidhar22/LymphoSeq2/issues
