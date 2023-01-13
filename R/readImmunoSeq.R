@@ -1,25 +1,22 @@
 #' Read ImmunoSeq files
 #'
-#' Imports tab-separated value (.tsv) files exported by the Adaptive 
-#' Biotechnologies ImmunoSEQ analyzer, BGI IR-SEQ, MiXCR and stores 
+#' `readImmunoSeq()` Imports tab-separated value (.tsv) files exported by the 
+#' Adaptive Biotechnologies ImmunoSEQ analyzer, BGI IR-SEQ, MiXCR and stores 
 #' them as MiAIRR compliant tibble. 
 #' 
-#' @md
-#' @name readImmunoSeq
-#' @param path Path to the directory containing tab-delimited files.  Only
-#' files with the extension .tsv are imported.  The names of the data frames are 
+#' @param path Path to the directory containing tab-delimited files. Only files 
+#' with the extension .tsv are imported. The names of the data frames are 
 #' the same as names of the files.
-#' 
+#' @param recursive If TRUE, the function will recursively search the input 
+#' directory for all .tsv files
+#' @param threads Number of threads. 
 #' @return Returns a tibble with MiAIRR headers and repertoire_id
-#'
 #' @examples
-#' file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
-#'
-#' study_table <- readImmunoSeq(path = file.path, recursive = FALSE)
+#' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
+#' study_table <- LymphoSeq2::readImmunoSeq(path = file.path, recursive = FALSE)
 #'
 #' @export
 #' @import magrittr 
-#' @rdname readImmunoSeq
 readImmunoSeq <- function(path, recursive = FALSE, threads = parallel::detectCores() / 2) {
     Sys.setenv("VROOM_SHOW_PROGRESS"="false")
     if (length(path) > 1) {
@@ -52,16 +49,13 @@ readImmunoSeq <- function(path, recursive = FALSE, threads = parallel::detectCor
     return(file_list)
 }
 
-#' @section Get file type:
-#'
-#' Retrives the file type
-#'
+#' `getFileType()` retrives the file type of the input TSV file
+#' @keywords internal
 #' @param clone_file A .tsv file to idetify the file type
 #' @return Returns "immunoSEQLegacy", "immunoSEQ", "10X", "BGI"
 #'
 #' @import magrittr 
-#' @export
-#' @rdname readImmunoSeq
+#' @noRd
 getFileType <- function(col_names) {
     colname_file <- system.file("extdata", "Accepted_file_types.csv", package = "LymphoSeq2")
     colname_table <- vroom::vroom(colname_file, show_col_types = FALSE)
@@ -87,17 +81,14 @@ getFileType <- function(col_names) {
     return(file_type)
 }
 
-#' @section Get standard headers:
-#'
-#' Converts AIRR-Seq data into MiAIRR compatible format
-#'
+#' `getStandard()` Converts AIRR-Seq data into MiAIRR compatible format
+#' @keywords internal
 #' @param clone_file A .tsv file to read in and standardize its fields to be MiAIRR compliant
 #' @param airr_fields A character vector of MiAIRR headers
 #' @return Tibble of given data with MiAIRR fields
 #'
 #' @import magrittr
-#' @export
-#' @rdname readImmunoSeq
+#' @noRd
 getStandard <- function(clone_file, progress, threads) {
     progress$tick()
     airr_headers_path <- system.file("extdata", "AIRR_fields.csv", package = "LymphoSeq2")
@@ -166,18 +157,15 @@ getStandard <- function(clone_file, progress, threads) {
     return(clone_data)
 }
 
-#' @section Resolve file type from fields:
-#'
-#' Given the path to a single AIRRSeq clone file, determine the file type and 
-#' return a named vector that can be used to repair headers while reading input.
-#'
+#' `getAIRRFields()` Given the path to a single AIRRSeq clone file, determine 
+#' the file type and returns a named vector that can be used to repair headers 
+#' while reading input.
+#' @keywords internal
 #' @param clone_file .tsv file containing results from AIRRSeq pipeline
-#'
 #' @return Named vector of corresponding AIRR fields
 #'
 #' @import magrittr
-#' @export
-#' @rdname readImmunoSeq
+#' @noRd
 getAIRRFields <- function(clone_file, threads) {
     clone_table <- vroom::vroom(clone_file, show_col_types = FALSE, 
         n_max = 1, num_threads = threads)
