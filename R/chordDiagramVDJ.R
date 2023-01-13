@@ -5,8 +5,8 @@
 #'
 #' @param study_table A tibble consisting of frequencies of antigen receptor
 #' sequences.  "v_family", "j_family", and if applicable, "d_family"
-#' are required columns.  Using output from the LymphoSeq2 function topSeqs is
-#' recommended.
+#' are required columns.  Using output from the LymphoSeq2 function `topSeqs()`
+#' is recommended.
 #' @param association A character vector of gene families to associate. Options
 #' include "VJ" or "DJ".
 #' @param colors A character vector of 2 colors corresponding to the V/D and J
@@ -16,21 +16,15 @@
 #' event. The thicker the ribbon, the higher the frequency of the recombination.
 #' @return Returns a chord diagram showing VJ or DJ gene associations from one or
 #' more samples.
-#' @seealso \code{\link{topSeqs}}
+#' @seealso [LymphoSeq2::topSeqs()]
 #' @examples
 #' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
-#'
-#' stable <- readImmunoSeq(file_path)
-#'
-#' ntable <- productiveSeq(stable, aggregate = "junction")
-#'
-#' top_seqs <- topSeqs(ntable, top = 1)
-#'
-#' chordDiagramVDJ(top_seqs, association = "VJ", colors = c("red", "blue"))
-#'
-#'
+#' study_table <- LymphoSeq2::readImmunoSeq(file_path)
+#' nucleotide_table <- LymphoSeq2::productiveSeq(stable, aggregate = "junction")
+#' top_seqs <- LymphoSeq2::topSeqs(nucleotide_table, top = 1)
+#' nucleotide_tablechordDiagramVDJ(top_seqs, association = "VJ", 
+#'     colors = c("red", "blue"))
 #' @export
-#' @importFrom circlize colorRamp2 chordDiagram
 #' @import magrittr
 chordDiagramVDJ <- function(study_table, association = "VJ", colors = c("red", "blue")) {
     if (association == "VJ") {
