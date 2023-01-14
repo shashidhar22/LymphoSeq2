@@ -11,7 +11,7 @@
 #' clonality is usually calculated from productive junction sequences.
 #' Therefore, it is not recommended to run this function using a productive
 #' sequence list aggregated by amino acids.
-#' @param normalize If TRUE, rarefied diversity metrics are calculated by sampling
+#' @param rarefy If TRUE, rarefied diversity metrics are calculated by sampling
 #' down each repertoire in the input table down to the repertoire with the
 #' smallest number of sequences and calculating the diversity metrics on the
 #' sampled data. The process is repeated for the number of iterations specified
@@ -56,27 +56,30 @@
 #' study_table <- LymphoSeq2::readImmunoSeq(path = file_path)
 #' raw_clonality <- LymphoSeq2::clonality(study_table)
 #' sampled_clonality <- LymphoSeq2::clonality(study_table,
-#'   normalize = TRUE,
-#'   iterations = 100
+#'   rarefy = TRUE,
+#'   iterations = 100,
+#'   min_count = 1000
 #' )
 #' @seealso [LymphoSeq2::lorenzCurve()]
 #' @export
 #' @import magrittr
-clonality <- function(study_table, normalize = FALSE, iterations = 100, min_count = 1000) {
-    if (normalize) {
+clonality <- function(study_table, rarefy = FALSE, iterations = 100, min_count = 1000) {
+    if (rarefy) {
         low_count <- study_table %>% 
             dplyr::group_by(repertoire_id) %>%
             dplyr::summarize(total = sum(duplicate_count)) %>% 
             dplyr::filter(total < min_count) %>%
             dplyr::pull(repertoire_id)
-        print(str_c("Dropping the following samples since they have less than ",
-                    min_count, "sequences\\n", str_c(low_count, sep =""), 
+        if (length(low_count) >= 1) {
+            print(stringr::str_c("Dropping the following samples since they have less than ",
+                    min_count, "sequences \n", stringr::str_c(low_count, sep =""), 
                     sep = ""))
+        }
         study_table <- study_table %>%
             dplyr::filter(!(repertoire_id %in% low_count)) %>%
             dplyr::group_by(repertoire_id) %>%
             dplyr::group_split() %>%
-            purrr::map(iterativeSummary) %>%
+            purrr::map(~iterativeSummary(.x, iterations, min_count)) %>%
             dplyr::bind_rows()      
     } else {
         study_table <- study_table %>%
@@ -95,10 +98,9 @@ clonality <- function(study_table, normalize = FALSE, iterations = 100, min_coun
 #' @return Tibble summarizing the sequence information for each repertoire_id
 #'
 #' @export
-#' @import magrittr vegan
+#' @import magrittr 
 
 summarySeq <- function(study_table) {
-  study_table <- tibble::as_tibble(study_table)
   productive <- LymphoSeq2::productiveSeq(study_table, aggregate = "junction")
   frequency <- productive %>%
     dplyr::pull(duplicate_frequency)
@@ -106,6 +108,12 @@ summarySeq <- function(study_table) {
     dplyr::pull(duplicate_count)
   entropy <- -base::sum(frequency * base::log2(frequency), na.rm = TRUE)
   clonality <- 1 - base::round(entropy / base::log2(base::nrow(productive)), digits = 6)
+  convergence <- productive %>% 
+      LymphoSeq2::topSeqs(top = 100) %>%
+      dplyr::group_by(junction_aa) %>% 
+      dplyr::summarise(convergence = length(unique(junction))) %>%
+      dplyr::pull(convergence) %>% 
+      mean()
   study_summary <- tibble::tibble(
     repertoire_id = study_table$repertoire_id[1],
     total_sequences = base::nrow(study_table),
@@ -113,7 +121,8 @@ summarySeq <- function(study_table) {
     total_count = base::sum(study_table$duplicate_count),
     clonality = clonality,
     gini_coefficient = ineq::Gini(productive$duplicate_frequency),
-    top_productive_sequence = base::max((productive$duplicate_frequency) * 100)
+    top_productive_sequence = base::max((productive$duplicate_frequency) * 100),
+    convergence = convergence
   )
   return(study_summary)
 }
@@ -125,9 +134,36 @@ summarySeq <- function(study_table) {
 #' normalized by depth of sequencing
 #'
 #' @export
-#' @import magrittr vegan
 iterativeSummary <- function(study_table, iterations, min_count = 1000) {
     uncount_table <- study_table %>% 
         tidyr::uncount(weights = duplicate_count) 
-    return(uncount_table)
+
+    summary_table <- purrr::map(1:iterations, 
+                                \(i)sampledSummary(uncount_table, min_count)) %>%
+        dplyr::bind_rows() %>% 
+        dplyr::group_by(repertoire_id) %>%
+        dplyr::summarise_all(mean)
+    return(summary_table)
 }
+
+
+#' Sample repertoire
+#'
+#' @inheritParams clonality
+#' @return Tibble summarizing the sequence information for each repertoire_id
+#' randomly sampled to the minimum count 
+#'
+#' @export
+sampledSummary <- function(study_table, min_count) {
+    study_table <- tibble::as_tibble(study_table) %>% 
+        dplyr::sample_n(min_count) %>%
+        dplyr::select(-duplicate_frequency) %>% 
+        dplyr::group_by_all() %>% 
+        dplyr::summarise(duplicate_count = dplyr::n()) %>%
+        dplyr::mutate(duplicate_frequency = duplicate_count/sum(duplicate_count)) %>%
+        dplyr::ungroup() 
+    summary_table <- summarySeq(study_table) 
+    return(summary_table)
+}
+    
+        
