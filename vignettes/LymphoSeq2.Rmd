@@ -85,7 +85,7 @@ CMV
 A metadata file for the TCR sequencing samples can easily be combined with the `study_table` by reading in the metadata file as a tibble and using the `dplyr::left_join` function to merge the two tables.  In the example below, a metadata file is imported for the example TCRB data set which contains information on the number of days post bone marrow transplant the sample was collected and the cellular phenotype the blood sample was sorted for prior to sequencing.
 
 ```{r loadMeta}
-TCRB_metadata <- readr::read_csv(system.file("extdata", "TCRB_metadata.csv", package = "LymphoSeq2"))
+TCRB_metadata <- readr::read_csv(system.file("extdata", "TCRB_metadata.csv", package = "LymphoSeq2"), show_col_types = FALSE)
 TCRB_metadata
 ```
 
@@ -108,9 +108,8 @@ When AIRR-seq samples are derived from genomic DNA rather than complimentary DNA
 If you are interested in just the complementarity determining region 3 (CDR3) amino acid sequences, then set aggregate to `junction_aa` and the `duplicate_count` for duplicate amino acid sequences will be summed. The resulting tibble will have `junction_aa`, `duplicate_count`, `duplicate_frequency`,  `reading_frame`, and the most frequent VDJ gene combinations for each of the duplicated amino acid sequences and the corresponding gene family names. These gene names are only kept for consistency of the tibble structure, but since a single amino acid sequence can be generated from different VDJ combinations, it is inadvisable to use these values for downstream analysis
 
 ```{r readAmino}
-aa_table <- LymphoSeq2::productiveSeq(study_table = study_table, aggregate = "junction_aa", 
-                          prevalence = FALSE)
-  aa_table
+aa_table <- LymphoSeq2::productiveSeq(study_table = study_table, aggregate = "junction_aa", prevalence = FALSE)
+aa_table
 ```
 
 Alternatively you can aggregate by `junction` to group sequences by CDR3 nucleotide sequences. This option will produce a tibble similar to the output of `readImmunoSeq`. Many of the functions within LymphoSeq2 use the results from `productiveSeq` function. Please be sure to check the function documentation.
@@ -206,6 +205,14 @@ dplyr::filter(!is.na(PMID))
 ```
 
 For each found sequence, a table is provides listing the antigen, epitope, HLA type, PubMed ID (PMID), and prevalence (%) of the sequence among 55 healthy donor blood samples. 
+
+You can even search of productive CDR3 amino acid sequences from the repertoires that are found in public databases such as VdjDB, IEDB, and McPas-TCR using the function `searchDB`. By specifying `dbname="all"` `searchDB` will look for each CDR3 amino acid sequence in the dataset in all three public databases. You can also pass a vector with any of the three databases ("VdjDB", "IEDB", "McPAS-TCR") to search just those databases. 
+
+```{r searchDB}
+LymphoSeq2::searchDB(study_table = aa_table, dbname = "all", chain = "trb")
+```
+
+
 
 # Visualizing repertoire diversity
 
@@ -358,15 +365,15 @@ LymphoSeq2::chordDiagramVDJ(study_table = top_seqs,
 You can also visualize the results of `geneFreq` as a heat map, word cloud, our cumulative frequency bar plot with the support of additional R packages as shown below.
 
 ```{r wordcloud}
-vGenes <- LymphoSeq2::geneFreq(productive_nt = nuc_table, locus = "V", family = TRUE)
 library(RColorBrewer)
 library(grDevices)
+library(wordcloud2)
+vGenes <- LymphoSeq2::geneFreq(productive_nt = nuc_table, locus = "V", family = TRUE)
 RedBlue <- grDevices::colorRampPalette(rev(RColorBrewer::brewer.pal(11, "RdBu")))(256)
-library(wordcloud)
-vtable <- vGenes %>% dplyr::filter(repertoire_id == "TRB_Unsorted_83")
-wordcloud::wordcloud(words = vtable$gene_name, 
-                     freq = vtable$gene_frequency, 
-                     colors = RedBlue)
+vtable <- vGenes %>% dplyr::filter(repertoire_id == "TRB_Unsorted_83") %>%
+  dplyr::select(gene_name, gene_frequency)
+wordcloud2::wordcloud2(data = vtable, 
+                     color = RedBlue)
 ```
 
 ```{r heatmap}
@@ -400,7 +407,7 @@ ggplot2::ggplot(vGenes, aes(x = repertoire_id, y = gene_frequency, fill = gene_n
 
 # Removing sequences
 
-Occasionally you may identify one or more sequences in your data set that appear to be contamination. You can remove an amino acid sequence from all data frames using the function removeSeq and recompute `frequencyCount` for all remaining sequences.
+Occasionally you may identify one or more sequences in your data set that appear to be contamination. You can remove an amino acid sequence from all data frames using the function `removeSeq` and recompute `frequencyCount` for all remaining sequences.
 
 ```{r searchSequences}
 LymphoSeq2::searchSeq(study_table = aa_table, sequence = "CASSESAGSTGELFF", seq_type = "junction_aa")

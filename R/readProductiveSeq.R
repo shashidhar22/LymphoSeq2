@@ -2,8 +2,8 @@
 #'
 #' `productiveSeq()` Select productive nucleotide/amino acid CDR3 sequences
 #' from a tibble containing raw AIRR formatted data. Aggregation of the raw data
-#' is either done on the productive CDR3 amino acid sequence (junction_aa) or
-#' the productive CDR3 nucleotide sequence (junction).  If "junction_aa"
+#' is either done on the productive CDR3 amino acid sequence \(junction_aa\) or
+#' the productive CDR3 nucleotide sequence \(junction\).  If "junction_aa"
 #' is selected, then resulting tibble will display the most frequently observed.
 #' V, D, J gene that were associated with the formation of the productive CDR3
 #' amino acid sequence. If "junction" is selected then all columns in the
@@ -21,7 +21,7 @@
 #' @param prevalence A Boolean value indicating if a new column should be added
 #' to each of the data frames giving the prevalence of each CDR3 amino acid
 #' sequence in 55 healthy donor peripheral blood samples.  TRUE means the column
-#' is added and FALSE means it is not.  Values range from 0 to 100\% where
+#' is added and FALSE means it is not. Values range from 0 to 100 percent where
 #' 100\% means the sequence appeared in the blood of all 55 individuals.
 #' @return Returns a list of data frames of productive amino acid sequences with
 #' recomputed values for "duplicate_count", "duplicate_frequency".
@@ -64,11 +64,12 @@ productiveSeq <- function(study_table, aggregate = "junction_aa", prevalence = F
     dplyr::bind_rows()
   return(agg_table)
 }
-
 #' Group productive sequences by repertoire
+#' 
 #' @keywords internal
-#' @param progress_bar Progress progress bar
+#' @param progress_bar Progress bar
 #' @inheritParams productiveSeq
+#' @noRd
 aggreateSeq <- function(study_table, aggregate, prevalence, progress_bar) {
   progress_bar$tick()
   if (aggregate == "junction") {
