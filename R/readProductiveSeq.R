@@ -17,7 +17,7 @@
 #' "duplicate_count", and "duplicate_frequency" are required columns.
 #' @param aggregate Indicates whether the values of "duplicate_count" and
 #' "duplicate_frequency" should be aggregated by amino acid or junction sequence.
-#' Acceptable values are "junction_aa" or "junction". 
+#' Acceptable values are "junction_aa" or "junction".
 #' @param prevalence A Boolean value indicating if a new column should be added
 #' to each of the data frames giving the prevalence of each CDR3 amino acid
 #' sequence in 55 healthy donor peripheral blood samples.  TRUE means the column

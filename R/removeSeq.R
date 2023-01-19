@@ -1,28 +1,29 @@
 #' Remove sequence
-#' 
-#' Removes an amino acid sequence and associated data from all instances within 
-#' a list of data frames and then recomputes the frequencyCount.
-#' 
-#' @param study_table A list of data frames imported using the LymphoSeq function 
-#' readImmunoSeq.  "aminoAcid", "count", and "frequencyCount" are required columns.
-#' @param sequence A character vector of one or more amino acid sequences to 
-#' remove from the list of data frames.
-#' @return Returns a list of data frames like the one imported except all rows 
-#' with the specified amino acid sequence are removed.  The frequencyCount is 
-#' recalculated.
+#'
+#' Removes an amino acid sequence and associated data from all instances within
+#' study table and then recomputes the duplicate_frequency.
+#'
+#' @param study_table A tible imported using the LymphoSeq2 function
+#' `readImmunoSeq()`. `junction_aa`, `duplicate_count`, and
+#' `duplicate_frequency` are required columns.
+#' @param sequence A character vector of one or more amino acid sequences to
+#' remove from the study table
+#' @return Returns a tibble like the one imported except all rows
+#' with the specified amino acid sequence are removed.  The
+#' `duplicate_frequency` is recalculated.
 #' @examples
 #' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
-#' stable <- readImmunoSeq(path = file_path)
-#' searchSeq(stable, sequence = "CASSDLIGNGKLFF")
-#' cleansed <- removeSeq(stable, sequence = "CASSDLIGNGKLFF")
-#' searchSeq(cleansed, sequence = "CASSDLIGNGKLFF")
+#' study_table <- readImmunoSeq(path = file_path)
+#' searchSeq(study_table, sequence = "CASSDLIGNGKLFF")
+#' cleaned_table <- removeSeq(study_table, sequence = "CASSDLIGNGKLFF")
+#' searchSeq(cleaned_table, sequence = "CASSDLIGNGKLFF")
 #' @export
 #' @import  magrittr
 removeSeq <- function(study_table, sequence) {
-    study_table <- study_table %>% 
-                   dplyr::filter(!junction_aa %in% sequence) %>% 
-                   dplyr::group_by(repertoire_id) %>%
-                   dplyr::mutate(duplicate_frequency = `duplicate_count` / sum(`duplicate_count`)) %>% 
-                   dplyr::ungroup()
-    return(study_table)
+  study_table <- study_table %>%
+    dplyr::filter(!junction_aa %in% sequence) %>%
+    dplyr::group_by(repertoire_id) %>%
+    dplyr::mutate(duplicate_frequency = `duplicate_count` / sum(`duplicate_count`)) %>%
+    dplyr::ungroup()
+  return(study_table)
 }

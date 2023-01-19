@@ -157,7 +157,7 @@ One of the drawbacks of the clonality metric is that it does not take into accou
 ```{r readIGH}
 IGH_path <- system.file("extdata", "IGH_sequencing", package = "LymphoSeq2")
 IGH_table <- LymphoSeq2::readImmunoSeq(path = IGH_path)
-LymphoSeq2::clonalRelatedness(study_table = IGH_table, editDistance = 10)
+LymphoSeq2::clonalRelatedness(study_table = IGH_table, edit_distance = 10)
 ```
 
 # Draw a phylogenetic tree
