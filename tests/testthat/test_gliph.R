@@ -1,5 +1,6 @@
 context("Read GLIPH Files")
 library(LymphoSeq2)
+library(tidyverse)
 
 test_that("Reads a GLIPH files correctly", {
   gtable <- LymphoSeq2::readGliph("test_data/gliph")

@@ -1,6 +1,6 @@
 context("Find n top sequences with highest frequency")
 library(LymphoSeq2)
-
+library(tidyverse)
 
 test_that("Find top sequence in all samples", {
   stable <- LymphoSeq2::readImmunoSeq("test_data/015V06013979_CFAR.tsv")

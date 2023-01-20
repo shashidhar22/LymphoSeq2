@@ -1,6 +1,6 @@
 context("Get VDJ gene frequency")
 library(LymphoSeq2)
-
+library(tidyverse)
 
 test_that("Gene frequency charcterized by gene name sums to 1", {
   stable <- LymphoSeq2::readImmunoSeq("test_data")

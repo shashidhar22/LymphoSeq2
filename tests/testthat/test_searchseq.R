@@ -1,6 +1,6 @@
 context("Search of similar sequences from table")
 library(LymphoSeq2)
-
+library(tidyverse)
 
 test_that("Find all nucleotide sequences with edit distance ten", {
   stable <- LymphoSeq2::readImmunoSeq("test_data/015V06013979_CFAR.tsv")

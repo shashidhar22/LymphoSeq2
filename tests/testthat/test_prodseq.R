@@ -1,5 +1,6 @@
 context("Get productive sequences")
 library(LymphoSeq2)
+library(tidyverse)
 
 test_that("Gather productive aminoacid sequences", {
   stable <- LymphoSeq2::readImmunoSeq(c("test_data/015V12001549_CFAR.tsv", 
@@ -8,8 +9,8 @@ test_that("Gather productive aminoacid sequences", {
   arow <- base::nrow(atable)
   ctable <- tibble::tibble(repertoire_id = c("015V12001549_CFAR", "015V12001685_CFAR_R"),
                            tot_freq = c(1, 1),
-                           nrows = c(40, 38),
-                           nnuc = c(40, 38)) %>%
+                           nrows = c(802, 800),
+                           nnuc = c(802, 800)) %>%
             dplyr::mutate(nrows = base::as.integer(nrows),
                           nnuc = base::as.integer(nnuc))
   atable <- atable %>% 
@@ -17,7 +18,7 @@ test_that("Gather productive aminoacid sequences", {
             dplyr::summarize(tot_freq = base::sum(duplicate_frequency), 
                              nrows = dplyr::n(), 
                              nnuc = base::length(base::unique(junction_aa)))
-  expect_equal(arow, 78)
+  expect_equal(arow, 1602)
   expect_true(dplyr::all_equal(ctable, atable))
 })
 
@@ -28,8 +29,8 @@ test_that("Gather productive nucleotide sequences", {
   arow <- base::nrow(atable)
   ctable <- tibble::tibble(repertoire_id = c("015V12001549_CFAR", "015V12001685_CFAR_R"),
                            tot_freq = c(1, 1),
-                           nrows = c(40, 38),
-                           nnuc = c(40, 38)) %>%
+                           nrows = c(802, 802),
+                           nnuc = c(802, 800)) %>%
             dplyr::mutate(nrows = base::as.integer(nrows),
                           nnuc = base::as.integer(nnuc))
   atable <- atable %>% 
@@ -37,7 +38,7 @@ test_that("Gather productive nucleotide sequences", {
             dplyr::summarize(tot_freq = base::sum(duplicate_frequency), 
                              nrows = dplyr::n(), 
                              nnuc = base::length(base::unique(junction_aa)))
-  expect_equal(arow, 78)
+  expect_equal(arow, 1604)
   expect_true(dplyr::all_equal(ctable, atable))
 })
 
@@ -46,10 +47,10 @@ test_that("Count of collapse amino acid sequences match", {
   stable <- LymphoSeq2::readImmunoSeq("test_data/015V06013979_CFAR.tsv")
   atable <- LymphoSeq2::productiveSeq(stable, aggregate = "junction_aa")
   ctable <- tibble::tibble(repertoire_id = c("015V06013979_CFAR", "015V06013979_CFAR"),
-                           junction_aa = c("CAIEGRGHSDTQYF", "CAIPEREGTDDYGYTF"),
-                           duplicate_count = c(3, 361))
+                           junction_aa = c("CASSIASAGGPDTQYF", "CASSMGQGATVGYTF"),
+                           duplicate_count = c(608,184))
   atable <- atable %>% 
-            dplyr::filter(junction_aa %in% c("CAIEGRGHSDTQYF", "CAIPEREGTDDYGYTF")) %>%
+            dplyr::filter(junction_aa %in% c("CASSIASAGGPDTQYF", "CASSMGQGATVGYTF")) %>%
             dplyr::select(repertoire_id, junction_aa, duplicate_count)
   expect_true(dplyr::all_equal(ctable, atable))
 })
