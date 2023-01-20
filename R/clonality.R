@@ -20,7 +20,7 @@
 #' @param iterations Number of iterations to run the sampled clonality metrics.
 #' @return Returns a tibble giving the total number of sequences, number of
 #' unique productive sequences, number of genomes, clonality, Gini coefficient,
-#' simpson index, inverse simpson index, and the frequency (\%) of the top
+#' Simpson index, inverse Simpson index, and the frequency (\%) of the top
 #' productive sequence for each repertoire_id.
 #' @details Clonality is derived from the Shannon entropy, which is calculated
 #' from the frequencies of all productive sequences divided by the logarithm of
