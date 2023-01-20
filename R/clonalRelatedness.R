@@ -26,7 +26,7 @@
 #' clonal_relatedness <- clonalRelatedness(study_table, edit_distance = 10)
 #'
 #' # Merge results with clonality table
-#' clonality <- clonality(stable)
+#' clonality <- clonality(study_table)
 #' merged <- dplyr::full_join(clonality, clonal_relatedness, by = "repertoire_id")
 #'
 #' @export
