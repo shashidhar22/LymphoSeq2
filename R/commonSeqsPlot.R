@@ -43,7 +43,7 @@ commonSeqsPlot <- function(sample1, sample2, productive_aa, show = "common") {
     )
     plot <- ggplot2::ggplot(
       data = common,
-      aes_string(
+      ggplot2::aes_string(
         x = as.name(names(common)[2]),
         y = as.name(names(common)[3]), label = "junction_aa"
       )
@@ -69,7 +69,7 @@ commonSeqsPlot <- function(sample1, sample2, productive_aa, show = "common") {
       )
     plot <- ggplot2::ggplot(
       data = all,
-      aes_string(x = sample1, y = sample2, label = "junction_aa")
+      ggplot2::aes_string(x = sample1, y = sample2, label = "junction_aa")
     ) +
       ggplot2::geom_point() +
       ggplot2::theme_minimal() +
