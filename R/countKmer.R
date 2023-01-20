@@ -20,16 +20,13 @@
 #' @import magrittr 
 countKmer <- function(study_table, k, separate = TRUE) {
     if (separate) {
-        repertoire_id_names <- study_table %>%
-            dplyr::pull(repertoire_id) %>%
-            unique()
         kmer_counts <- study_table %>%
             dplyr::group_by(repertoire_id) %>%
             dplyr::group_split() %>%
-            purrr::map(~calculateCounts(.x, k))
-        kmer_counts <- purrr::map2(kmer_counts, c(repertoire_id_names), 
-                ~dplyr::rename(.x, !!.y := Count)) %>%
-            purrr::reduce(inner_join, by = "Kmer")
+            purrr::map(~calculateCounts(.x, k)) %>% 
+            dplyr::bind_rows() %>% 
+          tidyr::pivot_wider(id_cols = Kmer, names_from = repertoire_id, 
+                             values_from = Count)
         return(kmer_counts)
     } else {
         kmer_counts <- calculateCounts(study_table, k)
@@ -41,13 +38,18 @@ countKmer <- function(study_table, k, separate = TRUE) {
 calculateCounts <- function(study_table, k) {
     seq <- dplyr::pull(study_table, "junction") %>%
         stats::na.omit()
+    rep_id <- study_table %>% 
+      dplyr::pull(repertoire_id) %>% 
+      unique()
     kmer_counts <- purrr::map(seq,
             function(x) Biostrings::oligonucleotideFrequency(Biostrings::DNAString(x), k))
     kmer_counts <- purrr::map(kmer_counts,
             function(x) data.frame(Kmer = names(x), Count = unname(x))) %>%
         dplyr::bind_rows() %>%
         dplyr::group_by(Kmer) %>%
-        dplyr::summarise(Count = sum(Count))
+        dplyr::summarise(Count = sum(Count)) %>% 
+      dplyr::ungroup() %>% 
+      dplyr::mutate(repertoire_id = rep_id)
     return(kmer_counts)
 }
 
@@ -76,7 +78,7 @@ kmerPlot <- function(kmer_table, top = 10) {
         dplyr::mutate(total = sum(count)) %>%
         dplyr::arrange(desc(total)) %>%
         head(top * rep_num)
-    bar <- ggplot2::ggplot(kmer_table, aes(fill = repertoire_id, y = count, 
+    bar <- ggplot2::ggplot(kmer_table, ggplot2::aes(fill = repertoire_id, y = count, 
             x = Kmer)) +
         ggplot2::geom_bar(position = "stack", stat = "identity") + 
         ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, vjust = 0.5, 
