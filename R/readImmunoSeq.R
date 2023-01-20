@@ -53,9 +53,9 @@ readImmunoSeq <- function(path, recursive = FALSE, threads = parallel::detectCor
   return(file_list)
 }
 
-#' `getFileType()` retrives the file type of the input TSV file
+#' `getFileType()` retrieve the file type of the input TSV file
 #' @keywords internal
-#' @param clone_file A .tsv file to idetify the file type
+#' @param clone_file A .tsv file to identify the file type
 #' @return Returns "immunoSEQLegacy", "immunoSEQ", "10X", "BGI"
 #'
 #' @import magrittr
@@ -102,10 +102,17 @@ getStandard <- function(clone_file, progress, threads) {
   )
   matching_fields <- getAIRRFields(clone_file, threads)
   col_read <- names(matching_fields)
-  clone_data <- vroom::vroom(clone_file,
-    na = c("", "NA", "Nan", "NaN", "unresolved"),
-    show_col_types = FALSE, progress = FALSE, num_threads = threads,
-    .name_repair = ~ stringr::str_replace_all(., matching_fields)
+  clone_data <- suppressWarnings(
+    classes = c("vroom_mismatched_column_name", "vroom_parse_issue"),
+    vroom::vroom(clone_file,
+      col_types = c(
+        vFamilyTies = readr::col_character(),
+        jFamilyTies = readr::col_character()
+      ),
+      na = c("", "NA", "Nan", "NaN", "unresolved"),
+      show_col_types = FALSE, progress = FALSE, num_threads = threads,
+      .name_repair = ~ stringr::str_replace_all(., matching_fields)
+    )
   )
   existing_match <- airr_fields %>%
     colnames() %>%
@@ -114,7 +121,7 @@ getStandard <- function(clone_file, progress, threads) {
     return(clone_data)
   }
   existing_airr_data <- clone_data %>%
-    dplyr::select(existing_match)
+    dplyr::select(all_of(existing_match))
   clone_data <- dplyr::bind_rows(airr_fields, existing_airr_data) %>%
     dplyr::slice(-1)
   file_name <- tools::file_path_sans_ext(basename(clone_file))

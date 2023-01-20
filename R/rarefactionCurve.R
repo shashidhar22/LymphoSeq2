@@ -7,7 +7,7 @@
 #' @param study_table A tibble consisting antigen receptor sequencing
 #' data imported by the LymphoSeq2 function readImmunoSeq. "junction_aa",
 #' "duplicate_count", and "duplicate_frequency" are required columns.
-#' @seealso [LymphoSeq2::runINext()]}}
+#' @seealso [LymphoSeq2::runINext()]
 #' @examples
 #' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
 #' study_table <- readImmunoSeq(path = file_path)

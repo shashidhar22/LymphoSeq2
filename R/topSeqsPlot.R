@@ -21,7 +21,7 @@
 #' n <- as.character(nrow(study_table))
 #' topSeqsPlot(study_table = amino_table, top = 10) +
 #'   ggplot2::annotate("text", x = 1:length(n), y = 105, label = n, color = "black") +
-#'   ggplot2::expand_limits(y = c(0, 110)) + ggplot2::ggtitle("Figure Title") +
+#'   ggplot2::expand_limits(y = c(0, 110)) + ggplot2::ggtitle("Top sequences") +
 #'   ggplot2::scale_x_discrete(limits = names(n))
 #' @export
 #' @import magrittr
@@ -55,7 +55,7 @@ topSeqsPlot <- function(study_table, top = 10) {
     dplyr::arrange(Frequency) %>%
     dplyr::select(repertoire_id) %>%
     dplyr::pull()
-  ggplot2::ggplot(topfreq, aes_string(
+  ggplot2::ggplot(topfreq, ggplot2::aes_string(
     x = "repertoire_id",
     y = "Frequency",
     fill = "Sequence",

@@ -51,7 +51,7 @@
 #' ggplot2::scale_color_manual(name = "repertoire_ids", 
 #'                             breaks = repertoire_ids, 
 #'                             labels = labels, values = colors) + 
-#' ggplot2::ggtitle("Figure Title")
+#' ggplot2::ggtitle("Lorenz curve")
 #' @export
 #' @import magrittr
 lorenzCurve <- function(repertoire_ids, study_table) {
@@ -62,7 +62,7 @@ lorenzCurve <- function(repertoire_ids, study_table) {
               dplyr::bind_rows()
     getPalette <- grDevices::colorRampPalette(
       RColorBrewer::brewer.pal(9, "Set1"))
-    plot <- ggplot2::ggplot(lorenz, aes_string(x = "p", y = "L", 
+    plot <- ggplot2::ggplot(lorenz, ggplot2::aes_string(x = "p", y = "L", 
                                                color = "repertoire_id")) + 
             ggplot2::geom_line(size = 1) + 
             ggplot2::theme_minimal() + 

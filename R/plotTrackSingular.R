@@ -8,7 +8,7 @@
 #' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
 #' study_table <- LymphoSeq2::readImmunoSeq(path = file_path)
 #' amino_table <- LymphoSeq2::productiveSeq(study_table, aggregate = "junction_aa")
-#' clone_table <- LymphoSeq2::cloneTrack(
+#' clone_table <- LymphoSeq2::plotTrackSingular(
 #'   study_table = amino_table,
 #'   sample_list = c("TRB_CD8_949", "TRB_CD8_CMV_369")
 #' )

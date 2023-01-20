@@ -9,8 +9,8 @@
 #' using ggplot2 functions.  See examples below.
 #' @seealso An excellent resource for examples on how to reformat a ggplot can
 #' be found in the R Graphics Cookbook online (\url{http://www.cookbook-r.com/Graphs/}).
-#' The functions to create the similarity or Bhattacharyya matrix can be found
-#' here: \code{\link{similarityMatrix}} and \code{\link{bhattacharyyaMatrix}}
+#' The functions to create the similarity matrices can be found
+#' here: [LymphoSeq2::scoringMatrix()]
 #' @examples
 #' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
 #' study_table <- readImmunoSeq(path = file_path)
@@ -46,13 +46,13 @@ pairwisePlot <- function(matrix) {
       values_to = "score", values_drop_na = TRUE
     ) %>%
     dplyr::arrange(repertoire_id, repertoire_id_y)
-  ggplot(data = matrix, aes_string(
+  ggplot2::ggplot(data = matrix, ggplot2::aes_string(
     x = "repertoire_id", y = "repertoire_id_y",
     fill = "score"
   )) +
     ggplot2::geom_tile() +
     ggplot2::geom_text(
-      aes(repertoire_id, repertoire_id_y,
+      ggplot2::aes(repertoire_id, repertoire_id_y,
         label = sprintf("%0.2f", round(score, digits = 2))
       ),
       color = "black", size = 4

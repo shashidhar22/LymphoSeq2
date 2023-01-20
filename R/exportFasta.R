@@ -4,19 +4,25 @@
 #'
 #' @param sample_table A tibble consisting of antigen receptor sequences
 #' imported by the LymphoSeq function readImmunoSeq.
-#' @param type A character vector indicating whether "junction_aa" or "junction" sequences
-#' should be exported.  If "junction_aa" is specified, then run `productiveSeqs()` first.
-#' @param names A character vector of one or more column names to name the sequences.
-#' If "rank" is specified, then the rank order of the sequences by frequency is used.
+#' @param type A character vector indicating whether "junction_aa" or "junction" 
+#' sequences should be exported.  If "junction_aa" is specified, then run 
+#' `productiveSeqs()` first.
+#' @param names A character vector of one or more column names to name the 
+#' sequences.If "rank" is specified, then the rank order of the sequences by 
+#' frequency is used.
 #' @return Exports fasta files to the working directory.
 #' @examples
-#' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
+#' file_path <- system.file("extdata", "TCRB_sequencing", 
+#'   package = "LymphoSeq2")
 #' # Export raw data
 #' study_table <- readImmunoSeq(path = file_path)
-#' exportFasta(study_table = study_table, type = "junction", names = c("junction_aa", "duplicate_count"))
+#' exportFasta(study_table = study_table, type = "junction", 
+#'   names = c("junction_aa", "duplicate_count"))
 #' # Export only productive junction amino acid sequences
-#' amino_table <- productiveSeq(study_table = study_table, aggregate = "junction_aa")
-#' exportFasta(study_table = amino_table, type = "junction_aa", names = "duplicate_frequency")
+#' amino_table <- productiveSeq(study_table = study_table, 
+#'   aggregate = "junction_aa")
+#' exportFasta(study_table = amino_table, type = "junction_aa", 
+#'   names = "duplicate_frequency")
 #' @export
 #' @import magrittr
 exportFasta <- function(study_table, type = "junction",

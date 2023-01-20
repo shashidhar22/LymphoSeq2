@@ -61,7 +61,7 @@ plotTrack <- function(clone_table, alist = NULL, apal = NULL, breaks = 2,
       dplyr::pull(junction_aa)
     sankey <- ggplot2::ggplot(
       clone_table,
-      aes(
+      ggplot2::aes(
         x = repertoire_id, y = duplicate_frequency,
         stratum = junction_aa, alluvium = junction_aa,
         fill = junction_aa, label = junction_aa
@@ -76,7 +76,7 @@ plotTrack <- function(clone_table, alist = NULL, apal = NULL, breaks = 2,
         ymax = Inf, fill = breaks_pal[2], alpha = alphas
       ) +
       ggalluvial::geom_alluvium() +
-      ggalluvial::geom_stratum(aes(y = duplicate_frequency)) +
+      ggalluvial::geom_stratum(ggplot2::aes(y = duplicate_frequency)) +
       ggplot2::xlab("Repertoire ID") +
       ggplot2::scale_fill_manual(values = cpal, breaks = alist, name = "CDR3 sequence") +
       ggplot2::ylab("Frequency of CDR3 sequence") +
@@ -88,7 +88,7 @@ plotTrack <- function(clone_table, alist = NULL, apal = NULL, breaks = 2,
   } else {
     sankey <- ggplot2::ggplot(
       clone_table,
-      aes(
+      ggplot2::aes(
         x = repertoire_id, y = duplicate_frequency, stratum = junction_aa,
         alluvium = junction_aa, fill = junction_aa, label = junction_aa
       )
@@ -96,7 +96,7 @@ plotTrack <- function(clone_table, alist = NULL, apal = NULL, breaks = 2,
       ggplot2::geom_rect(xmin = 0, xmax = breaks + 0.5, ymin = -0.5, ymax = Inf, fill = breaks_pal[1], alpha = alphas) +
       ggplot2::geom_rect(xmin = breaks + 0.5, xmax = Inf, ymin = -0.5, ymax = Inf, fill = breaks_pal[2], alpha = alphas) +
       ggalluvial::geom_alluvium() +
-      ggalluvial::geom_stratum(aes(y = duplicate_frequency)) +
+      ggalluvial::geom_stratum(ggplot2::aes(y = duplicate_frequency)) +
       ggplot2::xlab("Repertoire ID") +
       ggplot2::ylab("Frequency of CDR3 sequence") +
       ggplot2::theme_classic() +
