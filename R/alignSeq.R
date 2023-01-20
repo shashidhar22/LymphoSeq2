@@ -32,8 +32,8 @@
 #' \url{http://bioconductor.org/packages/release/bioc/vignettes/msa/inst/doc/msa.pdf}
 #' @examples
 #' file_path <- system.file("extdata", "IGH_sequencing", package = "LymphoSeq2")
-#' study_table <- LymohoSeq2::readImmunoSeq(path = file_path)
-#' nucleotide_table <- LymphoSeq2::productiveSeq(stable, aggregate = "junction")
+#' study_table <- LymphoSeq2::readImmunoSeq(path = file_path)
+#' nucleotide_table <- LymphoSeq2::productiveSeq(study_table, aggregate = "junction")
 #' LymphoSeq2::alignSeq(nucleotide_table,
 #'   repertoire_id = "IGH_MVQ92552A_BL", type = "junction",
 #'   method = "ClustalW"
@@ -95,8 +95,8 @@ alignSeq <- function(study_table, repertoire_ids = NULL,
       search_table <- search_table %>%
         dplyr::filter(!!base::as.symbol(type) %in% searchSequence) %>%
         LymphoSeq2::topSeqs(top = top)
+      message("Only 150 sequences sampled equally from each search group will be selected")
     }
-    message("Only 150 sequences sampled equally from each search group will be selected")
   }
   # Select the string set according to the type provided by the user
   # and create a DNA/AAStringSet with this
@@ -106,8 +106,7 @@ alignSeq <- function(study_table, repertoire_ids = NULL,
     string_list <- search_table %>%
       dplyr::pull(junction) %>%
       Biostrings::DNAStringSet()
-  }
-  if (type == "junction_aa") {
+  } else if (type == "junction_aa") {
     search_table <- search_table %>%
       dplyr::filter(base::nchar(junction_aa) > 3)
     string_list <- search_table %>%
@@ -143,6 +142,6 @@ alignSeq <- function(study_table, repertoire_ids = NULL,
   }
   # Perform multiple sequence alignment using the method described by the user
   base::set.seed(12357)
-  alignment <- msa::msa(string_list, method = method)
+  alignment <- suppressMessages(msa::msa(string_list, method = method))
   return(alignment)
 }
