@@ -3,7 +3,7 @@
 #' Removes an amino acid sequence and associated data from all instances within
 #' study table and then recomputes the duplicate_frequency.
 #'
-#' @param study_table A tible imported using the LymphoSeq2 function
+#' @param study_table A tibble imported using the LymphoSeq2 function
 #' `readImmunoSeq()`. `junction_aa`, `duplicate_count`, and
 #' `duplicate_frequency` are required columns.
 #' @param sequence A character vector of one or more amino acid sequences to
@@ -13,10 +13,10 @@
 #' `duplicate_frequency` is recalculated.
 #' @examples
 #' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
-#' study_table <- readImmunoSeq(path = file_path)
-#' searchSeq(study_table, sequence = "CASSDLIGNGKLFF")
-#' cleaned_table <- removeSeq(study_table, sequence = "CASSDLIGNGKLFF")
-#' searchSeq(cleaned_table, sequence = "CASSDLIGNGKLFF")
+#' study_table <- LymphoSeq2::readImmunoSeq(path = file_path)
+#' LymphoSeq2::searchSeq(study_table, sequence = "CASSDLIGNGKLFF")
+#' cleaned_table <- LymphoSeq2::removeSeq(study_table, sequence = "CASSDLIGNGKLFF")
+#' LymphoSeq2::searchSeq(cleaned_table, sequence = "CASSDLIGNGKLFF")
 #' @export
 #' @import  magrittr
 removeSeq <- function(study_table, sequence) {

@@ -11,9 +11,11 @@
 #' data frames aggregated by `duplicate_count`
 #' @examples
 #' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
-#' study_table <- readImmunoSeq(path = file_path)
-#' amino_table <- productiveSeq(study_table = study_table, aggregate = "junction_aa")
-#' unique_seqs <- uniqueSeqs(productive_table = amino_table, unique_type = "junction_aa")
+#' study_table <- LymphoSeq2::readImmunoSeq(path = file_path)
+#' amino_table <- LymphoSeq2::productiveSeq(study_table = study_table,
+#'   aggregate = "junction_aa")
+#' unique_seqs <- LymphoSeq2::uniqueSeqs(productive_table = amino_table,
+#'   unique_type = "junction_aa")
 #' @export
 uniqueSeqs <- function(productive_table = productive_table, unique_type = "junction_aa") {
   # Add checks to see if the tibble is a productive table

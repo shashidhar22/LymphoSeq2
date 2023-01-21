@@ -15,13 +15,13 @@
 #' file_path <- system.file("extdata", "TCRB_sequencing", 
 #'   package = "LymphoSeq2")
 #' # Export raw data
-#' study_table <- readImmunoSeq(path = file_path)
-#' exportFasta(study_table = study_table, type = "junction", 
+#' study_table <- LymphoSeq2::readImmunoSeq(path = file_path)
+#' LymphoSeq2::exportFasta(study_table = study_table, type = "junction", 
 #'   names = c("junction_aa", "duplicate_count"))
 #' # Export only productive junction amino acid sequences
-#' amino_table <- productiveSeq(study_table = study_table, 
+#' amino_table <- LymphoSeq2::productiveSeq(study_table = study_table, 
 #'   aggregate = "junction_aa")
-#' exportFasta(study_table = amino_table, type = "junction_aa", 
+#' LymphoSeq2::exportFasta(study_table = amino_table, type = "junction_aa", 
 #'   names = "duplicate_frequency")
 #' @export
 #' @import magrittr

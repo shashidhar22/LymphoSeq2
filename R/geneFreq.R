@@ -15,9 +15,10 @@
 #' 100\% for each repertoire_id).
 #' @examples
 #' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
-#' study_table <- readImmunoSeq(path = file_path)
-#' nucleotide_table <- productiveSeq(study_table = study_table, aggregate = "junction")
-#' geneFreq(nucleotide_table, locus = "VDJ", family = FALSE)
+#' study_table <- LymphoSeq2::readImmunoSeq(path = file_path)
+#' nucleotide_table <- LymphoSeq2::productiveSeq(study_table = study_table,
+#'   aggregate = "junction")
+#' LymphoSeq2::geneFreq(nucleotide_table, locus = "VDJ", family = FALSE)
 #' @export
 #' @import magrittr
 geneFreq <- function(productive_nt, locus = "V|D|J", family = FALSE) {

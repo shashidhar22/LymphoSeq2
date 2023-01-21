@@ -13,8 +13,7 @@
 #' @return Returns a tibble with MiAIRR headers and repertoire_id
 #' @examples
 #' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
-#' study_table <- LymphoSeq2::readImmunoSeq(path = file.path, recursive = FALSE)
-#'
+#' study_table <- LymphoSeq2::readImmunoSeq(path = file_path, recursive = FALSE)
 #' @export
 #' @import magrittr
 readImmunoSeq <- function(path, recursive = FALSE, threads = parallel::detectCores() / 2) {
@@ -57,7 +56,6 @@ readImmunoSeq <- function(path, recursive = FALSE, threads = parallel::detectCor
 #' @keywords internal
 #' @param clone_file A .tsv file to identify the file type
 #' @return Returns "immunoSEQLegacy", "immunoSEQ", "10X", "BGI"
-#'
 #' @import magrittr
 #' @noRd
 getFileType <- function(col_names) {

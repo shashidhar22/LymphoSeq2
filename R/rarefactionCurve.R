@@ -10,9 +10,8 @@
 #' @seealso [LymphoSeq2::runINext()]
 #' @examples
 #' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
-#' study_table <- readImmunoSeq(path = file_path)
-#' plotRarefactionCurve(study_table)
-#'
+#' study_table <- LymphoSeq2::readImmunoSeq(path = file_path)
+#' LymphoSeq2::plotRarefactionCurve(study_table)
 #' @export
 #' @import magrittr
 plotRarefactionCurve <- function(study_table) {

@@ -17,24 +17,24 @@
 #' @seealso [LymphoSeq2::topSeqs] and [LymphoSeq2::uniqueSeqs()]
 #' @examples
 #' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
-#' study_table <- readImmunoSeq(path = file_path)
-#' amino_table <- productiveSeq(study_table,
+#' study_table <- LymphoSeq2::readImmunoSeq(path = file_path)
+#' amino_table <- LymphoSeq2::productiveSeq(study_table,
 #'   aggregate = "junction_aa"
 #' )
-#' top_seqs <- topSeqs(amino_table,
+#' top_seqs <- LymphoSeq2::topSeqs(amino_table,
 #'   top = 1
 #' )
-#' sequence_matrix <- seqMatrix(amino_table,
+#' sequence_matrix <- LymphoSeq2::seqMatrix(amino_table,
 #'   sequences = top_seqs$junction_aa
 #' )
-#' unique_seqs <- uniqueSeqs(amino_table)
-#' sequence_matrix <- seqMatrix(amino_table,
+#' unique_seqs <- LymphoSeq2::uniqueSeqs(amino_table)
+#' sequence_matrix <- LymphoSeq2::seqMatrix(amino_table,
 #'   sequences = unique_seqs$junction_aa
 #' )
 #' # It can be helpful to combine top.freq and sequence.matrix
-#' top_freq <- topFreq(amino_table, frequency = 0.001)
-#' sequence_matrix <- seqMatrix(amino_table, sequences = top_freq$junction_aa)
-#' top_freq_matrix <- merge(top_freq, sequence_matrix)
+#' top_freq <- LymphoSeq2::topFreq(amino_table, frequency = 0.001)
+#' sequence_matrix <- LymphoSeq2::seqMatrix(amino_table, sequences = top_freq$junction_aa)
+#' top_freq_matrix <- dplyr::merge(top_freq, sequence_matrix)
 #' @export
 #' @import magrittr
 seqMatrix <- function(productive_aa, sequences = NULL, by = "duplicate_frequency") {

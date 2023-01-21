@@ -13,9 +13,9 @@
 #' counts of the entire study_table or counts for each repertoire_id.
 #' @examples
 #' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
-#' study_table <- readImmunoSeq(path = file_path)
-#' kmer_table <- countKmer(study_table = study_table, k = 5, separate = TRUE)
-#'
+#' study_table <- LymphoSeq2::readImmunoSeq(path = file_path)
+#' kmer_table <- LymphoSeq2::countKmer(study_table = study_table, k = 5,
+#'   separate = TRUE)
 #' @export
 #' @import magrittr 
 countKmer <- function(study_table, k, separate = TRUE) {

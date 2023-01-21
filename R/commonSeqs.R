@@ -13,12 +13,10 @@
 #' [LymphoSeq2::commonSeqsPlot()] [LymphoSeq2::commonSeqsBar()]
 #' @examples
 #' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
-#'
-#' study_table <- readImmunoSeq(path = file_path)
-#'
-#' amino_table <- productiveSeq(study_table = study_table, aggregate = "junction_aa")
-#'
-#' commonSeqs(
+#' study_table <- LymphoSeq2::readImmunoSeq(path = file_path)
+#' amino_table <- LymphoSeq2::productiveSeq(study_table = study_table,
+#'   aggregate = "junction_aa")
+#' LymphoSeq2::commonSeqs(
 #'   repertoire_ids = c("TRB_Unsorted_0", "TRB_Unsorted_32"),
 #'   study_table = amino_table
 #' )

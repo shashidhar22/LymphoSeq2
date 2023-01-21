@@ -25,12 +25,10 @@
 #' the false discovery rate), and log2 transformed fold change.
 #' @examples
 #' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
-#'
-#' study_table <- readImmunoSeq(path = file_path)
-#'
-#' amino_table <- productiveSeq(study_table = study_table, aggregate = "junction_aa")
-#'
-#' differentialAbundance(
+#' study_table <- LymphoSeq2::readImmunoSeq(path = file_path)
+#' amino_table <- LymphoSeq2::productiveSeq(study_table = study_table,
+#'   aggregate = "junction_aa")
+#' LymphoSeq2::differentialAbundance(
 #'   study_table = amino_table,
 #'   repertoire_ids = c("TRB_Unsorted_949", "TRB_Unsorted_1320"),
 #'   type = "junction_aa", q = 0.01, zero = 0.001

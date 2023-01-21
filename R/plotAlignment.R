@@ -8,14 +8,23 @@
 #' \url{https://cran.r-project.org/web/packages/ggmsa/vignettes/ggmsa.html}
 #' @examples
 #' file_path <- system.file("extdata", "IGH_sequencing", package = "LymphoSeq2")
-#' study_table <- readImmunoSeq(path = file_path)
-#' nucleotide_table <- productiveSeq(study_table, aggregate = "junction")
-#' msa <- alignSeq(nucleotide_table,
+#' study_table <- LymphoSeq2::readImmunoSeq(path = file_path)
+#' nucleotide_table <- LymphoSeq2::productiveSeq(study_table, aggregate = "junction")
+#' msa <- LymphoSeq2::alignSeq(nucleotide_table,
 #'   repertoire_id = "IGH_MVQ92552A_BL",
-#'   type = "junction", method = "ClustalW"
+#'   type = "junction_aa", method = "ClustalW"
 #' )
-#' plotAlignment(msa)
+#' LymphoSeq2::plotAlignment(msa)
+#' @import ggmsa
 #' @export
 plotAlignment <- function(msa) {
-  ggmsa::ggmsa(msa, font = NULL, color = "Chemistry_NT")
+  if (class(msa)[1] == "MsaDNAMultipleAlignment") {
+    msa <- Biostrings::DNAMultipleAlignment(msa)
+    ggmsa::ggmsa(msa, font = NULL, color = "Chemistry_NT", seq_name = FALSE) + 
+      ggmsa::geom_msaBar()  
+  } else if (class(msa)[1] == "MsaAAMultipleAlignment") {
+    msa <- Biostrings::AAMultipleAlignment(msa)
+    ggmsa::ggmsa(msa, font = NULL, color = "Chemistry_AA", seq_name = FALSE) + 
+      ggmsa::geom_msaBar()
+  }
 }

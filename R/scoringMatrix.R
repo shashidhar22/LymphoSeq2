@@ -17,21 +17,21 @@
 #' indicates no shared frequencies.
 #' @examples
 #' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
-#' study_table <- readImmunoSeq(path = file_path)
-#' amino_table <- productiveSeq(study_table, aggregate = "junction_aa")
-#' bhattacharyya_matrix <- scoringMatrix(
+#' study_table <- LymphoSeq2::readImmunoSeq(path = file_path)
+#' amino_table <- LymphoSeq2::productiveSeq(study_table, aggregate = "junction_aa")
+#' bhattacharyya_matrix <- LymphoSeq2::scoringMatrix(
 #'   productive_table = amino_table,
 #'   mode = "Bhattacharyya"
 #' )
-#' similarity_matrix <- scoringMatrix(
+#' similarity_matrix <- LymphoSeq2::scoringMatrix(
 #'   productive_table = amino_table,
 #'   mode = "Similarity"
 #' )
-#' sorensen_matrix <- scoringMatrix(
+#' sorensen_matrix <- LymphoSeq2::scoringMatrix(
 #'   productive_table = amino_table,
 #'   mode = "Sorensen"
 #' )
-#' psi_matrix <- scoringMatrix(
+#' psi_matrix <- LymphoSeq2::scoringMatrix(
 #'   productive_table = amino_table,
 #'   mode = "PSI"
 #' )
@@ -256,7 +256,7 @@ percentSI <- function(sample_list) {
     ) %>%
     dplyr::group_by(junction_aa, duplicate_frequency_1, duplicate_frequency_2) %>%
     dplyr::summarize(min_count = min(duplicate_frequency_1, duplicate_frequency_2)) %>%
-    ungroup()
+    dplyr::ungroup()
   min_sum <- combined %>%
     dplyr::pull(min_count) %>%
     sum()

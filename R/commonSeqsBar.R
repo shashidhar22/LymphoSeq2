@@ -24,9 +24,10 @@
 #' [LymphoSeq2::commonSeqsVenn()] [LymphoSeq2::commonSeqsPlot()]
 #' @examples
 #' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
-#' study_table <- readImmunoSeq(path = file_path)
-#' amino_table <- productiveSeq(study_table, aggregate = "junction_aa")
-#' commonSeqsBar(amino_table, repertoire_ids = c(
+#' study_table <- LymphoSeq2::readImmunoSeq(path = file_path)
+#' amino_table <- LymphoSeq2::productiveSeq(study_table,
+#'   aggregate = "junction_aa")
+#' LymphoSeq2::commonSeqsBar(amino_table, repertoire_ids = c(
 #'   "TRB_CD4_949", "TRB_CD8_949",
 #'   "TRB_Unsorted_949", "TRB_Unsorted_1320"
 #' ), color_sample = "TRB_CD8_949")

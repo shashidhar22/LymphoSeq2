@@ -26,41 +26,41 @@
 #' the searched sequence(s) appeared.
 #' @examples
 #' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
-#' study_table <- readImmunoSeq(path = file_path)
+#' study_table <- LymphoSeq2::readImmunoSeq(path = file_path)
 #' aa1 <- "CASSPVSNEQFF"
 #' aa2 <- "CASSQEVPPYQAFF"
-#' searchSeq(
+#' LymphoSeq2::searchSeq(
 #'   study_table = study_table,
 #'   sequence = aa1,
 #'   seq_type = "junction_aa",
 #'   edit_distance = 0
 #' )
-#' searchSeq(
+#' LymphoSeq2::searchSeq(
 #'   study_table = study_table,
 #'   sequence = c(aa1, aa2),
 #'   seq_type = "junction_aa",
 #'   edit_distance = 0
 #' )
-#' searchSeq(
+#' LymphoSeq2::searchSeq(
 #'   study_table = study_table,
 #'   sequence = aa1,
 #'   seq_type = "junction_aa",
 #'   edit_distance = 1
 #' )
 #' nt <- "CTGATTCTGGAGTCCGCCAGCACCAACCAGACATCTATGTACCTCTGTGCCAGCAGTCCGGTAAGCAATGAGCAGTTCTTCGGGCCA"
-#' searchSeq(
+#' LymphoSeq2::searchSeq(
 #'   study_table = study_table,
 #'   sequence = nt,
 #'   seq_type = "junction",
 #'   edit_distance = 3
 #' )
-#' searchSeq(
+#' LymphoSeq2::searchSeq(
 #'   study_table = study_table,
 #'   sequence = "CASSPVS",
 #'   seq_type = "junction_aa",
 #'   edit_distance = 0
 #' )
-#' searchSeq(
+#' LymphoSeq2::searchSeq(
 #'   study_table = study_table,
 #'   sequence = nt,
 #'   seq_type = "junction",

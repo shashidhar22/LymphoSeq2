@@ -13,10 +13,11 @@
 #' [LymphoSeq2::commonSeqsPlot()] [LymphoSeq2::commonSeqsBar()]
 #' @examples
 #' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
-#' study_table <- readImmunoSeq(path = file_path)
-#' amino_table <- productiveSeq(study_table = study_table, aggregate = "junction_aa")
+#' study_table <- LymphoSeq2::readImmunoSeq(path = file_path)
+#' amino_table <- LymphoSeq2::productiveSeq(study_table = study_table,
+#'   aggregate = "junction_aa")
 #' # Plot a triple Venn diagram
-#' commonSeqsVenn(
+#' LymphoSeq2::commonSeqsVenn(
 #'   repertoire_ids = c(
 #'     "TRB_Unsorted_0",
 #'     "TRB_Unsorted_32", "TRB_Unsorted_83"
@@ -24,7 +25,7 @@
 #'   productive_aa = amino_table
 #' )
 #' # Plot a double Venn diagram
-#' commonSeqsVenn(repertoire_ids = c(
+#' LymphoSeq2::commonSeqsVenn(repertoire_ids = c(
 #'   "TRB_Unsorted_0",
 #'   "TRB_Unsorted_32"
 #' ), productive_aa = amino_table)

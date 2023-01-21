@@ -14,9 +14,10 @@
 #' @examples
 #' data("publishedTRB")
 #' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
-#' study_table <- readImmunoSeq(path = file_path)
-#' amino_table <- productiveSeq(study_table = study_table, aggregate = "junction_aa")
-#' searchPublished(amino_table)
+#' study_table <- LymphoSeq2::readImmunoSeq(path = file_path)
+#' amino_table <- LymphoSeq2::productiveSeq(study_table = study_table,
+#'   aggregate = "junction_aa")
+#' LymphoSeq2::searchPublished(amino_table)
 #' @export
 #' @import magrittr
 searchPublished <- function(study_table) {

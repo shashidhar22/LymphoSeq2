@@ -14,11 +14,9 @@
 #' @return Tibble with four columns, repertoire_id, gliph count, specificity
 #' group and junction amino acid sequence. The GLIPH file name is used as the
 #' repertoire_id
-#'
 #' @examples
 #' file_path <- base::system.file("extdata", "TCRB_gliph", package = "LymphoSeq2")
 #' gliph_table <- LymphoSeq2::readGliph(file_path)
-#'
 #' @export
 #' @import magrittr
 readGliph <- function(gliph_path) {

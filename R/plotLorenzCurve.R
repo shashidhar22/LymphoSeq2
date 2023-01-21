@@ -22,31 +22,31 @@
 #' be found in the R Graphics Cookbook online
 #' (\url{http://www.cookbook-r.com/Graphs/}).
 #' @examples
+#' library(magrittr)
 #' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
 #' # Plot Lorenz curve with raw data
-#' study_table <- readImmunoSeq(path = file_path)
+#' study_table <- LymphoSeq2::readImmunoSeq(path = file_path)
 #' repertoire_ids <- study_table %>% 
 #'   dplyr::pull(repertoire_id) %>% 
 #'   unique()
-#' lorenzCurve(repertoire_ids = repertoire_ids, study_table = study_table)
+#' LymphoSeq2::lorenzCurve(repertoire_ids = repertoire_ids,
+#'   study_table = study_table)
 #' # Plot Lorenz curve with productive amino acid sequences
-#' amino_table <- productiveSeq(study_table = study_table, 
+#' amino_table <- LymphoSeq2::productiveSeq(study_table = study_table, 
 #'   aggregate = "junction_aa")
 #' repertoire_ids <- amino_table %>%
 #'   dplyr::pull(repertoire_id) %>%
 #'   unique()
-#' lorenzCurve(repertoire_ids = repertoire_ids, study_table = amino_table)
+#' LymphoSeq2::lorenzCurve(repertoire_ids = repertoire_ids,
+#'   study_table = amino_table)
 #' # Change the legend labels, line colors, and add a title
 #' repertoire_ids <- c("TRB_Unsorted_0", "TRB_Unsorted_32", 
 #'    "TRB_Unsorted_83", "TRB_Unsorted_949", "TRB_Unsorted_1320")
-#' lorenz_curve <- lorenzCurve(repertoire_ids = repertoire_ids, 
+#' lorenz_curve <- LymphoSeq2::lorenzCurve(repertoire_ids = repertoire_ids, 
 #'   study_table = amino_table)
-#' 
 #' labels <- c("Day 0", "Day 32", "Day 83", "Day 949", "Day 1320")
-#' 
 #' colors <- c("navyblue", "red", "darkgreen", "orange", "purple",
 #'              "yellow", "pink", "lightgreen", "cyan", "maroon")
-#' 
 #' lorenz_curve + 
 #' ggplot2::scale_color_manual(name = "repertoire_ids", 
 #'                             breaks = repertoire_ids, 

@@ -16,34 +16,28 @@
 #' unique sequence.
 #' @examples
 #' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
-#'
-#' study_table <- readImmunoSeq(path = file_path)
-#'
-#' amino_table <- productiveSeq(study_table = study_table, aggregate = "junction_aa")
-#'
-#' top_freq <- topFreq(amino_table, frequency = 0.001)
-#'
+#' study_table <- LymphoSeq2::readImmunoSeq(path = file_path)
+#' amino_table <- LymphoSeq2::productiveSeq(study_table = study_table, 
+#'   aggregate = "junction_aa")
+#' top_freq <- LymphoSeq2::topFreq(amino_table, frequency = 0.001)
 #' # Track clones without mapping or tracking specific sequences
-#' cloneTrack(amino_table)
-#'
+#' LymphoSeq2::cloneTrack(amino_table)
 #' # Track top 20 clones mapping to the CD4 and CD8 samples
-#' cloneTrack(amino_table,
+#' LymphoSeq2::cloneTrack(amino_table,
 #'   sample_list = c("TRB_CD4_949", "TRB_CD8_949"),
 #'   sequence_track = top_freq$junction_aa[1:20]
 #' )
-#'
 #' # Track the top 10 clones from top.freq
-#' cloneTrack(study_table = amino_table, sequence_track = top_freq$junction_aa[1:10])
-#'
+#' LymphoSeq2::cloneTrack(study_table = amino_table, 
+#'   sequence_track = top_freq$junction_aa[1:10])
 #' # Track clones mapping to the CD4 and CD8 samples while ignoring all others
-#' cloneTrack(study_table = amino_table, sample_list = c("TRB_CD4_949", "TRB_CD8_949"))
-#'
+#' LymphoSeq2::cloneTrack(study_table = amino_table,
+#'   sample_list = c("TRB_CD4_949", "TRB_CD8_949"))
 #' # Track clones mapping to the CD4 and CD8 samples and track 2 specific sequences
-#' cloneTrack(
+#' LymphoSeq2::cloneTrack(
 #'   study_table = amino_table, sample_list = c("TRB_CD4_949", "TRB_CD8_949"),
 #'   sequence_track = c("CASSPPTGERDTQYF", "CASSQDRTGQYGYTF")
 #' )
-#'
 #' @export
 #' @import magrittr
 cloneTrack <- function(study_table, sample_list = NULL, sequence_track = NULL) {

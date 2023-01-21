@@ -23,21 +23,21 @@
 #' details on how to manipulate the tree.
 #' @examples
 #' file_path <- system.file("extdata", "IGH_sequencing", package = "LymphoSeq2")
-#' study_table <- readImmunoSeq(path = file_path)
-#' nucleotide_table <- productiveSeq(
+#' study_table <- LymphoSeq2::readImmunoSeq(path = file_path)
+#' nucleotide_table <- LymphoSeq2::productiveSeq(
 #'   study_table = study_table,
 #'   aggregate = "junction"
 #' )
-#' phyloTree(
+#' LymphoSeq2::phyloTree(
 #'   study_table = nucleotide_table, repertoire_ids = "IGH_MVQ92552A_BL",
 #'   type = "junction", layout = "rectangular"
 #' )
-#' phyloTree(
+#' LymphoSeq2::phyloTree(
 #'   study_table = nucleotide_table, repertoire_ids = "IGH_MVQ92552A_BL",
 #'   type = "junction_aa", layout = "circular"
 #' )
 #' # Add scale and title to figure
-#' phyloTree(
+#' LymphoSeq2::phyloTree(
 #'   study_table = nucleotide_table, repertoire_ids = "IGH_MVQ92552A_BL",
 #'   type = "junction_aa", layout = "rectangular"
 #' ) +
@@ -48,7 +48,7 @@
 #'   ) +
 #'   ggplot2::ggtitle("Title")
 #' # Hide legend and leaf labels
-#' phyloTree(
+#' LymphoSeq2::phyloTree(
 #'   study_table = nucleotide_table, repertoire_ids = "IGH_MVQ92552A_BL",
 #'   type = "junction", layout = "rectangular", label = FALSE
 #' ) +
@@ -92,7 +92,7 @@ phyloTree <- function(study_table, repertoire_ids, type = "junction",
       gene_families = paste(v_family, d_family, j_family)
     ) %>%
     dplyr::pull(gene_families)
-  tree_annotation <- tibble(
+  tree_annotation <- tibble::tibble(
     names = names,
     duplicate_count = sample_table$duplicate_count,
     geneFamilies = geneFamilies,
