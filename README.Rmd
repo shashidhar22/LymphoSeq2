@@ -31,7 +31,7 @@ also supports the importing of AIRR-seq data processed using the MiXCR pipeline.
 To install the latest version of LymphoSeq2 you can use the `devtools` package and install LymphoSeq2 from GitHub
 ``` r
 # install.packages("devtools")
-devtools::install_github("shashidhar22/LymphoSeq2")
+devtools::install_github("shashidhar22/LymphoSeq2", build_vignettes = TRUE)
 ```
 
 ## Getting started
