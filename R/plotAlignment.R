@@ -24,12 +24,12 @@ plotAlignment <- function(msa) {
     msa <- Biostrings::DNAMultipleAlignment(msa)
     names(msa@unmasked) <- paste(names(msa@unmasked),
         seq(1:length(names(msa@unmasked))), sep = "_")
-    ggmsa::ggmsa(msa, font = NULL, color = "Chemistry_NT") + geom_msaBar()
+    ggmsa::ggmsa(msa, font = NULL, color = "Chemistry_NT") + ggmsa::geom_msaBar()
   } else {
     msa <- Biostrings::AAMultipleAlignment(msa)
     names(msa@unmasked) <- paste(names(msa@unmasked),
       seq(1:length(names(msa@unmasked))), sep = "_")
-    ggmsa::ggmsa(msa, font = NULL, color = "Chemistry_AA") + geom_msaBar()
+    ggmsa::ggmsa(msa, font = NULL, color = "Chemistry_AA") + ggmsa::geom_msaBar()
     
   }
 }
