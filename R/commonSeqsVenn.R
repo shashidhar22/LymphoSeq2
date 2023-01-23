@@ -4,40 +4,41 @@
 #' three repertoire_ids.
 #'
 #' @param repertoire_ids A character vector of two or three names of repertoire_ids in
-#' productiveSeq table to compare.
+#' [productiveSeq()] table to compare.
 #' @param amino_table A tibble of amino acid sequences generated
-#' by the function `productiveSeq()`.
+#' by the function [productiveSeq()].
 #' @return Returns a a Venn diagram of the number of common sequences between
 #' two or three repertoire_ids.
-#' @seealso [LymphoSeq2::productiveSeq()] [LymphoSeq2::commonSeqs()]
-#' [LymphoSeq2::commonSeqsPlot()] [LymphoSeq2::commonSeqsBar()]
+#' @seealso [LymphoSeq2::productiveSeq()], [LymphoSeq2::commonSeqs()],
+#' [LymphoSeq2::commonSeqsPlot()], [LymphoSeq2::commonSeqsBar()]
 #' @examples
 #' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
-#' study_table <- readImmunoSeq(path = file_path)
-#' amino_table <- productiveSeq(study_table = study_table, aggregate = "junction_aa")
+#' study_table <- LymphoSeq2::readImmunoSeq(path = file_path)
+#' amino_table <- LymphoSeq2::productiveSeq(study_table = study_table, 
+#'   aggregate = "junction_aa")
 #' # Plot a triple Venn diagram
-#' commonSeqsVenn(
+#' LymphoSeq2::commonSeqsVenn(
 #'   repertoire_ids = c(
 #'     "TRB_Unsorted_0",
 #'     "TRB_Unsorted_32", "TRB_Unsorted_83"
 #'   ),
-#'   productive_aa = amino_table
+#'   amino_table = amino_table
 #' )
 #' # Plot a double Venn diagram
-#' commonSeqsVenn(repertoire_ids = c(
+#' LymphoSeq2::commonSeqsVenn(repertoire_ids = c(
 #'   "TRB_Unsorted_0",
 #'   "TRB_Unsorted_32"
-#' ), productive_aa = amino_table)
+#' ), amino_table = amino_table)
 #' @export
 #' @import magrittr
-commonSeqsVenn <- function(repertoire_ids, productive_aa) {
+commonSeqsVenn <- function(repertoire_ids, amino_table) {
   if (base::length(repertoire_ids) > 3 | base::length(repertoire_ids) < 2) {
     stop("Please enter 2 or 3 repertoire_ids.")
   }
   if (base::length(repertoire_ids) == 2) {
-    a <- productive_aa %>%
+    a <- amino_table %>%
       dplyr::filter(repertoire_id == repertoire_ids[[1]])
-    b <- productive_aa %>%
+    b <- amino_table %>%
       dplyr::filter(repertoire_id == repertoire_ids[[2]])
     grid::grid.newpage()
     venn <- VennDiagram::draw.pairwise.venn(
@@ -52,11 +53,11 @@ commonSeqsVenn <- function(repertoire_ids, productive_aa) {
     grid::grid.draw(venn)
   }
   if (base::length(repertoire_ids) == 3) {
-    a <- productive_aa %>%
+    a <- amino_table %>%
       dplyr::filter(repertoire_id == repertoire_ids[[1]])
-    b <- productive_aa %>%
+    b <- amino_table %>%
       dplyr::filter(repertoire_id == repertoire_ids[[2]])
-    c <- productive_aa %>%
+    c <- amino_table %>%
       dplyr::filter(repertoire_id == repertoire_ids[[3]])
     grid::grid.newpage()
     venn <- VennDiagram::draw.triple.venn(

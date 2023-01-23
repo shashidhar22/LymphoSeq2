@@ -2,22 +2,27 @@
 #'
 #' `clonality()` Creates a tibble giving the total number of sequences, number
 #' of unique productive sequences, number of genomes, entropy, clonality, Gini
-#' coefficient, TCR/BCR convergence, simpson index, inverse simpson index, and
-#' the frequency (\%) of the top productive sequences for any given sample.
+#' coefficient, TCR/BCR convergence, and the frequency of the top productive 
+#' sequences for any given sample.
 #'
 #' @param study_table A tibble consisting of antigen receptor sequencing
-#' imported by the LymphoSeq2 function `readImmunoSeq()`. "junction_aa",
+#' imported by the LymphoSeq2 function [readImmunoSeq()]. "junction_aa",
 #' "duplicate_count", and "duplicate_frequency" are required columns. Note that
 #' clonality is usually calculated from productive junction sequences.
 #' Therefore, it is not recommended to run this function using a productive
 #' sequence list aggregated by amino acids.
-#' @param rarefy If TRUE, rarefied diversity metrics are calculated by sampling
-#' down each repertoire in the input table down to the repertoire with the
-#' smallest number of sequences and calculating the diversity metrics on the
-#' sampled data. The process is repeated for the number of iterations specified
-#' by the user and the diversity metrics are averaged over the number of
-#' iterations. See details.
+#' @param rarefy A Boolean value
+#'    * `TRUE` : Rarefied diversity metrics are calculated by sampling down each
+#'    repertoire in the input table down to the repertoire with the smallest 
+#'    number of sequences and calculating the diversity metrics on the sampled
+#'    data. The process is repeated for the number of iterations specified by 
+#'    the user and the diversity metrics are averaged over the number of 
+#'    iterations. Default 100 (the default)
+#'    * `FALSE` (the default): Diversity metrics will be calculated considering 
+#'    the raw repertoire data for each of the samples 
 #' @param iterations Number of iterations to run the sampled clonality metrics.
+#' @param min_count The minimum depth to which each repertoire in the study must
+#' be sampled to. Default 1000 (the default)
 #' @return Returns a tibble giving the total number of sequences, number of
 #' unique productive sequences, number of genomes, clonality, Gini coefficient,
 #' Simpson index, inverse Simpson index, and the frequency (\%) of the top

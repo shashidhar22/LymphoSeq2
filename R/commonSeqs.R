@@ -4,21 +4,19 @@
 #' reporting their frequencies in each.
 #'
 #' @param study_table A list of productive amino acid sequences generated
-#' by the LymphoSeq2 function `productiveSeq()` where aggregate = "junction_aa".
+#' by the LymphoSeq2 function [productiveSeq()] where aggregate = "junction_aa".
 #' @param repertoire_ids A character vector of two or more repertoire_id names in
 #' study_table.
 #' @return Returns a data frame of the common sequences between two or more files
 #' displaying their frequencies in each.
-#' @seealso [LymphoSeq2::productiveSeq()] [LymphoSeq2::commonSeqsVenn()] 
-#' [LymphoSeq2::commonSeqsPlot()] [LymphoSeq2::commonSeqsBar()]
+#' @seealso [LymphoSeq2::productiveSeq()], [LymphoSeq2::commonSeqsVenn()],
+#' [LymphoSeq2::commonSeqsPlot()], [LymphoSeq2::commonSeqsBar()]
 #' @examples
 #' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
-#'
-#' study_table <- readImmunoSeq(path = file_path)
-#'
-#' amino_table <- productiveSeq(study_table = study_table, aggregate = "junction_aa")
-#'
-#' commonSeqs(
+#' study_table <- LymphoSeq2::readImmunoSeq(path = file_path)
+#' amino_table <- LymphoSeq2::productiveSeq(study_table = study_table,
+#'   aggregate = "junction_aa")
+#' LymphoSeq2::commonSeqs(
 #'   repertoire_ids = c("TRB_Unsorted_0", "TRB_Unsorted_32"),
 #'   study_table = amino_table
 #' )

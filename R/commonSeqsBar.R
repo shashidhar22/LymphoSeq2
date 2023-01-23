@@ -20,25 +20,25 @@
 #' include "yes" or "no".
 #' @return Returns an UpSetR bar plot showing the number of intersecting sequences
 #' across multiple repertoire_ids.
-#' @seealso [LymphoSeq2::productiveSeq()] [LymphoSeq2::commonSeqs()]
-#' [LymphoSeq2::commonSeqsVenn()] [LymphoSeq2::commonSeqsPlot()]
+#' @seealso [LymphoSeq2::productiveSeq()], [LymphoSeq2::commonSeqs()],
+#' [LymphoSeq2::commonSeqsVenn()], [LymphoSeq2::commonSeqsPlot()]
 #' @examples
 #' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
-#' study_table <- readImmunoSeq(path = file_path)
-#' amino_table <- productiveSeq(study_table, aggregate = "junction_aa")
-#' commonSeqsBar(amino_table, repertoire_ids = c(
+#' study_table <- LymphoSeq2::readImmunoSeq(path = file_path)
+#' amino_table <- LymphoSeq2::productiveSeq(study_table, aggregate = "junction_aa")
+#' LymphoSeq2::commonSeqsBar(amino_table, repertoire_ids = c(
 #'   "TRB_CD4_949", "TRB_CD8_949",
 #'   "TRB_Unsorted_949", "TRB_Unsorted_1320"
 #' ), color_sample = "TRB_CD8_949")
 #' @export
 #' @import magrittr
-commonSeqsBar <- function(productive_aa, repertoire_ids, color_sample = NULL,
+commonSeqsBar <- function(amino_table, repertoire_ids, color_sample = NULL,
                           color_intersection = NULL, color = "#377eb8",
                           labels = "no") {
-  unique_seqs <- LymphoSeq2::uniqueSeqs(productive_table = productive_aa) %>%
+  unique_seqs <- LymphoSeq2::uniqueSeqs(productive_table = amino_table) %>%
     dplyr::pull(junction_aa)
   sequence_matrix <- LymphoSeq2::seqMatrix(
-    productive_aa = productive_aa,
+    amino_table = amino_table,
     sequences = unique_seqs
   )
   junction_aa <- sequence_matrix %>%
@@ -55,7 +55,7 @@ commonSeqsBar <- function(productive_aa, repertoire_ids, color_sample = NULL,
     queryFunction <- function(row, sequence) {
       data <- (row[["junction_aa"]] %in% sequence)
     }
-    seq_list <- productive_aa %>%
+    seq_list <- amino_table %>%
       dplyr::filter(repertoire_id == color_sample) %>%
       dplyr::pull(junction_aa)
     upplot <- UpSetR::upset(sequence_matrix,
