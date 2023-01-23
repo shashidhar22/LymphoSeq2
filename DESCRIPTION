@@ -46,6 +46,7 @@ Imports: Biostrings,
          vegan,
          tidyverse,
          usethis,
+         ggmsa,
          pheatmap
 Remotes: YuLab-SMU/ggtree,
          YuLab-SMU/ggmsa

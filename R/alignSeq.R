@@ -122,6 +122,9 @@ alignSeq <- function(study_table, repertoire_ids = NULL,
   if (!is.null(repertoire_ids)) {
     names(string_list) <- search_table %>%
       dplyr::pull(repertoire_id)
+      dplyr::mutate(rep_id = stringr::str_c(repertoire_id, dplyr::row_number(), 
+                                            sep ="_")) %>%
+      dplyr::pull(rep_id)
   } else {
     names(string_list) <- search_table %>%
       dplyr::mutate(
