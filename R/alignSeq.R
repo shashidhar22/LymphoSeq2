@@ -7,7 +7,7 @@
 #' distance threshold.
 #'
 #' @param study_table A tibble consisting of antigen receptor sequences
-#' imported by the LymphoSeq2 function `readImmunoSeq()`.
+#' imported by the LymphoSeq2 function [readImmunoSeq()].
 #' @param repertoire_ids A character vector indicating the name of the 
 #' repertoire_id in the productive sequence list.
 #' @param sequence_list A character vector of one ore more amino acid or 
@@ -16,7 +16,7 @@
 #' sequence must be less than or equal to.  See details below.
 #' @param type A character vector indicating whether "junction_aa" or "junction"
 #' sequences should be aligned.  If "junction_aa" is specified, then run 
-#' `productiveSeq()` first.
+#' [productiveSeq()] first.
 #' @param method A character vector indicating the multiple sequence alignment
 #' method to be used.  Refer to the Bioconductor "msa" package for more details.
 #' Options include "ClustalW", "ClustalOmega", and "Muscle".
@@ -35,7 +35,7 @@
 #' study_table <- LymphoSeq2::readImmunoSeq(path = file_path)
 #' nucleotide_table <- LymphoSeq2::productiveSeq(study_table, aggregate = "junction")
 #' LymphoSeq2::alignSeq(nucleotide_table,
-#'   repertoire_id = "IGH_MVQ92552A_BL", type = "junction",
+#'   repertoire_ids = "IGH_MVQ92552A_BL", type = "junction",
 #'   method = "ClustalW"
 #' )
 #' @export
@@ -121,7 +121,6 @@ alignSeq <- function(study_table, repertoire_ids = NULL,
   # if provided or use gene family names with sequence counts
   if (!is.null(repertoire_ids)) {
     names(string_list) <- search_table %>%
-      dplyr::pull(repertoire_id)
       dplyr::mutate(rep_id = stringr::str_c(repertoire_id, dplyr::row_number(), 
                                             sep ="_")) %>%
       dplyr::pull(rep_id)
