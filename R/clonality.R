@@ -25,7 +25,7 @@
 #' be sampled to. Default 1000 (the default)
 #' @return Returns a tibble giving the total number of sequences, number of
 #' unique productive sequences, number of genomes, clonality, Gini coefficient,
-#' Simpson index, inverse Simpson index, and the frequency (\%) of the top
+#' Simpson index, inverse Simpson index, and the frequency of the top
 #' productive sequence for each repertoire_id.
 #' @details Clonality is derived from the Shannon entropy, which is calculated
 #' from the frequencies of all productive sequences divided by the logarithm of
@@ -58,12 +58,13 @@
 #' different tissue of origin
 #' @examples
 #' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
-#' study_table <- LymphoSeq2::readImmunoSeq(path = file_path)
+#' study_table <- LymphoSeq2::readImmunoSeq(path = file_path) %>% 
+#' LymphoSeq2::topSeqs(top = 100)
 #' raw_clonality <- LymphoSeq2::clonality(study_table)
 #' sampled_clonality <- LymphoSeq2::clonality(study_table,
 #'   rarefy = TRUE,
 #'   iterations = 100,
-#'   min_count = 1000
+#'   min_count = 100
 #' )
 #' @seealso [LymphoSeq2::lorenzCurve()]
 #' @export

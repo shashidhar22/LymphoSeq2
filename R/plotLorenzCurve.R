@@ -24,7 +24,8 @@
 #' library(magrittr)
 #' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
 #' # Plot Lorenz curve with raw data
-#' study_table <- LymphoSeq2::readImmunoSeq(path = file_path)
+#' study_table <- LymphoSeq2::readImmunoSeq(path = file_path) %>% 
+#' LymphoSeq2::topSeqs(top = 100)
 #' repertoire_ids <- study_table %>% 
 #'   dplyr::pull(repertoire_id) %>% 
 #'   unique()
