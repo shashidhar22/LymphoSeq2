@@ -4,7 +4,7 @@
 #' PSI matrix.
 #;
 #' @param matrix A Bhattacharyya, Similarity, Sorensen, or PSI matrix produced
-#' by the LymphoSeq2 `scoringMatrix()` function.
+#' by the LymphoSeq2 [scoringMatrix()] function.
 #' @return A network graph visualizing pairwise comparisons. The thicker the
 #' line connecting two nodes, the greater the similarity.
 #' @examples

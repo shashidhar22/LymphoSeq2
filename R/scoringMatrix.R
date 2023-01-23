@@ -4,7 +4,7 @@
 #' Percent Similarity Index of all pairwise comparison from a list of data frames.
 #'
 #' @param productive_table A tibble of productive sequences generated
-#' by the LymphoSeq function productiveSeq.  "duplicate_frequency" and
+#' by the LymphoSeq function [productiveSeq()].  "duplicate_frequency" and
 #' "junction_aa" are a required columns.
 #' @param mode The mode to use for calculating pairwise similarity. Can take the
 #' values "Bhattacharyya", "Similarity", "Sorensen", or "PSI". Default is
@@ -17,21 +17,21 @@
 #' indicates no shared frequencies.
 #' @examples
 #' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
-#' study_table <- readImmunoSeq(path = file_path)
-#' amino_table <- productiveSeq(study_table, aggregate = "junction_aa")
-#' bhattacharyya_matrix <- scoringMatrix(
+#' study_table <- LymphoSeq2::readImmunoSeq(path = file_path)
+#' amino_table <- LymphoSeq2::productiveSeq(study_table, aggregate = "junction_aa")
+#' bhattacharyya_matrix <- LymphoSeq2::scoringMatrix(
 #'   productive_table = amino_table,
 #'   mode = "Bhattacharyya"
 #' )
-#' similarity_matrix <- scoringMatrix(
+#' similarity_matrix <- LymphoSeq2::scoringMatrix(
 #'   productive_table = amino_table,
 #'   mode = "Similarity"
 #' )
-#' sorensen_matrix <- scoringMatrix(
+#' sorensen_matrix <- LymphoSeq2::scoringMatrix(
 #'   productive_table = amino_table,
 #'   mode = "Sorensen"
 #' )
-#' psi_matrix <- scoringMatrix(
+#' psi_matrix <- LymphoSeq2::scoringMatrix(
 #'   productive_table = amino_table,
 #'   mode = "PSI"
 #' )
@@ -100,17 +100,13 @@ scoringMatrix <- function(productive_table, mode = "Bhattacharyya") {
 #' Calculates the Bhattacharyya coefficient of two samples.
 #'
 #' @param sample_list A list of two tibble corresponding derived from the
-#' `productiveSeq()`function in LymphoSeq2. `duplicate_frequency`,
-#' `junction_aa`, and `repertoire_id` columns are necessary for the calculation
+#' `productiveSeq()`function in LymphoSeq2. "duplicate_frequency",
+#' "junction_aa", and "repertoire_id" columns are necessary for the calculation 
 #' of the Bhattacharyya coefficient.
 #'
 #' @return A tibble with one row and three columns sample1, sample2,
 #' bhattacharyya coefficient
 #'
-#' @examples
-#' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
-#' study_table <- readImmunoSeq(path = file_path)
-#' amino_table <- productiveSeq(study_table, aggregate = "junction_aa")
 #' @seealso [LymphoSeq2::scoringMatrix()]
 #' @import magrittr
 #' @export
@@ -138,19 +134,14 @@ bhattacharyyaCoefficient <- function(sample_list) {
 #'
 #' Calculates the similarity score of two samples.
 #'
-#' @param sample1 A data frame consisting of frequencies of antigen receptor
-#' sequences.  "junction_aa" and "duplicate_count" are a required columns.
-#' @param sample2 A data frame consisting of frequencies of antigen receptor
-#' sequences.  "junction_aa" and "duplicate_count" are a required columns.
+#' @param sample_list A list of two tibble corresponding derived from the
+#' [productiveSeq()] function in LymphoSeq2. "duplicate_frequency",
+#' "junction_aa", and "repertoire_id" columns are necessary for the calculation 
+#' of the Bhattacharyya coefficient.
 #' @return Returns the similarity score, a measure of the amount of
 #' overlap between two samples.  The value ranges from 0 to 1 where 1 indicates
 #' the sequence frequencies are identical in the two samples and 0
 #' indicates no shared frequencies.
-#' @examples
-#' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
-#' study_table <- readImmunoSeq(path = file_path)
-#' amino_table <- productiveSeq(study_table, aggregate = "junction_aa")
-#'
 #' @seealso [LymphoSeq2::scoringMatrix()]
 #' @import magrittr
 #' @export
@@ -179,22 +170,15 @@ similarityScore <- function(sample_list) {
 #' a Jaccard index, Sorensen index gives a greater weight to shared sequences
 #' over unique sequences.
 #'
-#' @param sample1 A data frame consisting of frequencies of antigen receptor
-#' sequences.  "junction_aa" and "duplicate_count" are a required columns.
-#' @param sample2 A data frame consisting of frequencies of antigen receptor
-#' sequences.  "junction_aa" and "duplicate_count" are a required columns.
+#' @param sample_list A list of two tibble corresponding derived from the
+#' [productiveSeq()] function in LymphoSeq2. "duplicate_frequency",
+#' "junction_aa", and "repertoire_id" columns are necessary for the calculation 
+#' of the Bhattacharyya coefficient.
 #' @return Returns the similarity score, a measure of the amount of
 #' overlap between two samples.  The value ranges from 0 to 1 where 1 indicates
 #' the sequence frequencies are identical in the two samples and 0
 #' indicates no shared frequencies.
-#' @examples
-#' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
-#'
-#' stable <- readImmunoSeq(path = file_path)
-#'
-#' atable <- productiveSeq(stable, aggregate = "junction_aa")
-#'
-#' @seealso \code{\link{scoringMatrix}}
+#' @seealso [LymphoSeq2::scoringMatrix()]
 #' @import magrittr
 #' @export
 sorensenIndex <- function(sample_list) {
@@ -229,20 +213,15 @@ sorensenIndex <- function(sample_list) {
 #' Percent similarity index, not only compares the number of similar and
 #' dissimilar species present between two sites, but also incorporate abundance.
 #'
-#' @param sample1 A data frame consisting of frequencies of antigen receptor
-#' sequences.  "junction_aa" and "duplicate_count" are a required columns.
-#' @param sample2 A data frame consisting of frequencies of antigen receptor
-#' sequences.  "junction_aa" and "duplicate_count" are a required columns.
+#' @param sample_list A list of two tibble corresponding derived from the
+#' [productiveSeq()] function in LymphoSeq2. "duplicate_frequency",
+#' "junction_aa", and "repertoire_id" columns are necessary for the calculation 
+#' of the Bhattacharyya coefficient.
 #' @return Returns the similarity score, a measure of the amount of
 #' overlap between two samples.  The value ranges from 0 to 1 where 1 indicates
 #' the sequence frequencies are identical in the two samples and 0
 #' indicates no shared frequencies.
-#' @examples
-#' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
-#' study_table <- readImmunoSeq(path = file_path)
-#' amino_table <- productiveSeq(study_table, aggregate = "junction_aa")
-#'
-#' @seealso [LymphoSeq2::scoringMatrix]
+#' @seealso [LymphoSeq2::scoringMatrix()]
 #' @import magrittr
 #' @export
 percentSI <- function(sample_list) {
@@ -256,7 +235,7 @@ percentSI <- function(sample_list) {
     ) %>%
     dplyr::group_by(junction_aa, duplicate_frequency_1, duplicate_frequency_2) %>%
     dplyr::summarize(min_count = min(duplicate_frequency_1, duplicate_frequency_2)) %>%
-    ungroup()
+    dplyr::ungroup()
   min_sum <- combined %>%
     dplyr::pull(min_count) %>%
     sum()

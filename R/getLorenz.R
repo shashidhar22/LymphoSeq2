@@ -3,7 +3,7 @@
 #' Calculate a Lorenz curve derived from the frequency of the amino acid sequences.
 #'
 #' @param sample_table A tibble for a single repertoire_id generated using the LymphoSeq
-#' function readImmunoSeq or productiveSeq.  "duplicate_frequency" is a required column.
+#' function [readImmunoSeq()] or [productiveSeq()].  "duplicate_frequency" is a required column.
 #' @return Returns a Lorenz curve tibble.
 #' @export
 #' @import magrittr

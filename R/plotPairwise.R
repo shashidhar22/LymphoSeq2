@@ -3,7 +3,7 @@
 #' Creates a heat map from a Bhattacharyya, Similarity, Sorensen, or PSI matrix.
 #'
 #' @param matrix A Bhattacharyya, Similarity, Sorensen, or PSI matrix produced
-#' by the LymphoSeq2 `scoringMatrix()` function.
+#' by the LymphoSeq2 [scoringMatrix()] function.
 #' @return A pairwise comparison heat map.
 #' @details The plot is made using the package ggplot2 and can be reformatted
 #' using ggplot2 functions.  See examples below.
@@ -13,22 +13,22 @@
 #' here: [LymphoSeq2::scoringMatrix()]
 #' @examples
 #' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
-#' study_table <- readImmunoSeq(path = file_path)
-#' amino_table <- productiveSeq(study_table, aggregate = "junction_aa")
+#' study_table <- LymphoSeq2::readImmunoSeq(path = file_path)
+#' amino_table <- LymphoSeq2::productiveSeq(study_table, aggregate = "junction_aa")
 #' # Plot similarity using Similarity score
-#' similarity_matrix <- scoringMatrix(
+#' similarity_matrix <- LymphoSeq2::scoringMatrix(
 #'   productive_table = amino_table,
 #'   mode = "Similarity"
 #' )
-#' pairwisePlot(matrix = similarity_matrix)
+#' LymphoSeq2::pairwisePlot(matrix = similarity_matrix)
 #' # Plot similarity using Bhattacharyya score
-#' bhattacharyya_matrix <- scoringMatrix(
+#' bhattacharyya_matrix <- LymphoSeq2::scoringMatrix(
 #'   productive_table = amino_table,
 #'   mode = "Bhattacharyya"
 #' )
-#' pairwisePlot(matrix = bhattacharyya_matrix)
+#' LymphoSeq2::pairwisePlot(matrix = bhattacharyya_matrix)
 #' # Change plot color, title legend, and add title
-#' pairwisePlot(matrix = similarity_matrix) +
+#' LymphoSeq2::pairwisePlot(matrix = similarity_matrix) +
 #'   ggplot2::scale_fill_gradient(low = "#deebf7", high = "#3182bd") +
 #'   ggplot2::labs(fill = "Similarity score") +
 #'   ggplot2::ggtitle("Pairwise similarity score")

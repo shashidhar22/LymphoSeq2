@@ -7,24 +7,26 @@
 #' and antigen specificity of that sequence is also provided.
 #'
 #' @param productive_table A tibble of productive amino acid sequences
-#' imported using the function LymphoSeq2 function `productiveSeq()` where the
-#' aggregate parameter was set to `junction_aa`.
+#' imported using the function LymphoSeq2 function [productiveSeq()] where the
+#' aggregate parameter was set to "junction_aa".
 #' @param frequency The minimum frequency that the sequence appears in any of
 #' the listed samples.
 #' @return A tibble of amino acid sequences and the number of samples that
 #' the sequence appears in along with the minimum, maximum, and mean frequency
 #' across all samples.
-#' For T cell receptor beta sequences, additionally reported is the
+#' @details For T cell receptor beta sequences, additionally reported is the
 #' \% prevalence that the sequence appears in 55 healthy donor blood samples.
 #' Also provided is the antigen specificity of that sequence if known by
 #' comparing it to a database of previously reported sequences in the
 #' literature.
 #' @examples
+#' library(LymphoSeq2)
 #' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
-#' study_table <- readImmunoSeq(path = file_path)
-#' amino_table <- productiveSeq(study_table = study_table, aggregate = "junction_aa")
-#' top_freq <- topFreq(productive_table = amino_table, frequency = 0.1)
+#' study_table <- LymphoSeq2::readImmunoSeq(path = file_path)
+#' amino_table <- LymphoSeq2::productiveSeq(study_table = study_table, aggregate = "junction_aa")
+#' top_freq <- LymphoSeq2::topFreq(productive_table = amino_table, frequency = 0.1)
 #' @export
+#' @import magrittr
 topFreq <- function(productive_table, frequency = 0.1) {
   productive_table <- productive_table
   top_freq <- productive_table %>%
@@ -37,8 +39,8 @@ topFreq <- function(productive_table, frequency = 0.1) {
       numberSamples = length(duplicate_frequency > 0)
     ) %>%
     dplyr::arrange(desc(numberSamples), desc(meanFrequency))
-  data("prevalenceTRB")
-  data("publishedTRB")
+  #data("prevalenceTRB")
+  #data("publishedTRB")
   top_freq <- dplyr::left_join(top_freq, prevalenceTRB, by = c("junction_aa" = "aminoAcid")) %>%
     dplyr::mutate(prevalence = tidyr::replace_na(0))
   antigen_table <- publishedTRB %>%

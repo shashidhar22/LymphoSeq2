@@ -4,7 +4,7 @@
 #' 
 #' @param repertoire_ids A character vector of repertoire_id names in list.
 #' @param study_table A tibble generated using the LymphoSeq2 function 
-#' `readImmunoSeq()` or `productiveSeq()`. `duplicate_frequency` is a required 
+#' [readImmunoSeq()] or [productiveSeq()]. "duplicate_frequency" is a required 
 #' column.
 #' @return Returns a Lorenz curve.
 #' @details The Gini coefficient is an alternative metric used to calculate 
@@ -15,31 +15,31 @@
 #' of all sequences.  The Gini coefficient is the ratio of the area between the 
 #' line of equality and the observed Lorenz curve over the total area under the 
 #' line of equality.
-#' 
 #' The plot is made using the package ggplot2 and can be reformatted
 #' using ggplot2 functions.  See examples below.
 #' @seealso An excellent resource for examples on how to reformat a ggplot can 
 #' be found in the R Graphics Cookbook online
 #' (\url{http://www.cookbook-r.com/Graphs/}).
 #' @examples
+#' library(magrittr)
 #' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
 #' # Plot Lorenz curve with raw data
-#' study_table <- readImmunoSeq(path = file_path)
+#' study_table <- LymphoSeq2::readImmunoSeq(path = file_path)
 #' repertoire_ids <- study_table %>% 
 #'   dplyr::pull(repertoire_id) %>% 
 #'   unique()
-#' lorenzCurve(repertoire_ids = repertoire_ids, study_table = study_table)
+#' LymphoSeq2::lorenzCurve(repertoire_ids = repertoire_ids, study_table = study_table)
 #' # Plot Lorenz curve with productive amino acid sequences
-#' amino_table <- productiveSeq(study_table = study_table, 
+#' amino_table <- LymphoSeq2::productiveSeq(study_table = study_table, 
 #'   aggregate = "junction_aa")
 #' repertoire_ids <- amino_table %>%
 #'   dplyr::pull(repertoire_id) %>%
 #'   unique()
-#' lorenzCurve(repertoire_ids = repertoire_ids, study_table = amino_table)
+#' LymphoSeq2::lorenzCurve(repertoire_ids = repertoire_ids, study_table = amino_table)
 #' # Change the legend labels, line colors, and add a title
 #' repertoire_ids <- c("TRB_Unsorted_0", "TRB_Unsorted_32", 
 #'    "TRB_Unsorted_83", "TRB_Unsorted_949", "TRB_Unsorted_1320")
-#' lorenz_curve <- lorenzCurve(repertoire_ids = repertoire_ids, 
+#' lorenz_curve <- LymphoSeq2::lorenzCurve(repertoire_ids = repertoire_ids, 
 #'   study_table = amino_table)
 #' 
 #' labels <- c("Day 0", "Day 32", "Day 83", "Day 949", "Day 1320")

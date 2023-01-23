@@ -3,18 +3,19 @@
 #' Calculate counts of k-mers in the query nucleotide sequence
 #'
 #' @param study_table A tibble consisting of antigen receptor
-#' sequencing imported by the LymphoSeq2 function `readImmunoSeq()`.
+#' sequencing imported by the LymphoSeq2 function [readImmunoSeq()].
 #' "repertoire_id" and "junction" are required columns.
 #' @param k The length of k-mers to find.
-#' @param separate A boolean value. TRUE to separate the counts of each k-mer
-#' by repertoire_ids. FALSE to show cumulative counts instead.
-#' Default value is TRUE.
+#' @param separate A boolean value. 
+#'  * `TRUE` (the default):  separate the counts of each k-mer by repertoire_id. 
+#'  * `FALSE` : show cumulative counts instead.
 #' @return A tibble with the k-mer and its counts. The counts can be cumulative
 #' counts of the entire study_table or counts for each repertoire_id.
 #' @examples
 #' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
-#' study_table <- readImmunoSeq(path = file_path)
-#' kmer_table <- countKmer(study_table = study_table, k = 5, separate = TRUE)
+#' study_table <- LymphoSeq2::readImmunoSeq(path = file_path)
+#' kmer_table <- LymphoSeq2::countKmer(study_table = study_table, k = 5, 
+#'   separate = TRUE)
 #'
 #' @export
 #' @import magrittr 
@@ -63,9 +64,9 @@ calculateCounts <- function(study_table, k) {
 #' @return A stacked bar chart showing k-mer distributions by repertoire_id
 #' @examples
 #' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
-#' study_table <- readImmunoSeq(path = file_path)
-#' kmer_table <- countKmer(study_table = study_table, k = 5, separate = TRUE)
-#' kmer_distributions <- kmerPlot(kmer_table, top = 10)
+#' study_table <- LymphoSeq2::readImmunoSeq(path = file_path)
+#' kmer_table <- LymphoSeq2::countKmer(study_table = study_table, k = 5, separate = TRUE)
+#' kmer_distributions <- LymphoSeq2::kmerPlot(kmer_table, top = 10)
 #' @export
 #' @import magrittr 
 kmerPlot <- function(kmer_table, top = 10) {

@@ -5,6 +5,9 @@
 #'
 #' @param path Path to the directory containing .tsv files. Only
 #' files with the .tsv extension are imported.
+#' @param recursive A Boolean value
+#'  * `TRUE` : the function will recursively search directory for all .tsv files
+#'  * `FALSE` (the default): Open file using path
 #' @return Returns a tibble with MiAIRR headers and repertoire_id
 #' @export
 #' @import magrittr
@@ -74,8 +77,6 @@ collpase_chains <- function(clone_file) {
 
 #' Select the most frequent chain
 #'
-#' [description]
-#'
 #' @param barcode_data A tibble that holds data for one barcode
 #' identifier
 #' @param clone_data A tibble that holds data for one repertoire_id
@@ -84,7 +85,7 @@ collpase_chains <- function(clone_file) {
 #' occurring one. Values given can only be "TRA" or "TRB" to indicate
 #' alpha or beta chain respectively.
 #' @return A tibble with one row of data that contains the most
-#' frequently occuring chain.
+#' frequently occurring chain.
 selectChain <- function(barcode_data, clone_data, chain = "TRA") {
   if (chain == "TRA") {
     opp_chain <- "TRB"
@@ -143,7 +144,10 @@ mostPrevalent <- function(barcode_data, clone_data) {
   }
   return(barcode_data)
 }
-
+#' Standardize 10X data inputs
+#'
+#' @param clone_file A single .tsv file from 10x Genomics
+#' @return A tibble standardized 10X data.
 standardize10x <- function(clone_file) {
   airr_headers_path <- system.file("extdata", "AIRR_fields.csv", package = "LymphoSeq2")
   empty_airr_frame <- readr::read_csv(airr_headers_path, trim_ws = TRUE)
@@ -154,7 +158,7 @@ standardize10x <- function(clone_file) {
   clone_frame <- dplyr::right_join(empty_airr_frame, file_info)
   clone_frame <- clone_frame %>%
     dplyr::mutate(
-      sequence_id = row_number(),
+      sequence_id = dplyr::row_number(),
       junction_length = stringr::str_length(junction),
       junction_aa_length = stringr::str_length(junction_aa),
       rev_comp = FALSE,

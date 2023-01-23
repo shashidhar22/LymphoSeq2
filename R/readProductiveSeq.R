@@ -1,9 +1,10 @@
 #' Select productive sequences
 #'
-#' `productiveSeq()` Select productive nucleotide/amino acid CDR3 sequences
+#'@description
+#' [productiveSeq()] Select productive nucleotide/amino acid CDR3 sequences
 #' from a tibble containing raw AIRR formatted data. Aggregation of the raw data
-#' is either done on the productive CDR3 amino acid sequence \(junction_aa\) or
-#' the productive CDR3 nucleotide sequence \(junction\).  If "junction_aa"
+#' is either done on the productive CDR3 amino acid sequence (junction_aa) or
+#' the productive CDR3 nucleotide sequence (junction).  If "junction_aa"
 #' is selected, then resulting tibble will display the most frequently observed.
 #' V, D, J gene that were associated with the formation of the productive CDR3
 #' amino acid sequence. If "junction" is selected then all columns in the
@@ -13,16 +14,15 @@
 #' genes.
 #'
 #' @param study_table A tibble consisting antigen receptor sequencing
-#' data imported by the LymphoSeq2 function `readImmunoSeq()`. "junction_aa",
+#' data imported by the LymphoSeq2 function [readImmunoSeq()]. "junction_aa",
 #' "duplicate_count", and "duplicate_frequency" are required columns.
 #' @param aggregate Indicates whether the values of "duplicate_count" and
 #' "duplicate_frequency" should be aggregated by amino acid or junction sequence.
 #' Acceptable values are "junction_aa" or "junction".
-#' @param prevalence A Boolean value indicating if a new column should be added
-#' to each of the data frames giving the prevalence of each CDR3 amino acid
-#' sequence in 55 healthy donor peripheral blood samples.  TRUE means the column
-#' is added and FALSE means it is not. Values range from 0 to 100 percent where
-#' 100 percent means the sequence appeared in the blood of all 55 individuals.
+#' @param prevalence A Boolean value 
+#'  * `TRUE` : Add a new column the study table giving the prevalence of each CDR3 amino acid
+#' sequence in 55 healthy donor peripheral blood samples.  
+#'  * `FALSE` (the default): Do not add prevelance information
 #' @return Returns a list of data frames of productive amino acid sequences with
 #' recomputed values for "duplicate_count", "duplicate_frequency".
 #' A productive sequences is defined as a sequences
@@ -67,8 +67,8 @@ productiveSeq <- function(study_table, aggregate = "junction_aa", prevalence = F
 #' Group productive sequences by repertoire
 #' 
 #' @keywords internal
-#' @param progress_bar Progress bar
 #' @inheritParams productiveSeq
+#' @param progress_bar Progress bar
 #' @noRd
 aggreateSeq <- function(study_table, aggregate, prevalence, progress_bar) {
   progress_bar$tick()

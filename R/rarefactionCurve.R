@@ -1,17 +1,17 @@
-#' Plot rarefication and extrapolation curves for samples
+#' Plot rarefaction and extrapolation curves for samples
 #'
 #' Given a study table, for each sample plot rarefaction curves to estimate
 #' repertoire diversity. The method used to generate the rarefaction curve
 #' is derived from Chao et al., (2014) using the iNEXT library
 #'
 #' @param study_table A tibble consisting antigen receptor sequencing
-#' data imported by the LymphoSeq2 function readImmunoSeq. "junction_aa",
+#' data imported by the LymphoSeq2 function [readImmunoSeq()]. "junction_aa",
 #' "duplicate_count", and "duplicate_frequency" are required columns.
 #' @seealso [LymphoSeq2::runINext()]
 #' @examples
 #' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
-#' study_table <- readImmunoSeq(path = file_path)
-#' plotRarefactionCurve(study_table)
+#' study_table <- LymphoSeq2::readImmunoSeq(path = file_path)
+#' LymphoSeq2::plotRarefactionCurve(study_table)
 #'
 #' @export
 #' @import magrittr
