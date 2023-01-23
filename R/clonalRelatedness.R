@@ -3,9 +3,9 @@
 #' Calculates the clonal relatedness for each repertoire in a study.
 #'
 #' @param study_table A tibble of raw or productive nucleotide junction sequences.
-#' `junction` and `duplicate_count` are required columns.
+#' "junction" and "duplicate_count" are required columns.
 #' @param edit_distance An integer giving the minimum edit distance that the
-#' sequence must be less than or equal to. See details below.
+#' sequence must be less than or equal to. See details below. Deafult 10 (the default)
 #' @details  Clonal relatedness is the proportion of junction sequences that
 #' are related by a defined edit distance threshold.  The value ranges from 0 to
 #' 1 where 0 indicates no sequences are related and 1 indicates all sequences
@@ -20,13 +20,10 @@
 #' repertoire_id.
 #' @examples
 #' file_path <- system.file("extdata", "IGH_sequencing", package = "LymphoSeq2")
-#'
-#' study_table <- readImmunoSeq(path = file_path)
-#'
-#' clonal_relatedness <- clonalRelatedness(study_table, edit_distance = 10)
-#'
+#' study_table <- LymphoSeq2::readImmunoSeq(path = file_path)
+#' clonal_relatedness <- LymphoSeq2::clonalRelatedness(study_table, edit_distance = 10)
 #' # Merge results with clonality table
-#' clonality <- clonality(study_table)
+#' clonality <- LymphoSeq2::clonality(study_table)
 #' merged <- dplyr::full_join(clonality, clonal_relatedness, by = "repertoire_id")
 #'
 #' @export
@@ -47,17 +44,17 @@ clonalRelatedness <- function(study_table, edit_distance = 10) {
 #' @inheritParams clonalRelatedness
 #' @export
 #' @import magrittr
-getRelatedness <- function(sample_table, edit_distance = 10) {
-  top_seq <- sample_table %>%
+getRelatedness <- function(study_table, edit_distance = 10) {
+  top_seq <- study_table %>%
     topSeqs(top = 1) %>%
     dplyr::pull(junction) %>%
     unique()
-  seq_distance <- sample_table %>%
+  seq_distance <- study_table %>%
     dplyr::mutate(ed = stringdist::stringdist(top_seq, junction))
   related_seq <- seq_distance %>%
     dplyr::filter(ed <= edit_distance)
   relatedness <- related_seq %>%
     dplyr::group_by(repertoire_id) %>%
-    dplyr::summarize(relatedness = length(unique(junction)) / base::nrow(sample_table))
+    dplyr::summarize(relatedness = length(unique(junction)) / base::nrow(study_table))
   return(relatedness)
 }

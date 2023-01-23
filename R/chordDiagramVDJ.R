@@ -5,10 +5,10 @@
 #'
 #' @param study_table A tibble consisting of frequencies of antigen receptor
 #' sequences.  "v_family", "j_family", and if applicable, "d_family"
-#' are required columns.  Using output from the LymphoSeq2 function `topSeqs()`
+#' are required columns.  Using output from the LymphoSeq2 function [topSeqs()]
 #' is recommended.
 #' @param association A character vector of gene families to associate. Options
-#' include "VJ" or "DJ".
+#' include `"VJ"` or `"DJ"`.
 #' @param colors A character vector of 2 colors corresponding to the V/D and J
 #' gene colors respectively.
 #' @details The size of the ribbons connecting VJ or DJ genes correspond to the

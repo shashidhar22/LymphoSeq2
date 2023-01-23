@@ -8,7 +8,7 @@
 #'
 #' @param study_table A tibble consisting of antigen receptor sequences
 #' imported by the LymphoSeq2 function `readImmunoSeq()`.
-#' @param repertoire_id A character vector indicating the name of the 
+#' @param repertoire_ids A character vector indicating the name of the 
 #' repertoire_id in the productive sequence list.
 #' @param sequence_list A character vector of one ore more amino acid or 
 #' nucleotide CDR3 sequences to search.
@@ -18,7 +18,7 @@
 #' sequences should be aligned.  If "junction_aa" is specified, then run 
 #' `productiveSeq()` first.
 #' @param method A character vector indicating the multiple sequence alignment
-#' method to be used.  Refer to the Bioconductor `msa` package for more details.
+#' method to be used.  Refer to the Bioconductor "msa" package for more details.
 #' Options include "ClustalW", "ClustalOmega", and "Muscle".
 #' @param top The number of top sequences to perform alignment.
 #' @details Edit distance is a way of quantifying how dissimilar two sequences
