@@ -210,7 +210,7 @@ LymphoSeq2::searchPublished(study_table = aa_table) %>%
 dplyr::filter(!is.na(PMID))
 ```
 
-For each found sequence, a table is provides listing the antigen, epitope, HLA type, PubMed ID (PMID), and prevalence (%) of the sequence among 55 healthy donor blood samples.
+For each found sequence, a table is provides listing the antigen, epitope, HLA type, PubMed ID (PMID), and prevalence percentage of the sequence among 55 healthy donor blood samples.
 
 You can even search of productive CDR3 amino acid sequences from the repertoires that are found in public databases such as VdjDB, IEDB, and McPas-TCR using the function `searchDB`. By specifying `dbname="all"` `searchDB` will look for each CDR3 amino acid sequence in the dataset in all three public databases. You can also pass a vector with any of the three databases ("VdjDB", "IEDB", "McPAS-TCR") to search just those databases.
 
@@ -257,25 +257,25 @@ To visualize the number of overlapping sequences between two or three samples in
 
 ```{r commonVenn, fig.height=5, fig.width=5}
 LymphoSeq2::commonSeqsVenn(repertoire_ids = c("TRB_Unsorted_32", "TRB_Unsorted_83"), 
-                           productive_aa = aa_table)
+                           amino_table = aa_table)
 ```
 
 ```{r commonVennT, fig.height=5, fig.width=5}
 LymphoSeq2::commonSeqsVenn(repertoire_ids = c("TRB_Unsorted_0", "TRB_Unsorted_32", "TRB_Unsorted_83"), 
-                           productive_aa = aa_table)
+                           amino_table = aa_table)
 ```
 
 To compare the frequency of sequences between two samples as a scatter plot, use the function `commonSeqsPlot`.
 
 ```{r commonSeqPlot}
 LymphoSeq2::commonSeqsPlot("TRB_Unsorted_32", "TRB_Unsorted_83", 
-                           productive_aa = aa_table, show = "common")
+                           amino_table = aa_table, show = "common")
 ```
 
 If you have more than 3 samples to compare, use the `commonSeqBar` function. You can chose to color a single sample with the `color.sample` argument or a desired intersection with the `color.intersection` argument.
 
 ```{r commonBar}
-LymphoSeq2::commonSeqsBar(productive_aa = aa_table, 
+LymphoSeq2::commonSeqsBar(amino_table = aa_table, 
                           repertoire_ids = c("TRB_CD4_949", "TRB_CD8_949", 
                                              "TRB_Unsorted_949", "TRB_Unsorted_1320"), 
                           color_sample = "TRB_CD8_949",
@@ -303,11 +303,11 @@ unique_seqs
 ```
 
 ```{r seqMatrix}
-sequence_matrix <- LymphoSeq2::seqMatrix(productive_aa = aa_table, sequences = unique_seqs$junction_aa)
+sequence_matrix <- LymphoSeq2::seqMatrix(amino_table = aa_table, sequences = unique_seqs$junction_aa)
 sequence_matrix
 ```
 
-If just the top clones with a frequency greater than a specified amount are of interest to you, then use the `topFreq` function. This creates a tibble of the top productive amino acid sequences having a minimum specified frequency and reports the minimum, maximum, and mean frequency that the sequence appears in a list of samples. For TCRB sequences, the prevalence (%) and the published antigen specificity of that sequence are also provided.
+If just the top clones with a frequency greater than a specified amount are of interest to you, then use the `topFreq` function. This creates a tibble of the top productive amino acid sequences having a minimum specified frequency and reports the minimum, maximum, and mean frequency that the sequence appears in a list of samples. For TCRB sequences, the prevalence percentage and the published antigen specificity of that sequence are also provided.
 
 ```{r topFreq}
 top_freq <- LymphoSeq2::topFreq(productive_table = aa_table, frequency = 0.001)
@@ -352,14 +352,14 @@ lalluvial[[1]]
 To compare the V, D, and J gene usage across samples, start by creating a data frame of V, D, and J gene counts and frequencies using the function `geneFreq`. You can specify if you are interested in the "VDJ", "DJ", "VJ", "DJ", "V", "D", or "J" loci using the locus parameter. Set family to TRUE if you prefer the family names instead of the gene names as reported by ImmunoSeq.
 
 ```{r geneFreq}
-vGenes <- LymphoSeq2::geneFreq(productive_nt = nuc_table, locus = "V", family = TRUE)
+vGenes <- LymphoSeq2::geneFreq(nuc_table, locus = "V", family = TRUE)
 vGenes
 ```
 
 To create a chord diagram showing VJ or DJ gene associations from one or more more samples, combine the output of `geneFreq` with the function `chordDiagramVDJ`. This function works well the `topSeqs` function that creates a data frame of a selected number of top productive sequences. In the example below, a chord diagram is made showing the association between V and J genes of just the single dominant clones in each sample. The size of the ribbons connecting VJ genes correspond to the number of samples that have that recombination event. The thicker the ribbon, the higher the frequency of the recombination.
 
 ```{r chordDiagram}
-top_seqs <- LymphoSeq2::topSeqs(productive_table = nuc_table, top = 1)
+top_seqs <- LymphoSeq2::topSeqs(nuc_table, top = 1)
 LymphoSeq2::chordDiagramVDJ(study_table = top_seqs, 
                             association = "VJ", 
                             colors = c("darkred", "navyblue"))
@@ -368,7 +368,7 @@ LymphoSeq2::chordDiagramVDJ(study_table = top_seqs,
 You can also visualize the results of `geneFreq` as a heat map, word cloud, our cumulative frequency bar plot with the support of additional R packages as shown below.
 
 ```{r wordcloud}
-vGenes <- LymphoSeq2::geneFreq(productive_nt = nuc_table, locus = "V", family = TRUE)
+vGenes <- LymphoSeq2::geneFreq(nuc_table, locus = "V", family = TRUE)
 RedBlue <- grDevices::colorRampPalette(rev(RColorBrewer::brewer.pal(11, "RdBu")))(256)
 vtable <- vGenes %>% dplyr::filter(repertoire_id == "TRB_Unsorted_83") %>%
   dplyr::select(gene_name, gene_frequency)
@@ -393,7 +393,7 @@ pheatmap::pheatmap(vGenes, scale = "row")
 ```
 
 ```{r geneFreqPlot}
-vGenes <- LymphoSeq2::geneFreq(productive_nt = nuc_table, locus = "V", family = TRUE)
+vGenes <- LymphoSeq2::geneFreq(nuc_table, locus = "V", family = TRUE)
 multicolors <- grDevices::colorRampPalette(rev(RColorBrewer::brewer.pal(9, "Set1")))(28)
 ggplot2::ggplot(vGenes, aes(x = repertoire_id, y = gene_frequency, fill = gene_name)) +
   ggplot2::geom_bar(stat = "identity") +
