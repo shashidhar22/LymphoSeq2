@@ -41,12 +41,9 @@
 #'    "TRB_Unsorted_83", "TRB_Unsorted_949", "TRB_Unsorted_1320")
 #' lorenz_curve <- LymphoSeq2::lorenzCurve(repertoire_ids = repertoire_ids, 
 #'   study_table = amino_table)
-#' 
 #' labels <- c("Day 0", "Day 32", "Day 83", "Day 949", "Day 1320")
-#' 
 #' colors <- c("navyblue", "red", "darkgreen", "orange", "purple",
 #'              "yellow", "pink", "lightgreen", "cyan", "maroon")
-#' 
 #' lorenz_curve + 
 #' ggplot2::scale_color_manual(name = "repertoire_ids", 
 #'                             breaks = repertoire_ids, 

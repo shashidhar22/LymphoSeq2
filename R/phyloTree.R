@@ -49,7 +49,7 @@
 #'   ) +
 #'   ggplot2::ggtitle("Title")
 #' # Hide legend and leaf labels
-#' phyloTree(
+#' LymphoSeq2::phyloTree(
 #'   study_table = nucleotide_table, repertoire_ids = "IGH_MVQ92552A_BL",
 #'   type = "junction", layout = "rectangular", label = FALSE
 #' ) +

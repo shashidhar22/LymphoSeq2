@@ -115,7 +115,7 @@ aggreateSeq <- function(study_table, aggregate, prevalence, progress_bar) {
       dtplyr::lazy_dt()
     study_table <- study_table %>%
       dplyr::group_by(junction_aa, vdj_comb_call) %>%
-      dplyr::mutate(vdj_comb_count = base::sum(duplicate_count)) %>%
+      dplyr::mutate(vdj_comb_count = sum(duplicate_count)) %>%
       dplyr::ungroup() %>%
       dplyr::group_by(junction_aa) %>%
       dplyr::arrange(desc(duplicate_count), desc(vdj_comb_count)) %>%

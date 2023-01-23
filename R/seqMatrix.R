@@ -17,8 +17,8 @@
 #' @seealso [LymphoSeq2::topSeqs()] and [LymphoSeq2::uniqueSeqs()]
 #' @examples
 #' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
-#' study_table <- readImmunoSeq(path = file_path)
-#' amino_table <- productiveSeq(study_table,
+#' study_table <- LymphoSeq2::readImmunoSeq(path = file_path)
+#' amino_table <- LymphoSeq2::productiveSeq(study_table,
 #'   aggregate = "junction_aa"
 #' )
 #' top_seqs <- LymphoSeq2::topSeqs(amino_table,

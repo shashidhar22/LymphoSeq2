@@ -8,7 +8,6 @@
 #' @return A network graph visualizing pairwise comparisons. The thicker the
 #' line connecting two nodes, the greater the similarity.
 #' @examples
-#' 
 #' file_path <- system.file("extdata", "TCRB_sequencing",
 #'   package = "LymphoSeq2")
 #' study_table <- LymphoSeq2::readImmunoSeq(path = file_path)

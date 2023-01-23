@@ -20,6 +20,7 @@
 #' [LymphoSeq2::commonSeqsVenn()], [LymphoSeq2::commonSeqsBar()]
 #' @examples
 #' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
+<<<<<<< HEAD
 #' study_table <- readImmunoSeq(path = file_path)
 #' amino_table <- productiveSeq(study_table = study_table, aggregate = "junction_aa")
 #' commonSeqsPlot("TRB_Unsorted_32", "TRB_Unsorted_83",
@@ -28,6 +29,17 @@
 #' # Change the X and Y axis to log-10 scale
 #' commonSeqsPlot("TRB_Unsorted_32", "TRB_Unsorted_83",
 #'   amino_table = amino_table
+=======
+#' study_table <- LymphoSeq2::readImmunoSeq(path = file_path)
+#' amino_table <- LymphoSeq2::productiveSeq(study_table = study_table,
+#'   aggregate = "junction_aa")
+#' LymphoSeq2::commonSeqsPlot("TRB_Unsorted_32", "TRB_Unsorted_83",
+#'   productive_aa = amino_table
+#' )
+#' # Change the X and Y axis to log-10 scale
+#' LymphoSeq2::commonSeqsPlot("TRB_Unsorted_32", "TRB_Unsorted_83",
+#'   productive_aa = amino_table
+>>>>>>> 961e44f8aaa3882cecdc95de252fbc9551201557
 #' ) +
 #'   ggplot2::scale_x_log10() +
 #'   ggplot2::scale_y_log10() +

@@ -14,7 +14,7 @@
 #' nucleotide_table <- LymphoSeq2::productiveSeq(study_table, aggregate = "junction")
 #' msa <- LymphoSeq2::alignSeq(nucleotide_table,
 #'   repertoire_id = "IGH_MVQ92552A_BL",
-#'   type = "junction", method = "ClustalW"
+#'   type = "junction_aa", method = "ClustalW"
 #' )
 #' LymphoSeq2::plotAlignment(msa)
 #' @export

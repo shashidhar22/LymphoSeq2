@@ -59,7 +59,6 @@ readImmunoSeq <- function(path, recursive = FALSE, threads = parallel::detectCor
 #' @keywords internal
 #' @param clone_file A .tsv file to identify the file type
 #' @return Returns "immunoSEQLegacy", "immunoSEQ", "10X", "BGI"
-#'
 #' @import magrittr
 #' @noRd
 getFileType <- function(col_names) {
