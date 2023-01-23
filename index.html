@@ -80,7 +80,7 @@
 <p>To install the latest version of LymphoSeq2 you can use the <code>devtools</code> package and install LymphoSeq2 from GitHub</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># install.packages("devtools")</span></span>
-<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"shashidhar22/LymphoSeq2"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"shashidhar22/LymphoSeq2"</span>, build_vignettes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="getting-started">Getting started<a class="anchor" aria-label="anchor" href="#getting-started"></a>
@@ -89,35 +89,25 @@
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/shashidhar22/LymphoSeq2" class="external-link">LymphoSeq2</a></span><span class="op">)</span></span>
 <span><span class="co">#&gt; Loading required package: data.table</span></span>
-<span><span class="co">#&gt; Registered S3 method overwritten by 'ggtree':</span></span>
-<span><span class="co">#&gt;   method      from </span></span>
-<span><span class="co">#&gt;   identify.gg ggfun</span></span>
+<span><span class="co">#&gt; Registered S3 methods overwritten by 'ggalt':</span></span>
+<span><span class="co">#&gt;   method                  from   </span></span>
+<span><span class="co">#&gt;   grid.draw.absoluteGrob  ggplot2</span></span>
+<span><span class="co">#&gt;   grobHeight.absoluteGrob ggplot2</span></span>
+<span><span class="co">#&gt;   grobWidth.absoluteGrob  ggplot2</span></span>
+<span><span class="co">#&gt;   grobX.absoluteGrob      ggplot2</span></span>
+<span><span class="co">#&gt;   grobY.absoluteGrob      ggplot2</span></span>
 <span><span class="va">study_files</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"TCRB_sequencing"</span>, package <span class="op">=</span> <span class="st">"LymphoSeq2"</span><span class="op">)</span> </span>
 <span><span class="va">study_table</span> <span class="op">&lt;-</span> <span class="fu">LymphoSeq2</span><span class="fu">::</span><span class="fu"><a href="reference/readImmunoSeq.html">readImmunoSeq</a></span><span class="op">(</span><span class="va">study_files</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: One or more parsing issues, call `problems()` on your data frame for details,</span></span>
-<span><span class="co">#&gt; e.g.:</span></span>
-<span><span class="co">#&gt;   dat &lt;- vroom(...)</span></span>
-<span><span class="co">#&gt;   problems(dat)</span></span>
-<span><span class="co">#&gt; One or more parsing issues, call `problems()` on your data frame for details,</span></span>
-<span><span class="co">#&gt; e.g.:</span></span>
-<span><span class="co">#&gt;   dat &lt;- vroom(...)</span></span>
-<span><span class="co">#&gt;   problems(dat)</span></span>
-<span><span class="co">#&gt; One or more parsing issues, call `problems()` on your data frame for details,</span></span>
-<span><span class="co">#&gt; e.g.:</span></span>
-<span><span class="co">#&gt;   dat &lt;- vroom(...)</span></span>
-<span><span class="co">#&gt;   problems(dat)</span></span>
-<span><span class="co">#&gt; One or more parsing issues, call `problems()` on your data frame for details,</span></span>
-<span><span class="co">#&gt; e.g.:</span></span>
-<span><span class="co">#&gt;   dat &lt;- vroom(...)</span></span>
-<span><span class="co">#&gt;   problems(dat)</span></span>
-<span><span class="co">#&gt; One or more parsing issues, call `problems()` on your data frame for details,</span></span>
-<span><span class="co">#&gt; e.g.:</span></span>
-<span><span class="co">#&gt;   dat &lt;- vroom(...)</span></span>
-<span><span class="co">#&gt;   problems(dat)</span></span>
-<span><span class="co">#&gt; One or more parsing issues, call `problems()` on your data frame for details,</span></span>
-<span><span class="co">#&gt; e.g.:</span></span>
-<span><span class="co">#&gt;   dat &lt;- vroom(...)</span></span>
-<span><span class="co">#&gt;   problems(dat)</span></span></code></pre></div>
+<span><span class="co">#&gt; Registered S3 methods overwritten by 'readr':</span></span>
+<span><span class="co">#&gt;   method                    from </span></span>
+<span><span class="co">#&gt;   as.data.frame.spec_tbl_df vroom</span></span>
+<span><span class="co">#&gt;   as_tibble.spec_tbl_df     vroom</span></span>
+<span><span class="co">#&gt;   format.col_spec           vroom</span></span>
+<span><span class="co">#&gt;   print.col_spec            vroom</span></span>
+<span><span class="co">#&gt;   print.collector           vroom</span></span>
+<span><span class="co">#&gt;   print.date_names          vroom</span></span>
+<span><span class="co">#&gt;   print.locale              vroom</span></span>
+<span><span class="co">#&gt;   str.col_spec              vroom</span></span></code></pre></div>
 <p>To get a quick summary of repertoire characteristics, use the <code>clonality</code> function. This will calculate many standard repertoire diversity metrics such <code>clonality</code>, <code>gini coefficient</code>, <code>convergence</code>, and <code>unique productive sequence</code> for each of the repertoires in the input dataset.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">summary_table</span> <span class="op">&lt;-</span> <span class="fu">LymphoSeq2</span><span class="fu">::</span><span class="fu"><a href="reference/clonality.html">clonality</a></span><span class="op">(</span><span class="va">study_table</span><span class="op">)</span></span>
@@ -145,16 +135,16 @@
 <span><span class="co">#&gt; # A tibble: 10 × 8</span></span>
 <span><span class="co">#&gt;    repertoire_id     total_seq…¹ uniqu…² total…³ clona…⁴ gini_…⁵ top_p…⁶ conve…⁷</span></span>
 <span><span class="co">#&gt;    &lt;chr&gt;                   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt;  1 TRB_CD4_949              163.    137.    1000  0.310    0.723   30.8     1   </span></span>
-<span><span class="co">#&gt;  2 TRB_CD8_949              192.    155.    1000  0.291    0.731   18.9     1.01</span></span>
-<span><span class="co">#&gt;  3 TRB_CD8_CMV_369          272.    189.    1000  0.299    0.719   16.7     1.08</span></span>
-<span><span class="co">#&gt;  4 TRB_Unsorted_0           254     209.    1000  0.160    0.621    6.18    1.00</span></span>
-<span><span class="co">#&gt;  5 TRB_Unsorted_1320        183     151.    1000  0.274    0.729   14.2     1.01</span></span>
-<span><span class="co">#&gt;  6 TRB_Unsorted_1496        211     175.    1000  0.257    0.705   14.0     1   </span></span>
-<span><span class="co">#&gt;  7 TRB_Unsorted_32          415.    351.    1000  0.0872   0.455    4.42    1.01</span></span>
-<span><span class="co">#&gt;  8 TRB_Unsorted_369         247.    204.    1000  0.345    0.714   31.6     1   </span></span>
-<span><span class="co">#&gt;  9 TRB_Unsorted_83          314.    256.    1000  0.272    0.653   23.7     1   </span></span>
-<span><span class="co">#&gt; 10 TRB_Unsorted_949         303.    249.    1000  0.230    0.635   13.5     1   </span></span>
+<span><span class="co">#&gt;  1 TRB_CD4_949              156.    129     1000  0.319    0.735   31.3     1   </span></span>
+<span><span class="co">#&gt;  2 TRB_CD8_949              192.    154.    1000  0.293    0.734   18.6     1.01</span></span>
+<span><span class="co">#&gt;  3 TRB_CD8_CMV_369          266     183.    1000  0.303    0.723   17.1     1.09</span></span>
+<span><span class="co">#&gt;  4 TRB_Unsorted_0           254.    212.    1000  0.158    0.616    6.11    1.00</span></span>
+<span><span class="co">#&gt;  5 TRB_Unsorted_1320        191.    156.    1000  0.277    0.726   14.6     1.02</span></span>
+<span><span class="co">#&gt;  6 TRB_Unsorted_1496        206     168.    1000  0.260    0.710   14.0     1.00</span></span>
+<span><span class="co">#&gt;  7 TRB_Unsorted_32          417.    349.    1000  0.0952   0.466    5.54    1.01</span></span>
+<span><span class="co">#&gt;  8 TRB_Unsorted_369         245.    203     1000  0.336    0.711   30.2     1   </span></span>
+<span><span class="co">#&gt;  9 TRB_Unsorted_83          320.    264.    1000  0.261    0.639   23.4     1   </span></span>
+<span><span class="co">#&gt; 10 TRB_Unsorted_949         301.    249.    1000  0.222    0.630   13.0     1.00</span></span>
 <span><span class="co">#&gt; # … with abbreviated variable names ¹​total_sequences,</span></span>
 <span><span class="co">#&gt; #   ²​unique_productive_sequences, ³​total_count, ⁴​clonality, ⁵​gini_coefficient,</span></span>
 <span><span class="co">#&gt; #   ⁶​top_productive_sequence, ⁷​convergence</span></span></code></pre></div>
