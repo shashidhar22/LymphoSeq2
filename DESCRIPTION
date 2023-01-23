@@ -4,7 +4,7 @@ Version: 1.0.0
 Authors@R: 
     c(
     person("Wu", "Elena", email = "ewu2@fredhutch.org", role = "aut"),
-    person("Ravishankar", "Shashidhar", email = "sravisha@fredhutch.org", role = "aut"),
+    person("Ravishankar", "Shashidhar", email = "sravisha@fredhutch.org", role = c("cre", "aut"),
     person("Coffey", "David", role = c("cre", "aut")))
 Description: This R package analyzes high-throughput sequencing of T
         and B cell receptor complementarity determining region 3 (CDR3)
