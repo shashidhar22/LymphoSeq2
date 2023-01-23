@@ -21,6 +21,9 @@
 #' @import magrittr
 readImmunoSeq <- function(path, recursive = FALSE, threads = parallel::detectCores() / 2) {
   Sys.setenv("VROOM_SHOW_PROGRESS" = "false")
+  if(floor(threads) == 0) {
+    threads <- as.integer(1)
+  }
   if (length(path) > 1) {
     file_paths <- path
   } else if (utils::file_test("-d", path)) {
