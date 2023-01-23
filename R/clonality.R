@@ -76,7 +76,7 @@ clonality <- function(study_table, rarefy = FALSE, iterations = 100, min_count =
             dplyr::filter(total < min_count) %>%
             dplyr::pull(repertoire_id)
         if (length(low_count) >= 1) {
-            print(stringr::str_c("Dropping the following samples since they have less than ",
+            warning(stringr::str_c("Dropping the following samples since they have less than ",
                     min_count, "sequences \n", stringr::str_c(low_count, sep =""), 
                     sep = ""))
         }
