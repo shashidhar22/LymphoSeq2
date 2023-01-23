@@ -51,10 +51,11 @@ system.file("extdata", "IGH_sequencing", package = "LymphoSeq2") #For the IGH fi
 
 ```{r readImmuno}
 study_files <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2") 
-study_table <- LymphoSeq2::readImmunoSeq(study_files)
+study_table <- LymphoSeq2::readImmunoSeq(study_files) %>% 
+    topSeqs(top = 100)
 ```
 
-Looking at the `study_table` we see a tibble with 12 columns and 9334 rows
+Looking at the `study_table` we see a tibble with 145 columns and 1000 rows
 
 ```{r showStudyTable}
 study_table
@@ -160,8 +161,9 @@ The Gini coefficient is an alternative metric used to calculate repertoire diver
 One of the drawbacks of the clonality metric is that it does not take into account sequence similarity. This is particularly important when studying affinity maturation or B cell malignancies(Lombardo, K.A., et al. Blood Advances 2017 1:535-544). Clonal relatedness is a useful metric that takes into account sequence similarity without regard for clonal frequency. It is defined as the proportion of nucleotide sequences that are related by a defined edit distance threshold. The value ranges from 0 to 1 where 0 indicates no sequences are related and 1 indicates all sequences are related. Edit distance is a way of quantifying how dissimilar two sequences are to one another by counting the minimum number of operations required to transform one sequence into the other. For example, an edit distance of 0 means the sequences are identical and an edit distance of 1 indicates that the sequences different by a single amino acid or nucleotide.
 
 ```{r readIGH}
-IGH_path <- system.file("extdata", "IGH_sequencing", package = "LymphoSeq2")
-IGH_table <- LymphoSeq2::readImmunoSeq(path = IGH_path)
+IGH_path <- system.file("extdata", "IGH_sequencing", package = "LymphoSeq2") 
+IGH_table <- LymphoSeq2::readImmunoSeq(path = IGH_path) %>% 
+  LymphoSeq2::topSeqs(top = 100)
 LymphoSeq2::clonalRelatedness(study_table = IGH_table, edit_distance = 10)
 ```
 
