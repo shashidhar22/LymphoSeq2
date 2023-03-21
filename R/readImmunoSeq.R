@@ -167,9 +167,9 @@ getStandard <- function(clone_file, progress, threads) {
         as.numeric(stringr::str_extract(j_call, "-\\d+")),
         sep = ""
       ),
-      d_call = stringr::str_c(stringr::str_extract(j_call, "[A-Z]+"),
-        as.numeric(stringr::str_extract(j_call, "\\d+")),
-        as.numeric(stringr::str_extract(j_call, "-\\d+")),
+      d_call = stringr::str_c(stringr::str_extract(d_call, "[A-Z]+"),
+        as.numeric(stringr::str_extract(d_call, "\\d+")),
+        as.numeric(stringr::str_extract(d_call, "-\\d+")),
         sep = ""
       ),
       v_call = stringr::str_replace(v_call, "TCR", "TR"),
