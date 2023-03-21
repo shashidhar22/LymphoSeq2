@@ -62,7 +62,7 @@
 
 
 
-<script src="LymphoSeq2_files/htmlwidgets-1.6.1/htmlwidgets.js"></script><link href="LymphoSeq2_files/wordcloud2-0.0.1/wordcloud.css" rel="stylesheet">
+<script src="LymphoSeq2_files/htmlwidgets-1.6.2/htmlwidgets.js"></script><link href="LymphoSeq2_files/wordcloud2-0.0.1/wordcloud.css" rel="stylesheet">
 <script src="LymphoSeq2_files/wordcloud2-0.0.1/wordcloud2-all.js"></script><script src="LymphoSeq2_files/wordcloud2-0.0.1/hover.js"></script><script src="LymphoSeq2_files/wordcloud2-binding-0.2.1/wordcloud2.js"></script><div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Analysis of Adaptive Immune Receptor Repertoire Sequencing data with LymphoSeq2</h1>
@@ -72,7 +72,7 @@ Ravishankar</h4>
                         <h4 data-toc-skip class="author">David
 Coffey</h4>
             
-            <h4 data-toc-skip class="date">2023-01-23</h4>
+            <h4 data-toc-skip class="date">2023-03-21</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/shashidhar22/LymphoSeq2/blob/HEAD/vignettes/LymphoSeq2.Rmd" class="external-link"><code>vignettes/LymphoSeq2.Rmd</code></a></small>
       <div class="d-none name"><code>LymphoSeq2.Rmd</code></div>
@@ -94,20 +94,31 @@ Coffey</h4>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">grDevices</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/lchiffon/wordcloud2" class="external-link">wordcloud2</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; ── <span style="font-weight: bold;">Attaching packages</span></span></span>
-<span><span class="co">#&gt; ───────────────────────────────────────</span></span>
-<span><span class="co">#&gt; tidyverse 1.3.2 ──</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">ggplot2</span> 3.4.0      <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">purrr  </span> 1.0.1 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">tibble </span> 3.1.8      <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">dplyr  </span> 1.0.10</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">tidyr  </span> 1.2.1      <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">stringr</span> 1.5.0 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">readr  </span> 2.1.3      <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">forcats</span> 0.5.2 </span></span>
+<span><span class="co">#&gt; ── <span style="font-weight: bold;">Attaching core tidyverse packages</span> ──────────────────────── tidyverse 2.0.0 ──</span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">dplyr    </span> 1.1.0     <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">readr    </span> 2.1.4</span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">forcats  </span> 1.0.0     <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">stringr  </span> 1.5.0</span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">ggplot2  </span> 3.4.1     <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">tibble   </span> 3.2.1</span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">lubridate</span> 1.9.2     <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">tidyr    </span> 1.3.0</span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">purrr    </span> 1.0.1</span></span>
 <span><span class="co">#&gt; ── <span style="font-weight: bold;">Conflicts</span> ────────────────────────────────────────── tidyverse_conflicts() ──</span></span>
-<span><span class="co">#&gt; <span style="color: #BB0000;">✖</span> <span style="color: #0000BB;">dplyr</span>::<span style="color: #00BB00;">between()</span>   masks <span style="color: #0000BB;">data.table</span>::between()</span></span>
-<span><span class="co">#&gt; <span style="color: #BB0000;">✖</span> <span style="color: #0000BB;">dplyr</span>::<span style="color: #00BB00;">filter()</span>    masks <span style="color: #0000BB;">stats</span>::filter()</span></span>
-<span><span class="co">#&gt; <span style="color: #BB0000;">✖</span> <span style="color: #0000BB;">dplyr</span>::<span style="color: #00BB00;">first()</span>     masks <span style="color: #0000BB;">data.table</span>::first()</span></span>
-<span><span class="co">#&gt; <span style="color: #BB0000;">✖</span> <span style="color: #0000BB;">dplyr</span>::<span style="color: #00BB00;">lag()</span>       masks <span style="color: #0000BB;">stats</span>::lag()</span></span>
-<span><span class="co">#&gt; <span style="color: #BB0000;">✖</span> <span style="color: #0000BB;">dplyr</span>::<span style="color: #00BB00;">last()</span>      masks <span style="color: #0000BB;">data.table</span>::last()</span></span>
-<span><span class="co">#&gt; <span style="color: #BB0000;">✖</span> <span style="color: #0000BB;">purrr</span>::<span style="color: #00BB00;">transpose()</span> masks <span style="color: #0000BB;">data.table</span>::transpose()</span></span>
+<span><span class="co">#&gt; <span style="color: #BB0000;">✖</span> <span style="color: #0000BB;">dplyr</span>::<span style="color: #00BB00;">between()</span>     masks <span style="color: #0000BB;">data.table</span>::between()</span></span>
+<span><span class="co">#&gt; <span style="color: #BB0000;">✖</span> <span style="color: #0000BB;">dplyr</span>::<span style="color: #00BB00;">filter()</span>      masks <span style="color: #0000BB;">stats</span>::filter()</span></span>
+<span><span class="co">#&gt; <span style="color: #BB0000;">✖</span> <span style="color: #0000BB;">dplyr</span>::<span style="color: #00BB00;">first()</span>       masks <span style="color: #0000BB;">data.table</span>::first()</span></span>
+<span><span class="co">#&gt; <span style="color: #BB0000;">✖</span> <span style="color: #0000BB;">lubridate</span>::<span style="color: #00BB00;">hour()</span>    masks <span style="color: #0000BB;">data.table</span>::hour()</span></span>
+<span><span class="co">#&gt; <span style="color: #BB0000;">✖</span> <span style="color: #0000BB;">lubridate</span>::<span style="color: #00BB00;">isoweek()</span> masks <span style="color: #0000BB;">data.table</span>::isoweek()</span></span>
+<span><span class="co">#&gt; <span style="color: #BB0000;">✖</span> <span style="color: #0000BB;">dplyr</span>::<span style="color: #00BB00;">lag()</span>         masks <span style="color: #0000BB;">stats</span>::lag()</span></span>
+<span><span class="co">#&gt; <span style="color: #BB0000;">✖</span> <span style="color: #0000BB;">dplyr</span>::<span style="color: #00BB00;">last()</span>        masks <span style="color: #0000BB;">data.table</span>::last()</span></span>
+<span><span class="co">#&gt; <span style="color: #BB0000;">✖</span> <span style="color: #0000BB;">lubridate</span>::<span style="color: #00BB00;">mday()</span>    masks <span style="color: #0000BB;">data.table</span>::mday()</span></span>
+<span><span class="co">#&gt; <span style="color: #BB0000;">✖</span> <span style="color: #0000BB;">lubridate</span>::<span style="color: #00BB00;">minute()</span>  masks <span style="color: #0000BB;">data.table</span>::minute()</span></span>
+<span><span class="co">#&gt; <span style="color: #BB0000;">✖</span> <span style="color: #0000BB;">lubridate</span>::<span style="color: #00BB00;">month()</span>   masks <span style="color: #0000BB;">data.table</span>::month()</span></span>
+<span><span class="co">#&gt; <span style="color: #BB0000;">✖</span> <span style="color: #0000BB;">lubridate</span>::<span style="color: #00BB00;">quarter()</span> masks <span style="color: #0000BB;">data.table</span>::quarter()</span></span>
+<span><span class="co">#&gt; <span style="color: #BB0000;">✖</span> <span style="color: #0000BB;">lubridate</span>::<span style="color: #00BB00;">second()</span>  masks <span style="color: #0000BB;">data.table</span>::second()</span></span>
+<span><span class="co">#&gt; <span style="color: #BB0000;">✖</span> <span style="color: #0000BB;">purrr</span>::<span style="color: #00BB00;">transpose()</span>   masks <span style="color: #0000BB;">data.table</span>::transpose()</span></span>
+<span><span class="co">#&gt; <span style="color: #BB0000;">✖</span> <span style="color: #0000BB;">lubridate</span>::<span style="color: #00BB00;">wday()</span>    masks <span style="color: #0000BB;">data.table</span>::wday()</span></span>
+<span><span class="co">#&gt; <span style="color: #BB0000;">✖</span> <span style="color: #0000BB;">lubridate</span>::<span style="color: #00BB00;">week()</span>    masks <span style="color: #0000BB;">data.table</span>::week()</span></span>
+<span><span class="co">#&gt; <span style="color: #BB0000;">✖</span> <span style="color: #0000BB;">lubridate</span>::<span style="color: #00BB00;">yday()</span>    masks <span style="color: #0000BB;">data.table</span>::yday()</span></span>
+<span><span class="co">#&gt; <span style="color: #BB0000;">✖</span> <span style="color: #0000BB;">lubridate</span>::<span style="color: #00BB00;">year()</span>    masks <span style="color: #0000BB;">data.table</span>::year()</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Use the conflicted package (<span style="color: #0000BB; font-style: italic;">&lt;http://conflicted.r-lib.org/&gt;</span>) to force all conflicts to become errors</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://vroom.r-lib.org" class="external-link">vroom</a></span><span class="op">)</span></span></code></pre></div>
 <p>Adaptive Immune Receptor Repertoire Sequencing (AIRR-seq) provides a
 unique opportunity to interrogate the adaptive immune repertoire under
@@ -357,16 +368,16 @@ analysis</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 810 × 11</span></span></span>
 <span><span class="co">#&gt;    repert…¹ junct…² v_call d_call j_call v_fam…³ d_fam…⁴ j_fam…⁵ readi…⁶ dupli…⁷</span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> TRB_CD4… CAISVG… TRBV1… TRBJ1… TRBJ1… TRBV10  TRBJ1   TRBJ1   in-fra…      10</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> TRB_CD4… CASDGG… TRBV1… TRBJ1… TRBJ1… TRBV19  TRBJ1   TRBJ1   in-fra…     458</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> TRB_CD4… CASGGL… <span style="color: #BB0000;">NA</span>     TRBJ1… TRBJ1… <span style="color: #BB0000;">NA</span>      TRBJ1   TRBJ1   in-fra…      23</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> TRB_CD4… CASGLV… TRBV1… TRBJ2… TRBJ2… TRBV12  TRBJ2   TRBJ2   in-fra…      29</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> TRB_CD4… CASGTG… TRBV6… TRBJ2… TRBJ2… TRBV6   TRBJ2   TRBJ2   in-fra…      21</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> TRB_CD4… CASHSS… TRBV6… TRBJ1… TRBJ1… TRBV6   TRBJ1   TRBJ1   in-fra…      11</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> TRB_CD4… CASKPP… TRBV6… TRBJ1… TRBJ1… TRBV6   TRBJ1   TRBJ1   in-fra…     119</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> TRB_CD4… CASMID… TRBV5… TRBJ1… TRBJ1… TRBV5   TRBJ1   TRBJ1   in-fra…      11</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> TRB_CD4… CASNAR… TRBV6… TRBJ1… TRBJ1… TRBV6   TRBJ1   TRBJ1   in-fra…      12</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> TRB_CD4… CASRLG… <span style="color: #BB0000;">NA</span>     TRBJ1… TRBJ1… <span style="color: #BB0000;">NA</span>      TRBJ1   TRBJ1   in-fra…      24</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> TRB_CD4… CAISVG… TRBV1… TRBD2… TRBJ1… TRBV10  TRBD2   TRBJ1   in-fra…      10</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> TRB_CD4… CASDGG… TRBV1… TRBD2… TRBJ1… TRBV19  TRBD2   TRBJ1   in-fra…     458</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> TRB_CD4… CASGGL… <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>     TRBJ1… <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      TRBJ1   in-fra…      23</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> TRB_CD4… CASGLV… TRBV1… TRBD2… TRBJ2… TRBV12  TRBD2   TRBJ2   in-fra…      29</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> TRB_CD4… CASGTG… TRBV6… TRBD2… TRBJ2… TRBV6   TRBD2   TRBJ2   in-fra…      21</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> TRB_CD4… CASHSS… TRBV6… <span style="color: #BB0000;">NA</span>     TRBJ1… TRBV6   <span style="color: #BB0000;">NA</span>      TRBJ1   in-fra…      11</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> TRB_CD4… CASKPP… TRBV6… TRBD1… TRBJ1… TRBV6   TRBD1   TRBJ1   in-fra…     119</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> TRB_CD4… CASMID… TRBV5… <span style="color: #BB0000;">NA</span>     TRBJ1… TRBV5   <span style="color: #BB0000;">NA</span>      TRBJ1   in-fra…      11</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> TRB_CD4… CASNAR… TRBV6… TRBD1… TRBJ1… TRBV6   TRBD1   TRBJ1   in-fra…      12</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> TRB_CD4… CASRLG… <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>     TRBJ1… <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      TRBJ1   in-fra…      24</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># … with 800 more rows, 1 more variable: duplicate_frequency &lt;dbl&gt;, and</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   abbreviated variable names ¹​repertoire_id, ²​junction_aa, ³​v_family,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   ⁴​d_family, ⁵​j_family, ⁶​reading_frame, ⁷​duplicate_count</span></span></span></code></pre></div>
@@ -383,16 +394,16 @@ function documentation.</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 812 × 12</span></span></span>
 <span><span class="co">#&gt;    repert…¹ junct…² junct…³ v_call d_call j_call v_fam…⁴ d_fam…⁵ j_fam…⁶ readi…⁷</span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> TRB_CD4… AACCTG… CASSVE… TRBV9… TRBJ1… TRBJ1… TRBV9   TRBJ1   TRBJ1   in-fra…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> TRB_CD4… AACCTG… CASSVM… TRBV9… TRBJ1… TRBJ1… TRBV9   TRBJ1   TRBJ1   in-fra…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> TRB_CD4… AACGCC… CASSDS… TRBV5… TRBJ1… TRBJ1… TRBV5   TRBJ1   TRBJ1   in-fra…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> TRB_CD4… AACGCC… CASSSQ… TRBV5… TRBJ2… TRBJ2… TRBV5   TRBJ2   TRBJ2   in-fra…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> TRB_CD4… AACGCC… CASSLT… TRBV5… TRBJ2… TRBJ2… TRBV5   TRBJ2   TRBJ2   in-fra…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> TRB_CD4… AAGATC… CASSSN… <span style="color: #BB0000;">NA</span>     TRBJ1… TRBJ1… <span style="color: #BB0000;">NA</span>      TRBJ1   TRBJ1   in-fra…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> TRB_CD4… AATCTT… CASSQG… <span style="color: #BB0000;">NA</span>     TRBJ1… TRBJ1… <span style="color: #BB0000;">NA</span>      TRBJ1   TRBJ1   in-fra…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> TRB_CD4… AATGTG… CASSLA… TRBV5… TRBJ1… TRBJ1… TRBV5   TRBJ1   TRBJ1   in-fra…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> TRB_CD4… AATTCC… CASSQP… <span style="color: #BB0000;">NA</span>     TRBJ1… TRBJ1… <span style="color: #BB0000;">NA</span>      TRBJ1   TRBJ1   in-fra…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> TRB_CD4… AATTCC… CASSQG… <span style="color: #BB0000;">NA</span>     TRBJ1… TRBJ1… <span style="color: #BB0000;">NA</span>      TRBJ1   TRBJ1   in-fra…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> TRB_CD4… AACCTG… CASSVE… TRBV9… <span style="color: #BB0000;">NA</span>     TRBJ1… TRBV9   <span style="color: #BB0000;">NA</span>      TRBJ1   in-fra…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> TRB_CD4… AACCTG… CASSVM… TRBV9… <span style="color: #BB0000;">NA</span>     TRBJ1… TRBV9   <span style="color: #BB0000;">NA</span>      TRBJ1   in-fra…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> TRB_CD4… AACGCC… CASSDS… TRBV5… TRBD1… TRBJ1… TRBV5   TRBD1   TRBJ1   in-fra…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> TRB_CD4… AACGCC… CASSSQ… TRBV5… TRBD1… TRBJ2… TRBV5   TRBD1   TRBJ2   in-fra…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> TRB_CD4… AACGCC… CASSLT… TRBV5… <span style="color: #BB0000;">NA</span>     TRBJ2… TRBV5   <span style="color: #BB0000;">NA</span>      TRBJ2   in-fra…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> TRB_CD4… AAGATC… CASSSN… <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>     TRBJ1… <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      TRBJ1   in-fra…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> TRB_CD4… AATCTT… CASSQG… <span style="color: #BB0000;">NA</span>     TRBD2… TRBJ1… <span style="color: #BB0000;">NA</span>      TRBD2   TRBJ1   in-fra…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> TRB_CD4… AATGTG… CASSLA… TRBV5… TRBD2… TRBJ1… TRBV5   TRBD2   TRBJ1   in-fra…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> TRB_CD4… AATTCC… CASSQP… <span style="color: #BB0000;">NA</span>     TRBD1… TRBJ1… <span style="color: #BB0000;">NA</span>      TRBD1   TRBJ1   in-fra…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> TRB_CD4… AATTCC… CASSQG… <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>     TRBJ1… <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      TRBJ1   in-fra…</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># … with 802 more rows, 2 more variables: duplicate_count &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   duplicate_frequency &lt;dbl&gt;, and abbreviated variable names ¹​repertoire_id,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   ²​junction, ³​junction_aa, ⁴​v_family, ⁵​d_family, ⁶​j_family, ⁷​reading_frame</span></span></span></code></pre></div>
@@ -441,16 +452,16 @@ counts added together.</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 83 × 11</span></span></span>
 <span><span class="co">#&gt;    repert…¹ junct…² v_call d_call j_call v_fam…³ d_fam…⁴ j_fam…⁵ readi…⁶ dupli…⁷</span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> TRB_Uns… CAISDL… TRBV1… TRBJ2… TRBJ2… TRBV10  TRBJ2   TRBJ2   in-fra…      59</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> TRB_Uns… CARPPY… TRBV1… TRBJ1… TRBJ1… TRBV10  TRBJ1   TRBJ1   in-fra…      21</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> TRB_Uns… CASKYG… TRBV7… TRBJ1… TRBJ1… TRBV7   TRBJ1   TRBJ1   in-fra…      55</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> TRB_Uns… CASREA… TRBV2… TRBJ1… TRBJ1… TRBV2   TRBJ1   TRBJ1   in-fra…     137</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> TRB_Uns… CASRHR… TRBV2… TRBJ1… TRBJ1… TRBV28  TRBJ1   TRBJ1   in-fra…      22</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> TRB_Uns… CASRPD… TRBV2… TRBJ1… TRBJ1… TRBV28  TRBJ1   TRBJ1   in-fra…      21</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> TRB_Uns… CASRPG… TRBV1… TRBJ2… TRBJ2… TRBV10  TRBJ2   TRBJ2   in-fra…      57</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> TRB_Uns… CASRPT… TRBV1… TRBJ2… TRBJ2… TRBV19  TRBJ2   TRBJ2   in-fra…     181</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> TRB_Uns… CASRSG… TRBV2… TRBJ1… TRBJ1… TRBV2   TRBJ1   TRBJ1   in-fra…      32</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> TRB_Uns… CASSAR… TRBV7… TRBJ2… TRBJ2… TRBV7   TRBJ2   TRBJ2   in-fra…      46</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> TRB_Uns… CAISDL… TRBV1… TRBD2… TRBJ2… TRBV10  TRBD2   TRBJ2   in-fra…      59</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> TRB_Uns… CARPPY… TRBV1… <span style="color: #BB0000;">NA</span>     TRBJ1… TRBV10  <span style="color: #BB0000;">NA</span>      TRBJ1   in-fra…      21</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> TRB_Uns… CASKYG… TRBV7… TRBD2… TRBJ1… TRBV7   TRBD2   TRBJ1   in-fra…      55</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> TRB_Uns… CASREA… TRBV2… TRBD1… TRBJ1… TRBV2   TRBD1   TRBJ1   in-fra…     137</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> TRB_Uns… CASRHR… TRBV2… <span style="color: #BB0000;">NA</span>     TRBJ1… TRBV28  <span style="color: #BB0000;">NA</span>      TRBJ1   in-fra…      22</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> TRB_Uns… CASRPD… TRBV2… TRBD1… TRBJ1… TRBV28  TRBD1   TRBJ1   in-fra…      21</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> TRB_Uns… CASRPG… TRBV1… TRBD1… TRBJ2… TRBV10  TRBD1   TRBJ2   in-fra…      57</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> TRB_Uns… CASRPT… TRBV1… <span style="color: #BB0000;">NA</span>     TRBJ2… TRBV19  <span style="color: #BB0000;">NA</span>      TRBJ2   in-fra…     181</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> TRB_Uns… CASRSG… TRBV2… TRBD2… TRBJ1… TRBV2   TRBD2   TRBJ1   in-fra…      32</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> TRB_Uns… CASSAR… TRBV7… <span style="color: #BB0000;">NA</span>     TRBJ2… TRBV7   <span style="color: #BB0000;">NA</span>      TRBJ2   in-fra…      46</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># … with 73 more rows, 1 more variable: duplicate_frequency &lt;dbl&gt;, and</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   abbreviated variable names ¹​repertoire_id, ²​junction_aa, ³​v_family,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   ⁴​d_family, ⁵​j_family, ⁶​reading_frame, ⁷​duplicate_count</span></span></span></code></pre></div>
@@ -557,7 +568,10 @@ the sequences are to one another).</p>
 <span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>of ggplot2 <span class="dv">3</span>.<span class="dv">3</span>.<span class="fl">4.</span></span>
 <span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a> [36mℹ [39m The deprecated feature was likely used <span class="cf">in</span> the  [34mLymphoSeq2 [39m package.</span>
 <span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>  Please report the issue at</span>
-<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>   [3m [34m<span class="sc">&lt;</span>https<span class="sc">:</span><span class="er">//</span>github.com<span class="sc">/</span>shashidhar22<span class="sc">/</span>LymphoSeq2<span class="sc">/</span>issues<span class="sc">&gt;</span> [39m [23m.</span></code></pre></div>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>   [3m [34m<span class="sc">&lt;</span>https<span class="sc">:</span><span class="er">//</span>github.com<span class="sc">/</span>shashidhar22<span class="sc">/</span>LymphoSeq2<span class="sc">/</span>issues<span class="sc">&gt;</span> [39m [23m.</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a> [90mThis warning is displayed once every <span class="dv">8</span> hours. [39m</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a> [90mCall <span class="st">`</span><span class="at">lifecycle::last_lifecycle_warnings()</span><span class="st">`</span> to see where this warning was [39m</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a> [90mgenerated. [39m</span></code></pre></div>
 <p><img src="LymphoSeq2_files/figure-html/getIGHProd-1.png" width="672"></p>
 </div>
 <div class="section level2">
@@ -602,7 +616,7 @@ searching for sub strings with CDR3 sequences.</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 13</span></span></span>
 <span><span class="co">#&gt;   reperto…¹ junct…² v_call d_call j_call v_fam…³ d_fam…⁴ j_fam…⁵ readi…⁶ dupli…⁷</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> TRB_Unso… CASSPV… TRBV2… TRBJ2… TRBJ2… TRBV28  TRBJ2   TRBJ2   in-fra…     822</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> TRB_Unso… CASSPV… TRBV2… TRBD2… TRBJ2… TRBV28  TRBD2   TRBJ2   in-fra…     822</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># … with 3 more variables: duplicate_frequency &lt;dbl&gt;, edit_distance &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   searchSequence &lt;chr&gt;, and abbreviated variable names ¹​repertoire_id,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   ²​junction_aa, ³​v_family, ⁴​d_family, ⁵​j_family, ⁶​reading_frame,</span></span></span>
@@ -620,16 +634,16 @@ CDR3 TCRB sequence with known antigen specificity, use the function
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 26 × 16</span></span></span>
 <span><span class="co">#&gt;    repert…¹ junct…² v_call d_call j_call v_fam…³ d_fam…⁴ j_fam…⁵ readi…⁶ dupli…⁷</span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> TRB_CD4… CASSQD… TRBV4… TRBJ2… TRBJ2… TRBV4   TRBJ2   TRBJ2   in-fra…      13</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> TRB_CD8… CASSPG… TRBV1… TRBJ1… TRBJ1… TRBV10  TRBJ1   TRBJ1   in-fra…      67</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> TRB_CD8… CASSPS… TRBV4… TRBJ1… TRBJ1… TRBV4   TRBJ1   TRBJ1   in-fra…      91</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> TRB_CD8… CASSYS… <span style="color: #BB0000;">NA</span>     TRBJ1… TRBJ1… <span style="color: #BB0000;">NA</span>      TRBJ1   TRBJ1   in-fra…      38</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> TRB_CD8… CASSPA… TRBV4… TRBJ1… TRBJ1… TRBV4   TRBJ1   TRBJ1   in-fra…      15</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> TRB_CD8… CASSPG… TRBV1… TRBJ1… TRBJ1… TRBV10  TRBJ1   TRBJ1   in-fra…       9</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> TRB_CD8… CASSPS… TRBV4… TRBJ1… TRBJ1… TRBV4   TRBJ1   TRBJ1   in-fra…      11</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> TRB_CD8… CASSYS… <span style="color: #BB0000;">NA</span>     TRBJ1… TRBJ1… <span style="color: #BB0000;">NA</span>      TRBJ1   TRBJ1   in-fra…       2</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> TRB_Uns… CASSPQ… TRBV4… TRBJ1… TRBJ1… TRBV4   TRBJ1   TRBJ1   in-fra…      87</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> TRB_Uns… CASSLE… TRBV5… TRBJ1… TRBJ1… TRBV5   TRBJ1   TRBJ1   in-fra…     126</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> TRB_CD4… CASSQD… TRBV4… TRBD1… TRBJ2… TRBV4   TRBD1   TRBJ2   in-fra…      13</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> TRB_CD8… CASSPG… TRBV1… TRBD1… TRBJ1… TRBV10  TRBD1   TRBJ1   in-fra…      67</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> TRB_CD8… CASSPS… TRBV4… TRBD2… TRBJ1… TRBV4   TRBD2   TRBJ1   in-fra…      91</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> TRB_CD8… CASSYS… <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>     TRBJ1… <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      TRBJ1   in-fra…      38</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> TRB_CD8… CASSPA… TRBV4… <span style="color: #BB0000;">NA</span>     TRBJ1… TRBV4   <span style="color: #BB0000;">NA</span>      TRBJ1   in-fra…      15</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> TRB_CD8… CASSPG… TRBV1… TRBD1… TRBJ1… TRBV10  TRBD1   TRBJ1   in-fra…       9</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> TRB_CD8… CASSPS… TRBV4… TRBD2… TRBJ1… TRBV4   TRBD2   TRBJ1   in-fra…      11</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> TRB_CD8… CASSYS… <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>     TRBJ1… <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      TRBJ1   in-fra…       2</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> TRB_Uns… CASSPQ… TRBV4… TRBD2… TRBJ1… TRBV4   TRBD2   TRBJ1   in-fra…      87</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> TRB_Uns… CASSLE… TRBV5… TRBD1… TRBJ1… TRBV5   TRBD1   TRBJ1   in-fra…     126</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># … with 16 more rows, 6 more variables: duplicate_frequency &lt;dbl&gt;, PMID &lt;fct&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   HLA &lt;fct&gt;, antigen &lt;fct&gt;, epitope &lt;fct&gt;, prevalence &lt;dbl&gt;, and abbreviated</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   variable names ¹​repertoire_id, ²​junction_aa, ³​v_family, ⁴​d_family,</span></span></span>
@@ -649,16 +663,16 @@ can also pass a vector with any of the three databases (“VdjDB”, “IEDB”,
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 839 × 26</span></span></span>
 <span><span class="co">#&gt;    repert…¹ junct…² v_call d_call j_call v_fam…³ d_fam…⁴ j_fam…⁵ readi…⁶ dupli…⁷</span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> TRB_CD4… CAISVG… TRBV1… TRBJ1… TRBJ1… TRBV10  TRBJ1   TRBJ1   in-fra…      10</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> TRB_CD4… CASDGG… TRBV1… TRBJ1… TRBJ1… TRBV19  TRBJ1   TRBJ1   in-fra…     458</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> TRB_CD4… CASGGL… <span style="color: #BB0000;">NA</span>     TRBJ1… TRBJ1… <span style="color: #BB0000;">NA</span>      TRBJ1   TRBJ1   in-fra…      23</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> TRB_CD4… CASGLV… TRBV1… TRBJ2… TRBJ2… TRBV12  TRBJ2   TRBJ2   in-fra…      29</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> TRB_CD4… CASGTG… TRBV6… TRBJ2… TRBJ2… TRBV6   TRBJ2   TRBJ2   in-fra…      21</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> TRB_CD4… CASHSS… TRBV6… TRBJ1… TRBJ1… TRBV6   TRBJ1   TRBJ1   in-fra…      11</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> TRB_CD4… CASKPP… TRBV6… TRBJ1… TRBJ1… TRBV6   TRBJ1   TRBJ1   in-fra…     119</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> TRB_CD4… CASMID… TRBV5… TRBJ1… TRBJ1… TRBV5   TRBJ1   TRBJ1   in-fra…      11</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> TRB_CD4… CASNAR… TRBV6… TRBJ1… TRBJ1… TRBV6   TRBJ1   TRBJ1   in-fra…      12</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> TRB_CD4… CASRLG… <span style="color: #BB0000;">NA</span>     TRBJ1… TRBJ1… <span style="color: #BB0000;">NA</span>      TRBJ1   TRBJ1   in-fra…      24</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> TRB_CD4… CAISVG… TRBV1… TRBD2… TRBJ1… TRBV10  TRBD2   TRBJ1   in-fra…      10</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> TRB_CD4… CASDGG… TRBV1… TRBD2… TRBJ1… TRBV19  TRBD2   TRBJ1   in-fra…     458</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> TRB_CD4… CASGGL… <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>     TRBJ1… <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      TRBJ1   in-fra…      23</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> TRB_CD4… CASGLV… TRBV1… TRBD2… TRBJ2… TRBV12  TRBD2   TRBJ2   in-fra…      29</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> TRB_CD4… CASGTG… TRBV6… TRBD2… TRBJ2… TRBV6   TRBD2   TRBJ2   in-fra…      21</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> TRB_CD4… CASHSS… TRBV6… <span style="color: #BB0000;">NA</span>     TRBJ1… TRBV6   <span style="color: #BB0000;">NA</span>      TRBJ1   in-fra…      11</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> TRB_CD4… CASKPP… TRBV6… TRBD1… TRBJ1… TRBV6   TRBD1   TRBJ1   in-fra…     119</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> TRB_CD4… CASMID… TRBV5… <span style="color: #BB0000;">NA</span>     TRBJ1… TRBV5   <span style="color: #BB0000;">NA</span>      TRBJ1   in-fra…      11</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> TRB_CD4… CASNAR… TRBV6… TRBD1… TRBJ1… TRBV6   TRBD1   TRBJ1   in-fra…      12</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> TRB_CD4… CASRLG… <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>     TRBJ1… <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      TRBJ1   in-fra…      24</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># … with 829 more rows, 16 more variables: duplicate_frequency &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   tra_cdr3_aa &lt;chr&gt;, gene &lt;chr&gt;, epitope &lt;chr&gt;, pathology &lt;chr&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   antigen &lt;chr&gt;, tra_v_call &lt;chr&gt;, tra_j_call &lt;chr&gt;, mhc_allele &lt;chr&gt;,</span></span></span>
@@ -862,7 +876,7 @@ antigen specificity of that sequence are also provided.</p>
 <code>seqMatrix</code> and <code>topFreq</code>.</p>
 <div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">top_freq_matrix</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">full_join</a></span><span class="op">(</span><span class="va">top_freq</span>, <span class="va">sequence_matrix</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Joining, by = "junction_aa"</span></span>
+<span><span class="co">#&gt; Joining with `by = join_by(junction_aa)`</span></span>
 <span><span class="va">top_freq_matrix</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 438 × 17</span></span></span>
 <span><span class="co">#&gt;    junction_aa   minFr…¹ maxFr…² meanF…³ numbe…⁴ preva…⁵ antigen TRB_C…⁶ TRB_C…⁷</span></span>
@@ -1012,10 +1026,10 @@ recompute <code>frequencyCount</code> for all remaining sequences.</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 4 × 13</span></span></span>
 <span><span class="co">#&gt;   reperto…¹ junct…² v_call d_call j_call v_fam…³ d_fam…⁴ j_fam…⁵ readi…⁶ dupli…⁷</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> TRB_CD4_… CASSES… TRBV1… TRBJ2… TRBJ2… TRBV10  TRBJ2   TRBJ2   in-fra…    <span style="text-decoration: underline;">5</span>019</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> TRB_Unso… CASSES… TRBV1… TRBJ2… TRBJ2… TRBV10  TRBJ2   TRBJ2   in-fra…   <span style="text-decoration: underline;">10</span>326</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> TRB_Unso… CASSES… TRBV1… TRBJ2… TRBJ2… TRBV10  TRBJ2   TRBJ2   in-fra…    <span style="text-decoration: underline;">1</span>755</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> TRB_Unso… CASSES… TRBV1… TRBJ2… TRBJ2… TRBV10  TRBJ2   TRBJ2   in-fra…     338</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> TRB_CD4_… CASSES… TRBV1… TRBD2… TRBJ2… TRBV10  TRBD2   TRBJ2   in-fra…    <span style="text-decoration: underline;">5</span>019</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> TRB_Unso… CASSES… TRBV1… TRBD2… TRBJ2… TRBV10  TRBD2   TRBJ2   in-fra…   <span style="text-decoration: underline;">10</span>326</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> TRB_Unso… CASSES… TRBV1… TRBD2… TRBJ2… TRBV10  TRBD2   TRBJ2   in-fra…    <span style="text-decoration: underline;">1</span>755</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> TRB_Unso… CASSES… TRBV1… TRBD2… TRBJ2… TRBV10  TRBD2   TRBJ2   in-fra…     338</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># … with 3 more variables: duplicate_frequency &lt;dbl&gt;, edit_distance &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   searchSequence &lt;chr&gt;, and abbreviated variable names ¹​repertoire_id,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   ²​junction_aa, ³​v_family, ⁴​d_family, ⁵​j_family, ⁶​reading_frame,</span></span></span>
@@ -1046,9 +1060,9 @@ then extrapolating the curve to an ideal depth.</p>
 </h2>
 <div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; R version 4.2.2 (2022-10-31)</span></span>
+<span><span class="co">#&gt; R version 4.2.3 (2023-03-15)</span></span>
 <span><span class="co">#&gt; Platform: x86_64-pc-linux-gnu (64-bit)</span></span>
-<span><span class="co">#&gt; Running under: Ubuntu 22.04.1 LTS</span></span>
+<span><span class="co">#&gt; Running under: Ubuntu 22.04.2 LTS</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Matrix products: default</span></span>
 <span><span class="co">#&gt; BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3</span></span>
@@ -1064,59 +1078,53 @@ then extrapolating the curve to an ideal depth.</p>
 <span><span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; other attached packages:</span></span>
-<span><span class="co">#&gt;  [1] vroom_1.6.1        forcats_0.5.2      stringr_1.5.0      dplyr_1.0.10      </span></span>
-<span><span class="co">#&gt;  [5] purrr_1.0.1        readr_2.1.3        tidyr_1.2.1        tibble_3.1.8      </span></span>
-<span><span class="co">#&gt;  [9] ggplot2_3.4.0      tidyverse_1.3.2    wordcloud2_0.2.1   RColorBrewer_1.1-3</span></span>
-<span><span class="co">#&gt; [13] LymphoSeq2_1.0.0   data.table_1.14.6 </span></span>
+<span><span class="co">#&gt;  [1] vroom_1.6.1        lubridate_1.9.2    forcats_1.0.0      stringr_1.5.0     </span></span>
+<span><span class="co">#&gt;  [5] dplyr_1.1.0        purrr_1.0.1        readr_2.1.4        tidyr_1.3.0       </span></span>
+<span><span class="co">#&gt;  [9] tibble_3.2.1       ggplot2_3.4.1      tidyverse_2.0.0    wordcloud2_0.2.1  </span></span>
+<span><span class="co">#&gt; [13] RColorBrewer_1.1-3 LymphoSeq2_1.0.0   data.table_1.14.8 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
-<span><span class="co">#&gt;   [1] circlize_0.4.15        readxl_1.4.1           backports_1.4.1       </span></span>
-<span><span class="co">#&gt;   [4] fastmatch_1.1-3        systemfonts_1.0.4      plyr_1.8.8            </span></span>
-<span><span class="co">#&gt;   [7] igraph_1.3.5           lazyeval_0.2.2         seqmagick_0.1.5       </span></span>
-<span><span class="co">#&gt;  [10] GenomeInfoDb_1.34.6    digest_0.6.31          yulab.utils_0.0.6     </span></span>
-<span><span class="co">#&gt;  [13] htmltools_0.5.4        ggalluvial_0.12.3      fansi_1.0.3           </span></span>
-<span><span class="co">#&gt;  [16] magrittr_2.0.3         memoise_2.0.1          ineq_0.2-13           </span></span>
-<span><span class="co">#&gt;  [19] googlesheets4_1.0.1    tzdb_0.3.0             Biostrings_2.66.0     </span></span>
-<span><span class="co">#&gt;  [22] modelr_0.1.10          dtplyr_1.2.2           extrafont_0.19        </span></span>
-<span><span class="co">#&gt;  [25] extrafontdb_1.0        timechange_0.2.0       pkgdown_2.0.7         </span></span>
-<span><span class="co">#&gt;  [28] prettyunits_1.1.1      colorspace_2.0-3       rvest_1.0.3           </span></span>
-<span><span class="co">#&gt;  [31] textshaping_0.3.6      haven_2.5.1            xfun_0.36             </span></span>
-<span><span class="co">#&gt;  [34] crayon_1.5.2           RCurl_1.98-1.9         jsonlite_1.8.4        </span></span>
-<span><span class="co">#&gt;  [37] phangorn_2.10.0        ape_5.6-2              glue_1.6.2            </span></span>
-<span><span class="co">#&gt;  [40] polyclip_1.10-4        gtable_0.3.1           gargle_1.2.1          </span></span>
-<span><span class="co">#&gt;  [43] zlibbioc_1.44.0        XVector_0.38.0         UpSetR_1.4.0          </span></span>
-<span><span class="co">#&gt;  [46] proj4_1.0-12           R4RNA_1.26.0           Rttf2pt1_1.3.11       </span></span>
-<span><span class="co">#&gt;  [49] shape_1.4.6            BiocGenerics_0.44.0    maps_3.4.1            </span></span>
-<span><span class="co">#&gt;  [52] scales_1.2.1           pheatmap_1.0.12        futile.options_1.0.1  </span></span>
-<span><span class="co">#&gt;  [55] DBI_1.1.3              Rcpp_1.0.9             progress_1.2.2        </span></span>
-<span><span class="co">#&gt;  [58] gridGraphics_0.5-1     tidytree_0.4.2         bit_4.0.5             </span></span>
-<span><span class="co">#&gt;  [61] stats4_4.2.2           htmlwidgets_1.6.1      httr_1.4.4            </span></span>
-<span><span class="co">#&gt;  [64] ellipsis_0.3.2         pkgconfig_2.0.3        farver_2.1.1          </span></span>
-<span><span class="co">#&gt;  [67] sass_0.4.4             dbplyr_2.3.0           utf8_1.2.2            </span></span>
-<span><span class="co">#&gt;  [70] ggmsa_1.3.4            reshape2_1.4.4         ggplotify_0.1.0       </span></span>
-<span><span class="co">#&gt;  [73] tidyselect_1.2.0       labeling_0.4.2         rlang_1.0.6           </span></span>
-<span><span class="co">#&gt;  [76] munsell_0.5.0          cellranger_1.1.0       tools_4.2.2           </span></span>
-<span><span class="co">#&gt;  [79] cachem_1.0.6           cli_3.6.0              generics_0.1.3        </span></span>
-<span><span class="co">#&gt;  [82] broom_1.0.2            evaluate_0.20          fastmap_1.1.0         </span></span>
-<span><span class="co">#&gt;  [85] yaml_2.3.6             ragg_1.2.5             ggtree_3.7.1.002      </span></span>
-<span><span class="co">#&gt;  [88] knitr_1.41             bit64_4.0.5            fs_1.5.2              </span></span>
-<span><span class="co">#&gt;  [91] nlme_3.1-160           ash_1.0-15             formatR_1.14          </span></span>
-<span><span class="co">#&gt;  [94] aplot_0.1.9            xml2_1.3.3             compiler_4.2.2        </span></span>
-<span><span class="co">#&gt;  [97] curl_5.0.0             msa_1.30.1             reprex_2.0.2          </span></span>
-<span><span class="co">#&gt; [100] treeio_1.23.0          tweenr_2.0.2           bslib_0.4.2           </span></span>
-<span><span class="co">#&gt; [103] stringi_1.7.12         highr_0.10             futile.logger_1.4.3   </span></span>
-<span><span class="co">#&gt; [106] desc_1.4.2             ggalt_0.4.0            lattice_0.20-45       </span></span>
-<span><span class="co">#&gt; [109] Matrix_1.5-1           vctrs_0.5.1            stringdist_0.9.10     </span></span>
-<span><span class="co">#&gt; [112] pillar_1.8.1           lifecycle_1.0.3        GlobalOptions_0.1.2   </span></span>
-<span><span class="co">#&gt; [115] jquerylib_0.1.4        bitops_1.0-7           patchwork_1.1.2       </span></span>
-<span><span class="co">#&gt; [118] R6_2.5.1               gridExtra_2.3          KernSmooth_2.23-20    </span></span>
-<span><span class="co">#&gt; [121] IRanges_2.32.0         codetools_0.2-18       lambda.r_1.2.4        </span></span>
-<span><span class="co">#&gt; [124] MASS_7.3-58.1          assertthat_0.2.1       rprojroot_2.0.3       </span></span>
-<span><span class="co">#&gt; [127] withr_2.5.0            iNEXT_3.0.0            S4Vectors_0.36.1      </span></span>
-<span><span class="co">#&gt; [130] GenomeInfoDbData_1.2.9 parallel_4.2.2         hms_1.1.2             </span></span>
-<span><span class="co">#&gt; [133] quadprog_1.5-8         VennDiagram_1.7.3      grid_4.2.2            </span></span>
-<span><span class="co">#&gt; [136] ggfun_0.0.9            rmarkdown_2.20         googledrive_2.0.0     </span></span>
-<span><span class="co">#&gt; [139] ggforce_0.4.1          lubridate_1.9.0</span></span></code></pre></div>
+<span><span class="co">#&gt;   [1] colorspace_2.1-0       ggtree_3.7.1.003       ellipsis_0.3.2        </span></span>
+<span><span class="co">#&gt;   [4] rprojroot_2.0.3        circlize_0.4.15        futile.logger_1.4.3   </span></span>
+<span><span class="co">#&gt;   [7] XVector_0.38.0         GlobalOptions_0.1.2    fs_1.6.1              </span></span>
+<span><span class="co">#&gt;  [10] aplot_0.1.10           farver_2.1.1           bit64_4.0.5           </span></span>
+<span><span class="co">#&gt;  [13] fansi_1.0.4            codetools_0.2-19       extrafont_0.19        </span></span>
+<span><span class="co">#&gt;  [16] cachem_1.0.7           knitr_1.42             polyclip_1.10-4       </span></span>
+<span><span class="co">#&gt;  [19] jsonlite_1.8.4         Rttf2pt1_1.3.12        pheatmap_1.0.12       </span></span>
+<span><span class="co">#&gt;  [22] ineq_0.2-13            ggforce_0.4.1          msa_1.30.1            </span></span>
+<span><span class="co">#&gt;  [25] compiler_4.2.3         Matrix_1.5-3           fastmap_1.1.1         </span></span>
+<span><span class="co">#&gt;  [28] lazyeval_0.2.2         cli_3.6.0              formatR_1.14          </span></span>
+<span><span class="co">#&gt;  [31] tweenr_2.0.2           htmltools_0.5.4        prettyunits_1.1.1     </span></span>
+<span><span class="co">#&gt;  [34] tools_4.2.3            igraph_1.4.1           gtable_0.3.2          </span></span>
+<span><span class="co">#&gt;  [37] glue_1.6.2             GenomeInfoDbData_1.2.9 reshape2_1.4.4        </span></span>
+<span><span class="co">#&gt;  [40] maps_3.4.1             fastmatch_1.1-3        Rcpp_1.0.10           </span></span>
+<span><span class="co">#&gt;  [43] jquerylib_0.1.4        pkgdown_2.0.7          vctrs_0.6.0           </span></span>
+<span><span class="co">#&gt;  [46] Biostrings_2.66.0      ggalt_0.4.0            ape_5.7-1             </span></span>
+<span><span class="co">#&gt;  [49] nlme_3.1-162           extrafontdb_1.0        ggalluvial_0.12.5     </span></span>
+<span><span class="co">#&gt;  [52] xfun_0.37              timechange_0.2.0       lifecycle_1.0.3       </span></span>
+<span><span class="co">#&gt;  [55] phangorn_2.11.1        stringdist_0.9.10      zlibbioc_1.44.0       </span></span>
+<span><span class="co">#&gt;  [58] MASS_7.3-58.2          scales_1.2.1           ragg_1.2.5            </span></span>
+<span><span class="co">#&gt;  [61] hms_1.1.2              parallel_4.2.3         proj4_1.0-12          </span></span>
+<span><span class="co">#&gt;  [64] lambda.r_1.2.4         yaml_2.3.7             gridExtra_2.3         </span></span>
+<span><span class="co">#&gt;  [67] memoise_2.0.1          R4RNA_1.26.0           UpSetR_1.4.0          </span></span>
+<span><span class="co">#&gt;  [70] ggfun_0.0.9            dtplyr_1.3.0           seqmagick_0.1.5       </span></span>
+<span><span class="co">#&gt;  [73] yulab.utils_0.0.6      sass_0.4.5             stringi_1.7.12        </span></span>
+<span><span class="co">#&gt;  [76] highr_0.10             S4Vectors_0.36.2       desc_1.4.2            </span></span>
+<span><span class="co">#&gt;  [79] tidytree_0.4.2         ggmsa_1.3.4            BiocGenerics_0.44.0   </span></span>
+<span><span class="co">#&gt;  [82] shape_1.4.6            GenomeInfoDb_1.34.9    rlang_1.1.0           </span></span>
+<span><span class="co">#&gt;  [85] pkgconfig_2.0.3        systemfonts_1.0.4      bitops_1.0-7          </span></span>
+<span><span class="co">#&gt;  [88] iNEXT_3.0.0            evaluate_0.20          lattice_0.20-45       </span></span>
+<span><span class="co">#&gt;  [91] labeling_0.4.2         treeio_1.23.1          patchwork_1.1.2       </span></span>
+<span><span class="co">#&gt;  [94] htmlwidgets_1.6.2      bit_4.0.5              tidyselect_1.2.0      </span></span>
+<span><span class="co">#&gt;  [97] plyr_1.8.8             magrittr_2.0.3         R6_2.5.1              </span></span>
+<span><span class="co">#&gt; [100] IRanges_2.32.0         generics_0.1.3         pillar_1.8.1          </span></span>
+<span><span class="co">#&gt; [103] withr_2.5.0            RCurl_1.98-1.10        ash_1.0-15            </span></span>
+<span><span class="co">#&gt; [106] crayon_1.5.2           futile.options_1.0.1   KernSmooth_2.23-20    </span></span>
+<span><span class="co">#&gt; [109] utf8_1.2.3             tzdb_0.3.0             rmarkdown_2.20        </span></span>
+<span><span class="co">#&gt; [112] progress_1.2.2         grid_4.2.3             digest_0.6.31         </span></span>
+<span><span class="co">#&gt; [115] VennDiagram_1.7.3      gridGraphics_0.5-1     textshaping_0.3.6     </span></span>
+<span><span class="co">#&gt; [118] stats4_4.2.3           munsell_0.5.0          ggplotify_0.1.0       </span></span>
+<span><span class="co">#&gt; [121] bslib_0.4.2            quadprog_1.5-8</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>

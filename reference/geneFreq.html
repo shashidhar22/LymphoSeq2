@@ -95,20 +95,20 @@ gene names are used.</p></dd>
 <span class="r-in"><span><span class="va">ntable</span> <span class="op">&lt;-</span> <span class="fu"><a href="productiveSeq.html">productiveSeq</a></span><span class="op">(</span>study_table <span class="op">=</span> <span class="va">stable</span>, aggregate <span class="op">=</span> <span class="st">"junction"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">geneFreq</span><span class="op">(</span><span class="va">ntable</span>, locus <span class="op">=</span> <span class="st">"VDJ"</span>, family <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 563 × 5</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 581 × 5</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    repertoire_id gene_name duplicate_count gene_type gene_frequency</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> TRB_CD4_949   <span style="color: #BB0000;">NA</span>                   <span style="text-decoration: underline;">3</span>675 v_call            0.220 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> TRB_CD4_949   TRBJ1-1              <span style="text-decoration: underline;">1</span>846 j_call            0.055<span style="text-decoration: underline;">3</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> TRB_CD4_949   TRBJ1-2              <span style="text-decoration: underline;">2</span>344 j_call            0.070<span style="text-decoration: underline;">3</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> TRB_CD4_949   TRBJ1-3              <span style="text-decoration: underline;">4</span>586 j_call            0.137 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> TRB_CD4_949   TRBJ1-4               918 j_call            0.027<span style="text-decoration: underline;">5</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> TRB_CD4_949   TRBJ1-5              <span style="text-decoration: underline;">2</span>436 j_call            0.073<span style="text-decoration: underline;">0</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> TRB_CD4_949   TRBJ1-6              <span style="text-decoration: underline;">3</span>446 j_call            0.103 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> TRB_CD4_949   TRBJ2-1              <span style="text-decoration: underline;">1</span>554 j_call            0.046<span style="text-decoration: underline;">6</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> TRB_CD4_949   TRBJ2-2             <span style="text-decoration: underline;">10</span>944 j_call            0.328 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> TRB_CD4_949   TRBJ2-3               370 j_call            0.011<span style="text-decoration: underline;">1</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 553 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> TRB_CD4_949   <span style="color: #BB0000;">NA</span>                   <span style="text-decoration: underline;">5</span>764 d_call            0.283 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> TRB_CD4_949   TRBD1-1              <span style="text-decoration: underline;">6</span>561 d_call            0.322 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> TRB_CD4_949   TRBD2-1              <span style="text-decoration: underline;">8</span>029 d_call            0.394 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> TRB_CD4_949   TRBJ1-1               923 j_call            0.055<span style="text-decoration: underline;">3</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> TRB_CD4_949   TRBJ1-2              <span style="text-decoration: underline;">1</span>172 j_call            0.070<span style="text-decoration: underline;">3</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> TRB_CD4_949   TRBJ1-3              <span style="text-decoration: underline;">2</span>293 j_call            0.137 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> TRB_CD4_949   TRBJ1-4               459 j_call            0.027<span style="text-decoration: underline;">5</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> TRB_CD4_949   TRBJ1-5              <span style="text-decoration: underline;">1</span>218 j_call            0.073<span style="text-decoration: underline;">0</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> TRB_CD4_949   TRBJ1-6              <span style="text-decoration: underline;">1</span>723 j_call            0.103 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> TRB_CD4_949   TRBJ2-1               777 j_call            0.046<span style="text-decoration: underline;">6</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 571 more rows</span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
