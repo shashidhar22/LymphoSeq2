@@ -154,11 +154,9 @@ getStandard <- function(clone_file, progress, threads) {
             junction = dplyr::if_else(stringr::str_detect(junction, "x"), stringr::str_remove_all(junction, "x"), junction),
             junction = dplyr::if_else(stringr::str_detect(junction, "[A-Z]+"), stringr::str_remove_all(junction, "[A-Z]+"), junction),
             junction = toupper(junction),
-            sequence = junction,
             junction_aa = dplyr::if_else(stringr::str_detect(junction_aa, "x"), stringr::str_remove_all(junction_aa, "x"), junction_aa),
             junction_aa = dplyr::if_else(stringr::str_detect(junction_aa, "[A-Z]+"), stringr::str_remove_all(junction_aa, "[A-Z]+"), junction_aa),
-            junction_aa = toupper(junction_aa),
-            sequence_aa = junction_aa
+            junction_aa = toupper(junction_aa)
       )
   } else {
     clone_data <- clone_data %>%
@@ -169,6 +167,8 @@ getStandard <- function(clone_file, progress, threads) {
   }
   clone_data <- clone_data %>% 
     dplyr::mutate(
+      sequence = junction,
+      sequence_aa = junction_aa,
       junction_length = stringr::str_length(junction),
       junction_aa_length = stringr::str_length(junction_aa),
       rev_comp = FALSE,
