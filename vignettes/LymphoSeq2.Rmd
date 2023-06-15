@@ -51,7 +51,7 @@ system.file("extdata", "IGH_sequencing", package = "LymphoSeq2") #For the IGH fi
 
 ```{r readImmuno}
 study_files <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2") 
-study_table <- LymphoSeq2::readImmunoSeq(study_files) %>% 
+study_table <- LymphoSeq2::readImmunoSeq(study_files, threads = 1) %>% 
     topSeqs(top = 100)
 ```
 
@@ -162,7 +162,7 @@ One of the drawbacks of the clonality metric is that it does not take into accou
 
 ```{r readIGH}
 IGH_path <- system.file("extdata", "IGH_sequencing", package = "LymphoSeq2") 
-IGH_table <- LymphoSeq2::readImmunoSeq(path = IGH_path) %>% 
+IGH_table <- LymphoSeq2::readImmunoSeq(path = IGH_path, threads = 1) %>% 
   LymphoSeq2::topSeqs(top = 100)
 LymphoSeq2::clonalRelatedness(study_table = IGH_table, edit_distance = 10)
 ```

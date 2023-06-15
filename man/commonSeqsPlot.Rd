@@ -32,7 +32,7 @@ using ggplot2 functions. See examples below.
 }
 \examples{
 file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
-study_table <- readImmunoSeq(path = file_path)
+study_table <- readImmunoSeq(path = file_path, threads = 1)
 study_table <- LymphoSeq2::topSeqs(study_table, top = 100)
 amino_table <- productiveSeq(study_table = study_table, aggregate = "junction_aa")
 commonSeqsPlot("TRB_Unsorted_32", "TRB_Unsorted_83",

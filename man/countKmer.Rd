@@ -28,7 +28,7 @@ Calculate counts of k-mers in the query nucleotide sequence
 }
 \examples{
 file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
-study_table <- LymphoSeq2::readImmunoSeq(path = file_path)
+study_table <- LymphoSeq2::readImmunoSeq(path = file_path, threads = 1)
 study_table <- LymphoSeq2::topSeqs(study_table, top = 100)
 kmer_table <- LymphoSeq2::countKmer(study_table = study_table, k = 5, 
   separate = TRUE)

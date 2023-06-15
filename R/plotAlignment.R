@@ -10,7 +10,7 @@
 #' @examples
 #' library(ggmsa)
 #' file_path <- system.file("extdata", "IGH_sequencing", package = "LymphoSeq2")
-#' study_table <- LymphoSeq2::readImmunoSeq(path = file_path)
+#' study_table <- LymphoSeq2::readImmunoSeq(path = file_path, threads = 1)
 #' study_table <- LymphoSeq2::topSeqs(study_table, top = 100)
 #' nucleotide_table <- LymphoSeq2::productiveSeq(study_table, aggregate = "junction")
 #' msa <- LymphoSeq2::alignSeq(nucleotide_table,

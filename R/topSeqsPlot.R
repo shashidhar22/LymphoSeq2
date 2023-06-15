@@ -14,7 +14,7 @@
 #' be found in the R Graphics Cookbook online (\url{http://www.cookbook-r.com/Graphs/}).
 #' @examples
 #' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
-#' study_table <- LymphoSeq2::readImmunoSeq(path = file_path)
+#' study_table <- LymphoSeq2::readImmunoSeq(path = file_path, threads = 1)
 #' amino_table <- LymphoSeq2::productiveSeq(study_table = study_table, aggregate = "junction_aa")
 #' LymphoSeq2::topSeqsPlot(study_table = amino_table, top = 10)
 #' # Display the number of sequences at the top of bar plot and add a title

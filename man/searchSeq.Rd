@@ -62,7 +62,7 @@ the sequences different by a single amino acid or junction.
 
 \examples{
 file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
-study_table <- LymphoSeq2::readImmunoSeq(path = file_path)
+study_table <- LymphoSeq2::readImmunoSeq(path = file_path, threads = 1)
 study_table <- LymphoSeq2::topSeqs(study_table, top = 100)
 aa1 <- "CASSPVSNEQFF"
 aa2 <- "CASSQEVPPYQAFF"
