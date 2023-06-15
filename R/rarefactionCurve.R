@@ -10,8 +10,8 @@
 #' @seealso [LymphoSeq2::runINext()]
 #' @examples
 #' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
-#' study_table <- LymphoSeq2::readImmunoSeq(path = file_path) %>% 
-#' LymphoSeq2::topSeqs(top = 100)
+#' study_table <- LymphoSeq2::readImmunoSeq(path = file_path)
+#' study_table <- LymphoSeq2::topSeqs(study_table, top = 100)
 #' LymphoSeq2::plotRarefactionCurve(study_table)
 #'
 #' @export
