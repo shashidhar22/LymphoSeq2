@@ -3,7 +3,7 @@ library(LymphoSeq2)
 library(tidyverse)
 
 test_that("Gene frequency charcterized by gene name sums to 1", {
-  stable <- LymphoSeq2::readImmunoSeq("test_data")
+  stable <- LymphoSeq2::readImmunoSeq("test_data", threads = 1)
   ntable <- LymphoSeq2::productiveSeq(stable, aggregate = "junction")
   gtable <- LymphoSeq2::geneFreq(ntable) %>% 
             dplyr::group_by(repertoire_id, gene_type) %>% 
@@ -13,7 +13,7 @@ test_that("Gene frequency charcterized by gene name sums to 1", {
 })
 
 test_that("Gene frequency charcterized by gene name sums to 1", {
-  stable <- LymphoSeq2::readImmunoSeq("test_data")
+  stable <- LymphoSeq2::readImmunoSeq("test_data", threads = 1)
   ntable <- LymphoSeq2::productiveSeq(stable, aggregate = "junction")
   gtable <- LymphoSeq2::geneFreq(ntable, family = TRUE) %>% 
             dplyr::group_by(repertoire_id, gene_type) %>% 

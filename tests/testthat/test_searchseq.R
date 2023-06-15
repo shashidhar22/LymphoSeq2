@@ -3,7 +3,7 @@ library(LymphoSeq2)
 library(tidyverse)
 
 test_that("Find all nucleotide sequences with edit distance ten", {
-  stable <- LymphoSeq2::readImmunoSeq("test_data/015V06013979_CFAR.tsv")
+  stable <- LymphoSeq2::readImmunoSeq("test_data/015V06013979_CFAR.tsv", threads = 1)
   ntable <- LymphoSeq2::productiveSeq(stable, aggregate = "junction")
   seq <- "TTGGAGCTGGGGGACTCGGCCCTTTATCTTTGCGCCAGCAGCTCCGGGACAGGGGGCTCGGGCAATCAGCCCCAGCATTTTGGTGAT"
   nlist <- ntable %>%
@@ -18,7 +18,7 @@ test_that("Find all nucleotide sequences with edit distance ten", {
 })
 
 test_that("Find all amino acid sequences with edit distance ten from list of reference", {
-  stable <- LymphoSeq2::readImmunoSeq("test_data/015V06013979_CFAR.tsv")
+  stable <- LymphoSeq2::readImmunoSeq("test_data/015V06013979_CFAR.tsv", threads = 1)
   ntable <- LymphoSeq2::productiveSeq(stable, aggregate = "junction_aa")
   seq <- "CASSSGTGGSGNQPQHF"
   nlist <- ntable %>%

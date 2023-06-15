@@ -3,7 +3,7 @@ library(LymphoSeq2)
 library(tidyverse)
 
 test_that("Check if summary statistics for test data are correct", {
-  stable <- LymphoSeq2::readImmunoSeq("test_data/015V06013979_CFAR.tsv")
+  stable <- LymphoSeq2::readImmunoSeq("test_data/015V06013979_CFAR.tsv", threads = 1)
   ctable <- LymphoSeq2::clonality(stable)
   ttseq <- ctable %>%
            dplyr::pull(total_sequences)
