@@ -16,34 +16,36 @@ alignSeq(
 }
 \arguments{
 \item{study_table}{A tibble consisting of antigen receptor sequences
-imported by the LymphoSeq function readImmunoSeq.}
+imported by the LymphoSeq2 function \code{\link[=readImmunoSeq]{readImmunoSeq()}}.}
 
-\item{sequence_list}{A character vector of one ore more amino acid or junction
-CDR3 sequences to search.}
+\item{repertoire_ids}{A character vector indicating the name of the
+repertoire_id in the productive sequence list.}
+
+\item{sequence_list}{A character vector of one ore more amino acid or
+nucleotide CDR3 sequences to search.}
 
 \item{edit_distance}{An integer giving the minimum edit distance that the
 sequence must be less than or equal to.  See details below.}
 
-\item{type}{A character vector indicating whether "junction_aa" or "junction" sequences
-should be aligned.  If "junction_aa" is specified, then run productiveSeqs first.}
+\item{type}{A character vector indicating whether "junction_aa" or "junction"
+sequences should be aligned.  If "junction_aa" is specified, then run
+\code{\link[=productiveSeq]{productiveSeq()}} first.}
 
-\item{method}{A character vector indicating the multiple sequence alignment method to
-be used.  Refer to the Bioconductor msa package for more details.  Options include
-"ClustalW", "ClustalOmega", and "Muscle".}
+\item{method}{A character vector indicating the multiple sequence alignment
+method to be used.  Refer to the Bioconductor "msa" package for more details.
+Options include "ClustalW", "ClustalOmega", and "Muscle".}
 
 \item{top}{The number of top sequences to perform alignment.}
-
-\item{repertoire_id}{A character vector indicating the name of the repertoire_id in the productive
-sequence list.}
 }
 \value{
 Performs a multiple sequence alignment object.
 }
 \description{
-Perform multiple sequence alignment using one of three methods and output results to the
-console or as a pdf file.  One may perform the alignment of all amino acid or junction
-sequences in a single repertoire_id.  Alternatively, one may search for a given sequence
-within a list of samples using an edit distance threshold.
+Perform multiple sequence alignment using one of three methods and output
+results to the console or as a pdf file. One may perform the alignment of all
+amino acid or nucleotide sequences in a single repertoire_id. Alternatively,
+one may search for a given sequence within a list of samples using an edit
+distance threshold.
 }
 \details{
 Edit distance is a way of quantifying how dissimilar two sequences
@@ -54,16 +56,16 @@ the sequences different by a single amino acid or junction.
 }
 \examples{
 file_path <- system.file("extdata", "IGH_sequencing", package = "LymphoSeq2")
-
-stable <- readImmunoSeq(path = file_path)
-
-ntable <- productiveSeq(stable, aggregate = "junction")
-
-alignSeq(ntable, repertoire_id = "IGH_MVQ92552A_BL", type = "junction", 
-         method = "ClustalW")
+study_table <- LymphoSeq2::readImmunoSeq(path = file_path)
+study_table <- LymphoSeq2::topSeqs(study_table, top = 100)
+nucleotide_table <- LymphoSeq2::productiveSeq(study_table, aggregate = "junction")
+LymphoSeq2::alignSeq(nucleotide_table,
+  repertoire_ids = "IGH_MVQ92552A_BL", type = "junction",
+  method = "ClustalW"
+)
 }
 \seealso{
-If having trouble saving pdf files, refer to Bioconductor package msa for
-installation instructions
+If having trouble saving pdf files, refer to Bioconductor package
+msa for installation instructions
 \url{http://bioconductor.org/packages/release/bioc/vignettes/msa/inst/doc/msa.pdf}
 }

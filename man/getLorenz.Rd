@@ -8,7 +8,7 @@ getLorenz(sample_table)
 }
 \arguments{
 \item{sample_table}{A tibble for a single repertoire_id generated using the LymphoSeq
-function readImmunoSeq or productiveSeq.  "duplicate_frequency" is a required column.}
+function \code{\link[=readImmunoSeq]{readImmunoSeq()}} or \code{\link[=productiveSeq]{productiveSeq()}}.  "duplicate_frequency" is a required column.}
 }
 \value{
 Returns a Lorenz curve tibble.

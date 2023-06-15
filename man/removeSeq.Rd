@@ -7,18 +7,28 @@
 removeSeq(study_table, sequence)
 }
 \arguments{
-\item{study_table}{A list of data frames imported using the LymphoSeq function
-readImmunoSeq.  "aminoAcid", "count", and "frequencyCount" are required columns.}
+\item{study_table}{A tibble imported using the LymphoSeq2 function
+\code{\link[=readImmunoSeq]{readImmunoSeq()}}. "junction_aa", "duplicate_count", and
+"duplicate_frequency" are required columns.}
 
 \item{sequence}{A character vector of one or more amino acid sequences to
-remove from the list of data frames.}
+remove from the study table}
 }
 \value{
-Returns a list of data frames like the one imported except all rows
-with the specified amino acid sequence are removed.  The frequencyCount is
-recalculated.
+Returns a tibble like the one imported except all rows
+with the specified amino acid sequence are removed.  The
+"duplicate_frequency" is recalculated.
 }
 \description{
 Removes an amino acid sequence and associated data from all instances within
-a list of data frames and then recomputes the frequencyCount.
+study table and then recomputes the duplicate_frequency.
+}
+\examples{
+library(magrittr)
+file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
+study_table <- LymphoSeq2::readImmunoSeq(path = file_path)
+Lstudy_table <- LymphoSeq2::topSeqs(study_table, top = 100)
+LymphoSeq2::searchSeq(study_table, sequence = "CASSDLIGNGKLFF")
+cleaned_table <- LymphoSeq2::removeSeq(study_table, sequence = "CASSDLIGNGKLFF")
+LymphoSeq2::searchSeq(cleaned_table, sequence = "CASSDLIGNGKLFF")
 }

@@ -8,27 +8,29 @@ countKmer(study_table, k, separate = TRUE)
 }
 \arguments{
 \item{study_table}{A tibble consisting of antigen receptor
-sequencing imported by the LymphoSeq2 function readImmunoSeq.
+sequencing imported by the LymphoSeq2 function \code{\link[=readImmunoSeq]{readImmunoSeq()}}.
 "repertoire_id" and "junction" are required columns.}
 
 \item{k}{The length of k-mers to find.}
 
-\item{separate}{A boolean value. TRUE to separate the counts of each k-mer
-by repertoire_ids. FALSE to show cumulative counts instead.
-Default value is TRUE.}
+\item{separate}{A boolean value.
+\itemize{
+\item \code{TRUE} (the default):  separate the counts of each k-mer by repertoire_id.
+\item \code{FALSE} : show cumulative counts instead.
+}}
 }
 \value{
 A tibble with the k-mer and its counts. The counts can be cumulative
 counts of the entire study_table or counts for each repertoire_id.
 }
 \description{
-Calculate counts of kmers in the query nucleotide sequence
+Calculate counts of k-mers in the query nucleotide sequence
 }
 \examples{
 file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
-
-stable <- readImmunoSeq(path = file_path)
-
-kmer_table <- countKmer(study_table = stable, k = 5, separate = TRUE)
+study_table <- LymphoSeq2::readImmunoSeq(path = file_path)
+study_table <- LymphoSeq2::topSeqs(study_table, top = 100)
+kmer_table <- LymphoSeq2::countKmer(study_table = study_table, k = 5, 
+  separate = TRUE)
 
 }

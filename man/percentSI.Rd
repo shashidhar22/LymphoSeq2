@@ -7,11 +7,10 @@
 percentSI(sample_list)
 }
 \arguments{
-\item{sample1}{A data frame consisting of frequencies of antigen receptor
-sequences.  "junction_aa" and "duplicate_count" are a required columns.}
-
-\item{sample2}{A data frame consisting of frequencies of antigen receptor
-sequences.  "junction_aa" and "duplicate_count" are a required columns.}
+\item{sample_list}{A list of two tibble corresponding derived from the
+\code{\link[=productiveSeq]{productiveSeq()}} function in LymphoSeq2. "duplicate_frequency",
+"junction_aa", and "repertoire_id" columns are necessary for the calculation
+of the Bhattacharyya coefficient.}
 }
 \value{
 Returns the similarity score, a measure of the amount of
@@ -20,10 +19,10 @@ the sequence frequencies are identical in the two samples and 0
 indicates no shared frequencies.
 }
 \description{
-Calculates the Percent similarity index between two groups of repertoires. Percent
-similarity index, not only compares the number of similar and dissimilar species
-present between two sites, but also incorporate abundance.
+Calculates the Percent similarity index between two groups of repertoires.
+Percent similarity index, not only compares the number of similar and
+dissimilar species present between two sites, but also incorporate abundance.
 }
 \seealso{
-\code{\link{scoringMatrix}}
+\code{\link[=scoringMatrix]{scoringMatrix()}}
 }

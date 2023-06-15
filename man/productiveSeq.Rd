@@ -2,31 +2,25 @@
 % Please edit documentation in R/readProductiveSeq.R
 \name{productiveSeq}
 \alias{productiveSeq}
-\title{Productive sequences}
+\title{Select productive sequences}
 \usage{
 productiveSeq(study_table, aggregate = "junction_aa", prevalence = FALSE)
 }
 \arguments{
 \item{study_table}{A tibble consisting antigen receptor sequencing
-data imported by the LymphoSeq function readImmunoSeq. "junction_aa", "duplicate_count", and
-"duplicate_frequency" are required columns.}
+data imported by the LymphoSeq2 function \code{\link[=readImmunoSeq]{readImmunoSeq()}}. "junction_aa",
+"duplicate_count", and "duplicate_frequency" are required columns.}
 
-\item{aggregate}{Indicates whether the values of "duplicate_count", "duplicate_frequency",
-and "esimatedNumberGenomes" should be aggregated by amino acid or junction
-sequence.  Acceptable values are "junction_aa" or "junction".  If "junction_aa"
-is selected, then resulting data frame will have columns corresponding to
-junction_aa, duplicate_count, and duplicate_frequency.
-If "junction" is selected then all columns in the
-original list will be present in the outputted list.  The difference in
-output is due to the fact that the same amino acid CDR3 sequence may be
-encoded by multiple unique junction sequences with differing V, D, and J
-genes.}
+\item{aggregate}{Indicates whether the values of "duplicate_count" and
+"duplicate_frequency" should be aggregated by amino acid or junction sequence.
+Acceptable values are "junction_aa" or "junction".}
 
-\item{prevalence}{A Boolean value indicating if a new column should be added
-to each of the data frames giving the prevalence of each CDR3 amino acid
-sequence in 55 healthy donor peripheral blood samples.  TRUE means the column
-is added and FALSE means it is not.  Values range from 0 to 100\\% where
-100\\% means the sequence appeared in the blood of all 55 individuals.}
+\item{prevalence}{A Boolean value
+\itemize{
+\item \code{TRUE} : Add a new column the study table giving the prevalence of each CDR3 amino acid
+sequence in 55 healthy donor peripheral blood samples.
+\item \code{FALSE} (the default): Do not add prevelance information
+}}
 }
 \value{
 Returns a list of data frames of productive amino acid sequences with
@@ -35,12 +29,30 @@ A productive sequences is defined as a sequences
 that is in frame and does not have an early stop codon.
 }
 \description{
-\code{productiveSeq} Remove unproductive CDR3 sequences from a list of data frames.
+\code{\link[=productiveSeq]{productiveSeq()}} Select productive nucleotide/amino acid CDR3 sequences
+from a tibble containing raw AIRR formatted data. Aggregation of the raw data
+is either done on the productive CDR3 amino acid sequence (junction_aa) or
+the productive CDR3 nucleotide sequence (junction).  If "junction_aa"
+is selected, then resulting tibble will display the most frequently observed.
+V, D, J gene that were associated with the formation of the productive CDR3
+amino acid sequence. If "junction" is selected then all columns in the
+original list will be present in the outputted list.  The difference in
+output is due to the fact that the same amino acid CDR3 sequence may be
+encoded by multiple unique junction sequences with differing V, D, and J
+genes.
 }
 \examples{
 file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
-stable <- readImmunoSeq(path = file_path)
-atable <- productiveSeq(study_table = stable,
-                        aggregate = "junction_aa",
-                        prevalence = TRUE)
+study_table <- LymphoSeq2::readImmunoSeq(path = file_path)
+study_table <- LymphoSeq2::topSeqs(study_table, top = 100)
+amino_table <- LymphoSeq2::productiveSeq(
+  study_table = study_table,
+  aggregate = "junction_aa",
+  prevalence = TRUE
+)
+nucleotide_table <- LymphoSeq2::productiveSeq(
+  study_table = study_table,
+  aggregate = "junction",
+  prevalence = FALSE
+)
 }

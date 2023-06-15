@@ -8,7 +8,7 @@ pairwisePlot(matrix)
 }
 \arguments{
 \item{matrix}{A Bhattacharyya, Similarity, Sorensen, or PSI matrix produced
-by the LymphoSeq2 scoringMatrix function.}
+by the LymphoSeq2 \code{\link[=scoringMatrix]{scoringMatrix()}} function.}
 }
 \value{
 A pairwise comparison heat map.
@@ -22,28 +22,30 @@ using ggplot2 functions.  See examples below.
 }
 \examples{
 file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
-
-stable <- readImmunoSeq(path = file_path)
-
-atable <- productiveSeq(stable, aggregate = "junction_aa")
-
-similarity_matrix <- scoringMatrix(productive_table = atable, mode="Similarity")
-
-pairwisePlot(matrix = similarity_matrix)
-
-bhattacharyya_matrix <- scoringMatrix(productive_table = atable, mode="Bhattacharyya")
-
-pairwisePlot(matrix = bhattacharyya_matrix)
-
+study_table <- LymphoSeq2::readImmunoSeq(path = file_path) 
+study_table <- LymphoSeq2::topSeqs(study_table, top = 100)
+amino_table <- LymphoSeq2::productiveSeq(study_table, aggregate = "junction_aa")
+# Plot similarity using Similarity score
+similarity_matrix <- LymphoSeq2::scoringMatrix(
+  productive_table = amino_table,
+  mode = "Similarity"
+)
+LymphoSeq2::pairwisePlot(matrix = similarity_matrix)
+# Plot similarity using Bhattacharyya score
+bhattacharyya_matrix <- LymphoSeq2::scoringMatrix(
+  productive_table = amino_table,
+  mode = "Bhattacharyya"
+)
+LymphoSeq2::pairwisePlot(matrix = bhattacharyya_matrix)
 # Change plot color, title legend, and add title
-pairwisePlot(matrix = similarity_matrix) + 
-ggplot2::scale_fill_gradient(low = "#deebf7", high = "#3182bd") + 
-ggplot2::labs(fill = "Similarity score") + 
-ggplot2::ggtitle("Figure Title")
+LymphoSeq2::pairwisePlot(matrix = similarity_matrix) +
+  ggplot2::scale_fill_gradient(low = "#deebf7", high = "#3182bd") +
+  ggplot2::labs(fill = "Similarity score") +
+  ggplot2::ggtitle("Pairwise similarity score")
 }
 \seealso{
 An excellent resource for examples on how to reformat a ggplot can
 be found in the R Graphics Cookbook online (\url{http://www.cookbook-r.com/Graphs/}).
-The functions to create the similarity or Bhattacharyya matrix can be found
-here: \code{\link{similarityMatrix}} and \code{\link{bhattacharyyaMatrix}}
+The functions to create the similarity matrices can be found
+here: \code{\link[=scoringMatrix]{scoringMatrix()}}
 }

@@ -9,8 +9,9 @@ lorenzCurve(repertoire_ids, study_table)
 \arguments{
 \item{repertoire_ids}{A character vector of repertoire_id names in list.}
 
-\item{study_table}{A tibble generated using the LymphoSeq2 function readImmunoSeq
-or productiveSeq.  "duplicate_frequency" is a required column.}
+\item{study_table}{A tibble generated using the LymphoSeq2 function
+\code{\link[=readImmunoSeq]{readImmunoSeq()}} or \code{\link[=productiveSeq]{productiveSeq()}}. "duplicate_frequency" is a required
+column.}
 }
 \value{
 Returns a Lorenz curve.
@@ -27,43 +28,42 @@ line passing through the origin with a slope of 1 reflects equal frequencies
 of all sequences.  The Gini coefficient is the ratio of the area between the
 line of equality and the observed Lorenz curve over the total area under the
 line of equality.
-
 The plot is made using the package ggplot2 and can be reformatted
 using ggplot2 functions.  See examples below.
 }
 \examples{
+library(magrittr)
 file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
-
-stable <- readImmunoSeq(path = file_path)
-
-repertoire_ids <- stable \%>\% dplyr::pull(repertoire_id) \%>\% unique()
-
-lorenzCurve(repertoire_ids = repertoire_ids, study_table = stable)
-
-atable <- productiveSeq(study_table = stable, aggregate = "junction_aa")
-
-repertoire_ids <- atable \%>\% dplyr::pull(repertoire_id) \%>\% unique()
-
-lorenzCurve(repertoire_ids = repertoire_ids, study_table = atable)
-
+# Plot Lorenz curve with raw data
+study_table <- LymphoSeq2::readImmunoSeq(path = file_path) \%>\% 
+LymphoSeq2::topSeqs(top = 100)
+repertoire_ids <- study_table \%>\% 
+  dplyr::pull(repertoire_id) \%>\% 
+  unique()
+LymphoSeq2::lorenzCurve(repertoire_ids = repertoire_ids, study_table = study_table)
+# Plot Lorenz curve with productive amino acid sequences
+amino_table <- LymphoSeq2::productiveSeq(study_table = study_table, 
+  aggregate = "junction_aa")
+repertoire_ids <- amino_table \%>\%
+  dplyr::pull(repertoire_id) \%>\%
+  unique()
+LymphoSeq2::lorenzCurve(repertoire_ids = repertoire_ids, study_table = amino_table)
 # Change the legend labels, line colors, and add a title
 repertoire_ids <- c("TRB_Unsorted_0", "TRB_Unsorted_32", 
    "TRB_Unsorted_83", "TRB_Unsorted_949", "TRB_Unsorted_1320")
-
-lorenz_curve <- lorenzCurve(repertoire_ids = repertoire_ids, study_table = atable)
-
+lorenz_curve <- LymphoSeq2::lorenzCurve(repertoire_ids = repertoire_ids, 
+  study_table = amino_table)
 labels <- c("Day 0", "Day 32", "Day 83", "Day 949", "Day 1320")
-
 colors <- c("navyblue", "red", "darkgreen", "orange", "purple",
              "yellow", "pink", "lightgreen", "cyan", "maroon")
-
 lorenz_curve + 
 ggplot2::scale_color_manual(name = "repertoire_ids", 
                             breaks = repertoire_ids, 
                             labels = labels, values = colors) + 
-ggplot2::ggtitle("Figure Title")
+ggplot2::ggtitle("Lorenz curve")
 }
 \seealso{
 An excellent resource for examples on how to reformat a ggplot can
-be found in the R Graphics Cookbook online (\url{http://www.cookbook-r.com/Graphs/}).
+be found in the R Graphics Cookbook online
+(\url{http://www.cookbook-r.com/Graphs/}).
 }

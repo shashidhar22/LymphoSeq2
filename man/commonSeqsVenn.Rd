@@ -4,14 +4,14 @@
 \alias{commonSeqsVenn}
 \title{Common sequences Venn diagram}
 \usage{
-commonSeqsVenn(repertoire_ids, productive_aa)
+commonSeqsVenn(repertoire_ids, amino_table)
 }
 \arguments{
 \item{repertoire_ids}{A character vector of two or three names of repertoire_ids in
-productiveSeq table to compare.}
+\code{\link[=productiveSeq]{productiveSeq()}} table to compare.}
 
-\item{productive_aa}{A tibble of amino acid sequences generated
-by the LymphoSeq2 function productiveSeq.}
+\item{amino_table}{A tibble of amino acid sequences generated
+by the function \code{\link[=productiveSeq]{productiveSeq()}}.}
 }
 \value{
 Returns a a Venn diagram of the number of common sequences between
@@ -23,21 +23,25 @@ three repertoire_ids.
 }
 \examples{
 file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
-
-stable <- readImmunoSeq(path = file_path)
-
-atable <- productiveSeq(study_table = stable, aggregate = "junction_aa")
-
+study_table <- LymphoSeq2::readImmunoSeq(path = file_path)
+study_table <- LymphoSeq2::topSeqs(study_table, top = 100)
+amino_table <- LymphoSeq2::productiveSeq(study_table = study_table,
+  aggregate = "junction_aa")
 # Plot a triple Venn diagram
-commonSeqsVenn(repertoire_ids = c("TRB_Unsorted_0", 
-   "TRB_Unsorted_32", "TRB_Unsorted_83"), 
-   productive_aa = atable)
-
+LymphoSeq2::commonSeqsVenn(
+  repertoire_ids = c(
+    "TRB_Unsorted_0",
+    "TRB_Unsorted_32", "TRB_Unsorted_83"
+  ),
+  amino_table = amino_table
+)
 # Plot a double Venn diagram
-commonSeqsVenn(repertoire_ids = c("TRB_Unsorted_0", 
-   "TRB_Unsorted_32"), productive_aa = atable)
-
+LymphoSeq2::commonSeqsVenn(repertoire_ids = c(
+  "TRB_Unsorted_0",
+  "TRB_Unsorted_32"
+), amino_table = amino_table)
 }
 \seealso{
-\code{\link{productiveSeq}} \code{\link{commonSeqsVenn}} \code{\link{commonSeqsPlot}} \code{\link{commonSeqsBar}}
+\code{\link[=productiveSeq]{productiveSeq()}}, \code{\link[=commonSeqs]{commonSeqs()}},
+\code{\link[=commonSeqsPlot]{commonSeqsPlot()}}, \code{\link[=commonSeqsBar]{commonSeqsBar()}}
 }

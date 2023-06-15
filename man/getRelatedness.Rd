@@ -4,16 +4,15 @@
 \alias{getRelatedness}
 \title{Calculate relatedness}
 \usage{
-getRelatedness(sample_table, editDistance = 10)
+getRelatedness(study_table, edit_distance = 10)
 }
 \arguments{
-\item{sample_table}{A tibble of unproductive or productive junction
-sequences or productive junction sequences.  junction and duplicate_count are
-required columns.}
+\item{study_table}{A tibble of raw or productive nucleotide junction sequences.
+"junction" and "duplicate_count" are required columns.}
 
-\item{editDistance}{An integer giving the minimum edit distance that the
-sequence must be less than or equal to. See details below.}
+\item{edit_distance}{An integer giving the minimum edit distance that the
+sequence must be less than or equal to. See details below. Deafult 10 (the default)}
 }
 \description{
-Calculates the clonal relatedness of a repertoire_id.
+Calculates the clonal relatedness of a repertoire.
 }

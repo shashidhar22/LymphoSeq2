@@ -2,73 +2,35 @@
 % Please edit documentation in R/readImmunoSeq.R
 \name{readImmunoSeq}
 \alias{readImmunoSeq}
-\alias{getStandard}
-\alias{readFiles}
-\alias{iReceptorFormat}
 \title{Read ImmunoSeq files}
 \usage{
-readImmunoSeq(path, recursive = FALSE)
-
-getStandard(clone_file, airr_fields, matching_fields)
-
-readFiles(clone_file, empty_airr_frame, matching_fields, progress)
-
-iReceptorFormat(clone_frame)
+readImmunoSeq(path, recursive = FALSE, threads = parallel::detectCores()/2)
 }
 \arguments{
-\item{path}{Path to the directory containing tab-delimited files.  Only
-files with the extension .tsv are imported.  The names of the data frames are
+\item{path}{Path to the directory containing tab-delimited files. Only files
+with the extension .tsv are imported. The names of the data frames are
 the same as names of the files.}
 
-\item{clone_file}{.tsv file containing results from AIRRSeq pipeline}
+\item{recursive}{A Boolean value
+\itemize{
+\item \code{TRUE} : the function will recursively search directory for all .tsv files
+\item \code{FALSE} (the default): Open file using path
+}}
 
-\item{airr_fields}{A character vector of MiAIRR headers}
-
-\item{clone_frame}{An AIRR compliant tibble}
+\item{threads}{Number of threads.}
 }
 \value{
 Returns a tibble with MiAIRR headers and repertoire_id
-
-Tibble of given data with MiAIRR fields
-
-Tibble in MiAIRR format
-
-Tibble in iReceptor format
 }
 \description{
-Imports tab-separated value (.tsv) files exported by the Adaptive
-Biotechnologies ImmunoSEQ analyzer, BGI IR-SEQ, MiXCR and stores
+\code{\link[=readImmunoSeq]{readImmunoSeq()}} Imports tab-separated value (.tsv) files exported by the
+Adaptive Biotechnologies ImmunoSEQ analyzer, BGI IR-SEQ, MiXCR and stores
 them as MiAIRR compliant tibble.
 }
-\section{Get standard headers}{
-
-
-Retrives MiAIRR standard compliant fields from the clone files
-}
-
-\section{Read clone file from path}{
-
-
-Given the path to a single AIRRSeq clone file, generate MiAIRR compliant tibble.
-}
-
-\section{Get iReceptor standard format}{
-
-
-Returns a tibble that is compliant with the iReceptor repertoire format.
-}
-
 \examples{
-<<<<<<< HEAD
-file.path <- system.file("extdata", "TCRB_sequencing", 
- package = "LymphoSeq2")
+file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
+study_table <- LymphoSeq2::readImmunoSeq(path = file_path, recursive = FALSE,
+  threads = parallel::detectCores() / 2)
+study_table <- LymphoSeq2::topSeqs(study_table, top = 100)
 
-study_table <- readImmunoSeq(path = file.path,
-                             recursive = FALSE)
-=======
-file.path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
-
-study_table <- readImmunoSeq(path = file.path, recursive = FALSE)
-
->>>>>>> 8c93adc60131706d11b3a560be853bb3173513c5
 }

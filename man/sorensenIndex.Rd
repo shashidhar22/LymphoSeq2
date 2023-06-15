@@ -7,11 +7,10 @@
 sorensenIndex(sample_list)
 }
 \arguments{
-\item{sample1}{A data frame consisting of frequencies of antigen receptor
-sequences.  "junction_aa" and "duplicate_count" are a required columns.}
-
-\item{sample2}{A data frame consisting of frequencies of antigen receptor
-sequences.  "junction_aa" and "duplicate_count" are a required columns.}
+\item{sample_list}{A list of two tibble corresponding derived from the
+\code{\link[=productiveSeq]{productiveSeq()}} function in LymphoSeq2. "duplicate_frequency",
+"junction_aa", and "repertoire_id" columns are necessary for the calculation
+of the Bhattacharyya coefficient.}
 }
 \value{
 Returns the similarity score, a measure of the amount of
@@ -25,5 +24,5 @@ a Jaccard index, Sorensen index gives a greater weight to shared sequences
 over unique sequences.
 }
 \seealso{
-\code{\link{scoringMatrix}}
+\code{\link[=scoringMatrix]{scoringMatrix()}}
 }
