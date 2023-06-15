@@ -15,7 +15,7 @@
 #' @examples
 #' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
 #' study_table <- LymphoSeq2::readImmunoSeq(path = file_path, recursive = FALSE,
-#'   threads = parallel::detectCores() / 2)
+#'   threads = 1)
 #' study_table <- LymphoSeq2::topSeqs(study_table, top = 100)
 #'
 #' @export
