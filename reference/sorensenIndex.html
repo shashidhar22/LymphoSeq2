@@ -62,14 +62,11 @@ over unique sequences.</p>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
-    <dl><dt>sample1</dt>
-<dd><p>A data frame consisting of frequencies of antigen receptor
-sequences.  "junction_aa" and "duplicate_count" are a required columns.</p></dd>
-
-
-<dt>sample2</dt>
-<dd><p>A data frame consisting of frequencies of antigen receptor
-sequences.  "junction_aa" and "duplicate_count" are a required columns.</p></dd>
+    <dl><dt>sample_list</dt>
+<dd><p>A list of two tibble corresponding derived from the
+<code><a href="productiveSeq.html">productiveSeq()</a></code> function in LymphoSeq2. "duplicate_frequency",
+"junction_aa", and "repertoire_id" columns are necessary for the calculation
+of the Bhattacharyya coefficient.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -83,7 +80,7 @@ indicates no shared frequencies.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
-    <div class="dont-index"><p><code><a href="scoringMatrix.html">scoringMatrix</a></code></p></div>
+    <div class="dont-index"><p><code><a href="scoringMatrix.html">scoringMatrix()</a></code></p></div>
     </div>
 
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

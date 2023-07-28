@@ -58,13 +58,13 @@
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>productive_table</dt>
 <dd><p>A tibble of productive amino acid sequences
-imported using the function LymphoSeq function productiveSeq where the
+imported using the function LymphoSeq2 function <code><a href="productiveSeq.html">productiveSeq()</a></code> where the
 aggregate parameter was set to "junction_aa".</p></dd>
 
 
 <dt>unique_type</dt>
-<dd><p>Use "junction_aa" to aggregate by amino acid sequences.
-Use "junction" to aggregate by nucleotide sequences. Default is "junction_aa".</p></dd>
+<dd><p>Use <code>"junction_aa"</code> (the default) to aggregate by amino acid sequences.
+Use <code>"junction"</code> to aggregate by nucleotide sequences.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -72,9 +72,18 @@ Use "junction" to aggregate by nucleotide sequences. Default is "junction_aa".</
     
 
 <p>A data frame of unique amino acid sequences from the list of
-data frames aggregated by duplicate_count.</p>
+data frames aggregated by "duplicate_count"</p>
     </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">file_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"TCRB_sequencing"</span>, package <span class="op">=</span> <span class="st">"LymphoSeq2"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">study_table</span> <span class="op">&lt;-</span> <span class="fu">LymphoSeq2</span><span class="fu">::</span><span class="fu"><a href="readImmunoSeq.html">readImmunoSeq</a></span><span class="op">(</span>path <span class="op">=</span> <span class="va">file_path</span>, threads <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">study_table</span> <span class="op">&lt;-</span> <span class="fu">LymphoSeq2</span><span class="fu">::</span><span class="fu"><a href="topSeqs.html">topSeqs</a></span><span class="op">(</span><span class="va">study_table</span>, top <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">amino_table</span> <span class="op">&lt;-</span> <span class="fu">LymphoSeq2</span><span class="fu">::</span><span class="fu"><a href="productiveSeq.html">productiveSeq</a></span><span class="op">(</span>study_table <span class="op">=</span> <span class="va">study_table</span>, aggregate <span class="op">=</span> <span class="st">"junction_aa"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">unique_seqs</span> <span class="op">&lt;-</span> <span class="fu">LymphoSeq2</span><span class="fu">::</span><span class="fu">uniqueSeqs</span><span class="op">(</span>productive_table <span class="op">=</span> <span class="va">amino_table</span>, unique_type <span class="op">=</span> <span class="st">"junction_aa"</span><span class="op">)</span></span></span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside></div>
 

@@ -16,13 +16,16 @@
     <loc>https://shashidhar22.github.io/LymphoSeq2/index.html</loc>
   </url>
   <url>
-    <loc>https://shashidhar22.github.io/LymphoSeq2/reference/aggreateSeq.html</loc>
-  </url>
-  <url>
     <loc>https://shashidhar22.github.io/LymphoSeq2/reference/alignSeq.html</loc>
   </url>
   <url>
+    <loc>https://shashidhar22.github.io/LymphoSeq2/reference/antigen_db.html</loc>
+  </url>
+  <url>
     <loc>https://shashidhar22.github.io/LymphoSeq2/reference/bhattacharyyaCoefficient.html</loc>
+  </url>
+  <url>
+    <loc>https://shashidhar22.github.io/LymphoSeq2/reference/calculateCounts.html</loc>
   </url>
   <url>
     <loc>https://shashidhar22.github.io/LymphoSeq2/reference/chordDiagramVDJ.html</loc>
@@ -35,6 +38,9 @@
   </url>
   <url>
     <loc>https://shashidhar22.github.io/LymphoSeq2/reference/cloneTrack.html</loc>
+  </url>
+  <url>
+    <loc>https://shashidhar22.github.io/LymphoSeq2/reference/collpase_chains.html</loc>
   </url>
   <url>
     <loc>https://shashidhar22.github.io/LymphoSeq2/reference/commonSeqs.html</loc>
@@ -58,6 +64,9 @@
     <loc>https://shashidhar22.github.io/LymphoSeq2/reference/exportFasta.html</loc>
   </url>
   <url>
+    <loc>https://shashidhar22.github.io/LymphoSeq2/reference/fisherFunction.html</loc>
+  </url>
+  <url>
     <loc>https://shashidhar22.github.io/LymphoSeq2/reference/geneFreq.html</loc>
   </url>
   <url>
@@ -73,10 +82,19 @@
     <loc>https://shashidhar22.github.io/LymphoSeq2/reference/index.html</loc>
   </url>
   <url>
+    <loc>https://shashidhar22.github.io/LymphoSeq2/reference/iterativeSummary.html</loc>
+  </url>
+  <url>
     <loc>https://shashidhar22.github.io/LymphoSeq2/reference/kmerPlot.html</loc>
   </url>
   <url>
     <loc>https://shashidhar22.github.io/LymphoSeq2/reference/lorenzCurve.html</loc>
+  </url>
+  <url>
+    <loc>https://shashidhar22.github.io/LymphoSeq2/reference/mostPrevalent.html</loc>
+  </url>
+  <url>
+    <loc>https://shashidhar22.github.io/LymphoSeq2/reference/pairwiseNetwork.html</loc>
   </url>
   <url>
     <loc>https://shashidhar22.github.io/LymphoSeq2/reference/pairwisePlot.html</loc>
@@ -100,7 +118,19 @@
     <loc>https://shashidhar22.github.io/LymphoSeq2/reference/plotTrackSingular.html</loc>
   </url>
   <url>
+    <loc>https://shashidhar22.github.io/LymphoSeq2/reference/prepDB.html</loc>
+  </url>
+  <url>
+    <loc>https://shashidhar22.github.io/LymphoSeq2/reference/prevalenceTRB.html</loc>
+  </url>
+  <url>
     <loc>https://shashidhar22.github.io/LymphoSeq2/reference/productiveSeq.html</loc>
+  </url>
+  <url>
+    <loc>https://shashidhar22.github.io/LymphoSeq2/reference/publishedTRB.html</loc>
+  </url>
+  <url>
+    <loc>https://shashidhar22.github.io/LymphoSeq2/reference/read10x.html</loc>
   </url>
   <url>
     <loc>https://shashidhar22.github.io/LymphoSeq2/reference/readGliph.html</loc>
@@ -115,19 +145,22 @@
     <loc>https://shashidhar22.github.io/LymphoSeq2/reference/runINext.html</loc>
   </url>
   <url>
+    <loc>https://shashidhar22.github.io/LymphoSeq2/reference/sampledSummary.html</loc>
+  </url>
+  <url>
     <loc>https://shashidhar22.github.io/LymphoSeq2/reference/scoringMatrix.html</loc>
   </url>
   <url>
     <loc>https://shashidhar22.github.io/LymphoSeq2/reference/searchDB.html</loc>
   </url>
   <url>
-    <loc>https://shashidhar22.github.io/LymphoSeq2/reference/searchIreceptor.html</loc>
-  </url>
-  <url>
     <loc>https://shashidhar22.github.io/LymphoSeq2/reference/searchPublished.html</loc>
   </url>
   <url>
     <loc>https://shashidhar22.github.io/LymphoSeq2/reference/searchSeq.html</loc>
+  </url>
+  <url>
+    <loc>https://shashidhar22.github.io/LymphoSeq2/reference/selectChain.html</loc>
   </url>
   <url>
     <loc>https://shashidhar22.github.io/LymphoSeq2/reference/seqMatrix.html</loc>
@@ -137,6 +170,9 @@
   </url>
   <url>
     <loc>https://shashidhar22.github.io/LymphoSeq2/reference/sorensenIndex.html</loc>
+  </url>
+  <url>
+    <loc>https://shashidhar22.github.io/LymphoSeq2/reference/standardize10x.html</loc>
   </url>
   <url>
     <loc>https://shashidhar22.github.io/LymphoSeq2/reference/summarySeq.html</loc>
@@ -152,5 +188,8 @@
   </url>
   <url>
     <loc>https://shashidhar22.github.io/LymphoSeq2/reference/uniqueSeqs.html</loc>
+  </url>
+  <url>
+    <loc>https://shashidhar22.github.io/LymphoSeq2/reference/writeFasta.html</loc>
   </url>
 </urlset>
