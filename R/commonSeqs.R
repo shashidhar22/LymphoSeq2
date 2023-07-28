@@ -13,8 +13,8 @@
 #' [LymphoSeq2::commonSeqsPlot()], [LymphoSeq2::commonSeqsBar()]
 #' @examples
 #' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
-#' study_table <- LymphoSeq2::readImmunoSeq(path = file_path) %>% 
-#' LymphoSeq2::topSeqs(top = 100)
+#' study_table <- LymphoSeq2::readImmunoSeq(path = file_path, threads = 1)
+#' study_table <- LymphoSeq2::topSeqs(study_table, top = 100)
 #' amino_table <- LymphoSeq2::productiveSeq(study_table = study_table,
 #'   aggregate = "junction_aa")
 #' LymphoSeq2::commonSeqs(

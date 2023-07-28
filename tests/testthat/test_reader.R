@@ -3,7 +3,7 @@ library(LymphoSeq2)
 library(tidyverse)
 
 test_that("Reads a single AIRR file correctly", {
-  stable <- LymphoSeq2::readImmunoSeq("test_data/015V12001549_CFAR.tsv")
+  stable <- LymphoSeq2::readImmunoSeq("test_data/015V12001549_CFAR.tsv", threads = 1)
   snuc <- base::length(base::unique(stable$junction))
   srow <- base::nrow(stable)
   tot_freq <- stable %>% dplyr::pull(duplicate_frequency) %>% base::sum()
@@ -13,7 +13,8 @@ test_that("Reads a single AIRR file correctly", {
 })
 
 test_that("Reads a list of AIRR file correctly", {
-  stable <- LymphoSeq2::readImmunoSeq(c("test_data/015V12001549_CFAR.tsv", "test_data/015V12001685_CFAR_R.tsv"))
+  stable <- LymphoSeq2::readImmunoSeq(c("test_data/015V12001549_CFAR.tsv", "test_data/015V12001685_CFAR_R.tsv"),
+                                      threads = 1)
   srow <- base::nrow(stable)
   ctable <- tibble::tibble(repertoire_id = c("015V12001549_CFAR", "015V12001685_CFAR_R"),
                            tot_freq = c(1, 1),
@@ -31,7 +32,7 @@ test_that("Reads a list of AIRR file correctly", {
 })
 
 test_that("Reads AIRR files from a path correctly", {
-  stable <- LymphoSeq2::readImmunoSeq("test_data/")
+  stable <- LymphoSeq2::readImmunoSeq("test_data/", threads = 1)
   srow <- base::nrow(stable)
   ctable <- tibble::tibble(repertoire_id = c("015V12001549_CFAR", "015V12001685_CFAR_R", "015V12003105_CFAR", "015V06013979_CFAR"),
                            tot_freq = c(1, 1, 1, 1),
@@ -49,7 +50,7 @@ test_that("Reads AIRR files from a path correctly", {
 })
 
 test_that("Creates correct columns", {
-  stable <- LymphoSeq2::readImmunoSeq("test_data/015V12001549_CFAR.tsv")
+  stable <- LymphoSeq2::readImmunoSeq("test_data/015V12001549_CFAR.tsv", threads = 1)
   scol <- base::ncol(stable)
   sfields <- colnames(stable)
 

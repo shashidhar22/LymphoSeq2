@@ -4,26 +4,44 @@
 \alias{clonality}
 \title{Clonality (summary statistics)}
 \usage{
-clonality(study_table)
+clonality(study_table, rarefy = FALSE, iterations = 100, min_count = 1000)
 }
 \arguments{
-\item{study_table}{A tibble consisting of antigen receptor
-sequencing imported by the LymphoSeq2 function readImmunoSeq. "junction_aa", "duplicate_count",
-and "duplicate_frequency" are required columns. Note that clonality is usually calculated from
-productive junction sequences. Therefore, it is not recommended to run this function using a
-productive sequence list aggregated by amino acids.}
+\item{study_table}{A tibble consisting of antigen receptor sequencing
+imported by the LymphoSeq2 function \code{\link[=readImmunoSeq]{readImmunoSeq()}}. "junction_aa",
+"duplicate_count", and "duplicate_frequency" are required columns. Note that
+clonality is usually calculated from productive junction sequences.
+Therefore, it is not recommended to run this function using a productive
+sequence list aggregated by amino acids.}
+
+\item{rarefy}{A Boolean value
+\itemize{
+\item \code{TRUE} : Rarefied diversity metrics are calculated by sampling down each
+repertoire in the input table down to the repertoire with the smallest
+number of sequences and calculating the diversity metrics on the sampled
+data. The process is repeated for the number of iterations specified by
+the user and the diversity metrics are averaged over the number of
+iterations. Default 100 (the default)
+\item \code{FALSE} (the default): Diversity metrics will be calculated considering
+the raw repertoire data for each of the samples
+}}
+
+\item{iterations}{Number of iterations to run the sampled clonality metrics.}
+
+\item{min_count}{The minimum depth to which each repertoire in the study must
+be sampled to. Default 1000 (the default)}
 }
 \value{
 Returns a tibble giving the total number of sequences, number of
 unique productive sequences, number of genomes, clonality, Gini coefficient,
-simpson index, inverse simpson index, and the frequency (\\%) of the top productive sequence.
-for each repertoire_id.
+Simpson index, inverse Simpson index, and the frequency of the top
+productive sequence for each repertoire_id.
 }
 \description{
-Creates a tibble giving the total number of sequences, number of unique
-productive sequences, number of genomes, entropy, clonality, Gini
-coefficient, simpson index, inverse simpson index, and the
-frequency (\\%) of the top productive sequences form a repertoire_id tibble.
+\code{clonality()} Creates a tibble giving the total number of sequences, number
+of unique productive sequences, number of genomes, entropy, clonality, Gini
+coefficient, TCR/BCR convergence, and the frequency of the top productive
+sequences for any given sample.
 }
 \details{
 Clonality is derived from the Shannon entropy, which is calculated
@@ -42,14 +60,31 @@ and the observed Lorenz curve over the total area under the line of equality.
 Both Gini coefficient and clonality are reported on a scale from 0 to 1 where
 0 indicates all sequences have the same frequency and 1 indicates the
 repertoire is dominated by a single sequence.
+
+TCR/BCR convergence is defined as the average number of productive CDR3
+nucleotide sequences that form the same productive CDR3 amino acid sequence.
+
+Sequencing depth and amount of input available can often confound diversity
+metrics. For example, a peripheral blood sample can appear to be more clonal
+than a tumor sample when it is not sequenced to adequate depth. To overcome
+this we can sample down the sample down all repertoires to the depth of the
+sample with the least number of sequences and then calculate the diversity
+metrics. Repeating this process multiple times and averaging the diversity
+metrics can give a more accurate representation of sample diversity and
+enable comparison of repertoire samples from different experiments and
+different tissue of origin
 }
 \examples{
 file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
-
-stable <- readImmunoSeq(path = file_path)
-
-clonality(stable)
+study_table <- LymphoSeq2::readImmunoSeq(path = file_path, threads = 1)
+study_table <- LymphoSeq2::topSeqs(study_table, top = 100)
+raw_clonality <- LymphoSeq2::clonality(study_table)
+sampled_clonality <- LymphoSeq2::clonality(study_table,
+  rarefy = TRUE,
+  iterations = 100,
+  min_count = 100
+)
 }
 \seealso{
-\code{\link{lorenzCurve}}
+\code{\link[=lorenzCurve]{lorenzCurve()}}
 }

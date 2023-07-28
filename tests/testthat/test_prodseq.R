@@ -4,7 +4,8 @@ library(tidyverse)
 
 test_that("Gather productive aminoacid sequences", {
   stable <- LymphoSeq2::readImmunoSeq(c("test_data/015V12001549_CFAR.tsv", 
-                                        "test_data/015V12001685_CFAR_R.tsv"))
+                                        "test_data/015V12001685_CFAR_R.tsv"),
+                                        threads = 1)
   atable <- LymphoSeq2::productiveSeq(stable)
   arow <- base::nrow(atable)
   ctable <- tibble::tibble(repertoire_id = c("015V12001549_CFAR", "015V12001685_CFAR_R"),
@@ -24,7 +25,8 @@ test_that("Gather productive aminoacid sequences", {
 
 test_that("Gather productive nucleotide sequences", {
   stable <- LymphoSeq2::readImmunoSeq(c("test_data/015V12001549_CFAR.tsv", 
-                                        "test_data/015V12001685_CFAR_R.tsv"))
+                                        "test_data/015V12001685_CFAR_R.tsv"),
+                                        threads = 1)
   atable <- LymphoSeq2::productiveSeq(stable, aggregate = "junction")
   arow <- base::nrow(atable)
   ctable <- tibble::tibble(repertoire_id = c("015V12001549_CFAR", "015V12001685_CFAR_R"),
@@ -44,7 +46,7 @@ test_that("Gather productive nucleotide sequences", {
 
 
 test_that("Count of collapse amino acid sequences match", {
-  stable <- LymphoSeq2::readImmunoSeq("test_data/015V06013979_CFAR.tsv")
+  stable <- LymphoSeq2::readImmunoSeq("test_data/015V06013979_CFAR.tsv", threads = 1)
   atable <- LymphoSeq2::productiveSeq(stable, aggregate = "junction_aa")
   ctable <- tibble::tibble(repertoire_id = c("015V06013979_CFAR", "015V06013979_CFAR"),
                            junction_aa = c("CASSIASAGGPDTQYF", "CASSMGQGATVGYTF"),
@@ -57,7 +59,7 @@ test_that("Count of collapse amino acid sequences match", {
 
 
 test_that("Prevalence of amino acid sequences is correct", {
-  stable <- LymphoSeq2::readImmunoSeq("test_data")
+  stable <- LymphoSeq2::readImmunoSeq("test_data", threads = 1)
   ntable <- LymphoSeq2::productiveSeq(stable, aggregate = "junction_aa", prevalence = TRUE) %>% 
             dplyr::select(prevalence, junction_aa) %>%
             dplyr::filter(prevalence != 0) %>%

@@ -8,7 +8,7 @@ commonSeqs(study_table, repertoire_ids = NULL)
 }
 \arguments{
 \item{study_table}{A list of productive amino acid sequences generated
-by the LymphoSeq2 function productiveSeq where aggregate = "junction_aa".}
+by the LymphoSeq2 function \code{\link[=productiveSeq]{productiveSeq()}} where aggregate = "junction_aa".}
 
 \item{repertoire_ids}{A character vector of two or more repertoire_id names in
 study_table.}
@@ -18,19 +18,21 @@ Returns a data frame of the common sequences between two or more files
 displaying their frequencies in each.
 }
 \description{
-Creates a data frame of the common sequences in two or more repertoire_ids, reporting
-their frequencies in each.
+Creates a data frame of the common sequences in two or more repertoire_ids,
+reporting their frequencies in each.
 }
 \examples{
 file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
-
-stable <- readImmunoSeq(path = file_path)
-
-atable <- productiveSeq(study_table = stable, aggregate = "junction_aa")
-
-commonSeqs(repertoire_ids = c("TRB_Unsorted_0", "TRB_Unsorted_32"),
-   study_table = atable)
+study_table <- LymphoSeq2::readImmunoSeq(path = file_path, threads = 1)
+study_table <- LymphoSeq2::topSeqs(study_table, top = 100)
+amino_table <- LymphoSeq2::productiveSeq(study_table = study_table,
+  aggregate = "junction_aa")
+LymphoSeq2::commonSeqs(
+  repertoire_ids = c("TRB_Unsorted_0", "TRB_Unsorted_32"),
+  study_table = amino_table
+)
 }
 \seealso{
-\code{\link{productiveSeq}} \code{\link{commonSeqsVenn}} \code{\link{commonSeqsPlot}} \code{\link{commonSeqsBar}}
+\code{\link[=productiveSeq]{productiveSeq()}}, \code{\link[=commonSeqsVenn]{commonSeqsVenn()}},
+\code{\link[=commonSeqsPlot]{commonSeqsPlot()}}, \code{\link[=commonSeqsBar]{commonSeqsBar()}}
 }

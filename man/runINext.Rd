@@ -4,14 +4,12 @@
 \alias{runINext}
 \title{Run iNEXT on repertoire_ids}
 \usage{
-runINext(sample_table, color = "repertoire_id")
+runINext(sample_table)
 }
 \arguments{
 \item{sample_table}{A tibble consisting antigen receptor sequencing
-data imported by the LymphoSeq function readImmunoSeq. "junction_aa", "duplicate_count", and
-"duplicate_frequency" are required columns.}
-
-\item{color}{}
+data imported by the LymphoSeq2 function readImmunoSeq. "junction_aa",
+"duplicate_count", and "duplicate_frequency" are required columns.}
 }
 \description{
 Given a repertoire_id table, for each generate rarefaction curves to estimate
@@ -19,11 +17,15 @@ repertoire diversity. The method used to generate the rarefaction curve
 is derived from Chao et al., (2014) using the iNEXT library
 }
 \examples{
+library(magrittr)
 file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
-stable <- readImmunoSeq(path = file_path)
-atable <- productiveSeq(stable, 
-                        aggregate = "junction_aa", 
-                        prevalence = TRUE)
-atable <- atable \%>\% dplyr::filter(repertoire_id == "TRB_Unsorted_1320")
-rtable <- runINext(atable)
+study_table <- LymphoSeq2::readImmunoSeq(path = file_path, threads = 1) \%>\% 
+LymphoSeq2::topSeqs(top = 100)
+amino_table <- LymphoSeq2::productiveSeq(study_table,
+  aggregate = "junction_aa",
+  prevalence = TRUE
+)
+amino_table <- amino_table \%>\%
+  dplyr::filter(repertoire_id == "TRB_Unsorted_1320")
+rarefaction_table <- LymphoSeq2::runINext(amino_table)
 }

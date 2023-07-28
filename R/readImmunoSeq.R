@@ -15,8 +15,8 @@
 #' @examples
 #' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
 #' study_table <- LymphoSeq2::readImmunoSeq(path = file_path, recursive = FALSE,
-#'   threads = parallel::detectCores() / 2) %>% 
-#' LymphoSeq2::topSeqs(top = 100)
+#'   threads = 1)
+#' study_table <- LymphoSeq2::topSeqs(study_table, top = 100)
 #'
 #' @export
 #' @import magrittr
@@ -106,7 +106,9 @@ getStandard <- function(clone_file, progress, threads) {
     trim_ws = TRUE,
     show_col_types = FALSE
   )
-  matching_fields <- getAIRRFields(clone_file, threads)
+  AIRR_fields_res <- getAIRRFields(clone_file, threads)
+  matching_fields <- AIRR_fields_res$matching_fields
+  file_type = AIRR_fields_res$file_type
   col_read <- names(matching_fields)
   clone_data <- suppressWarnings(
     classes = c("vroom_mismatched_column_name", "vroom_parse_issue"),
@@ -141,11 +143,32 @@ getStandard <- function(clone_file, progress, threads) {
       cdr2_end = dplyr::if_else(is.na(cdr2_end), cdr2_end, cdr2_end + cdr2_start),
       cdr3_end = dplyr::if_else(is.na(cdr3_end), cdr3_end, cdr3_end + cdr3_start),
       sequence_id = dplyr::row_number(),
-      sequence_aa = dplyr::if_else(stringr::str_detect(sequence_aa, "x"), stringr::str_remove_all(sequence_aa, "x"), sequence_aa),
+      sequence = dplyr::if_else(is.na(sequence) & !is.na(junction), junction, sequence),
       junction = dplyr::if_else(is.na(junction) & !is.na(sequence), sequence, junction),
-      junction_aa = dplyr::if_else(is.na(junction_aa) & !is.na(sequence_aa), sequence_aa, junction_aa),
-      junction = dplyr::if_else(stringr::str_detect(junction, "[a-z]+"), toupper(stringr::str_extract(junction, "[a-z]{2,}")), junction),
-      junction_aa = dplyr::if_else(stringr::str_detect(junction_aa, "[a-z]+"), toupper(stringr::str_extract(junction_aa, "[a-z]{2,}")), junction_aa),
+      sequence_aa = dplyr::if_else(is.na(sequence_aa) & !is.na(junction_aa), junction_aa, sequence_aa),
+      junction_aa = dplyr::if_else(is.na(junction_aa) & !is.na(sequence_aa), sequence_aa, junction_aa)
+    )
+  if (file_type == "BGI") {
+    clone_data <- clone_data %>%
+      dplyr::mutate(
+            junction = dplyr::if_else(stringr::str_detect(junction, "x"), stringr::str_remove_all(junction, "x"), junction),
+            junction = dplyr::if_else(stringr::str_detect(junction, "[A-Z]+"), stringr::str_remove_all(junction, "[A-Z]+"), junction),
+            junction = toupper(junction),
+            junction_aa = dplyr::if_else(stringr::str_detect(junction_aa, "x"), stringr::str_remove_all(junction_aa, "x"), junction_aa),
+            junction_aa = dplyr::if_else(stringr::str_detect(junction_aa, "[A-Z]+"), stringr::str_remove_all(junction_aa, "[A-Z]+"), junction_aa),
+            junction_aa = toupper(junction_aa)
+      )
+  } else {
+    clone_data <- clone_data %>%
+      dplyr::mutate(
+        junction = dplyr::if_else(stringr::str_detect(junction, "[a-z]+"), toupper(stringr::str_extract(junction, "[a-z]{2,}")), junction),
+        junction_aa = dplyr::if_else(stringr::str_detect(junction_aa, "[a-z]+"), toupper(stringr::str_extract(junction_aa, "[a-z]{2,}")), junction_aa)
+      )
+  }
+  clone_data <- clone_data %>% 
+    dplyr::mutate(
+      sequence = junction,
+      sequence_aa = junction_aa,
       junction_length = stringr::str_length(junction),
       junction_aa_length = stringr::str_length(junction_aa),
       rev_comp = FALSE,
@@ -279,5 +302,5 @@ getAIRRFields <- function(clone_file, threads) {
     matching_fields <- col_names
     names(matching_fields) <- col_names
   }
-  return(matching_fields)
+  return(list("matching_fields" = matching_fields, "file_type" = input_type))
 }

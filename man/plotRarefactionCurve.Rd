@@ -2,14 +2,14 @@
 % Please edit documentation in R/rarefactionCurve.R
 \name{plotRarefactionCurve}
 \alias{plotRarefactionCurve}
-\title{Plot rarefication and extrapolation curves for samples}
+\title{Plot rarefaction and extrapolation curves for samples}
 \usage{
 plotRarefactionCurve(study_table)
 }
 \arguments{
 \item{study_table}{A tibble consisting antigen receptor sequencing
-data imported by the LymphoSeq function readImmunoSeq. "aminoAcid", "count", and
-"frequencyCount" are required columns.}
+data imported by the LymphoSeq2 function \code{\link[=readImmunoSeq]{readImmunoSeq()}}. "junction_aa",
+"duplicate_count", and "duplicate_frequency" are required columns.}
 }
 \description{
 Given a study table, for each sample plot rarefaction curves to estimate
@@ -18,7 +18,11 @@ is derived from Chao et al., (2014) using the iNEXT library
 }
 \examples{
 file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
-stable <- readImmunoSeq(path = file_path)
-plotRarefactionCurve(stable)
+study_table <- LymphoSeq2::readImmunoSeq(path = file_path, threads = 1)
+study_table <- LymphoSeq2::topSeqs(study_table, top = 100)
+LymphoSeq2::plotRarefactionCurve(study_table)
 
+}
+\seealso{
+\code{\link[=runINext]{runINext()}}
 }

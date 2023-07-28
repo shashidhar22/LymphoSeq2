@@ -4,7 +4,7 @@ library(tidyverse)
 
 test_that("Align all sequences in all sample within edit distance of 15", {
   base::set.seed(12357)
-  stable <- LymphoSeq2::readImmunoSeq("test_data/")
+  stable <- LymphoSeq2::readImmunoSeq("test_data/", threads = 1)
   ntable <- LymphoSeq2::productiveSeq(stable, aggregate = "junction")
   nalign <- LymphoSeq2::alignSeq(ntable)
   nseq <- base::length(nalign@unmasked)
@@ -14,13 +14,13 @@ test_that("Align all sequences in all sample within edit distance of 15", {
 })
 
 test_that("Align all sequences in one sample within edit distance of 15", {
-  ttable <- LymphoSeq2::readImmunoSeq("test_data/")
+  ttable <- LymphoSeq2::readImmunoSeq("test_data/", threads = 1)
   tntable <- LymphoSeq2::productiveSeq(ttable, aggregate = "junction")
   talign <- LymphoSeq2::alignSeq(tntable, repertoire_ids = "015V12001549_CFAR")
   tseq <- base::length(talign@unmasked)
   tconsensus <- suppressMessages(msa::msaConsensusSequence(talign))
   tname <- base::unique(stringr::str_remove(base::names(talign@unmasked), "_\\d+"))
-  ktable <- LymphoSeq2::readImmunoSeq("test_data/015V12001549_CFAR.tsv")
+  ktable <- LymphoSeq2::readImmunoSeq("test_data/015V12001549_CFAR.tsv", threads = 1)
   kntable <- LymphoSeq2::productiveSeq(ktable, aggregate = "junction")
   kalign <- LymphoSeq2::alignSeq(kntable)
   kseq <- base::length(kalign@unmasked)
@@ -33,7 +33,7 @@ test_that("Align all sequences in one sample within edit distance of 15", {
 
 test_that("Align single sequence in all samples within edit distance of 15", {
   base::set.seed(12357)
-  ttable <- LymphoSeq2::readImmunoSeq("test_data/")
+  ttable <- LymphoSeq2::readImmunoSeq("test_data/", threads = 1)
   tntable <- LymphoSeq2::productiveSeq(ttable, aggregate = "junction")
   talign <- LymphoSeq2::alignSeq(tntable, sequence_list = c("AATTCCCTGGAGCTTGGTGACTCTGCTGTGTATTTCTGTGCCAGCAGCTATAGAGCGGGGGCTGGCGGTGAGCAGTTCTTCGGGCCA"))
   tseq <- base::length(talign@unmasked)

@@ -7,27 +7,28 @@
 plotAlignment(msa)
 }
 \arguments{
-\item{msa}{An msa object obtained from alignSeq function in LymphoSeq2.}
+\item{msa}{An msa object obtained from \code{\link[=alignSeq]{alignSeq()}} function in LymphoSeq2.}
 }
 \value{
 Multiple sequence alignment plot.
 }
 \description{
-Generate MSA alignment figures from the results of alignSeq
+Generate MSA alignment figures from the results of \code{\link[=alignSeq]{alignSeq()}}
 }
 \examples{
+library(ggmsa)
 file_path <- system.file("extdata", "IGH_sequencing", package = "LymphoSeq2")
-
-stable <- readImmunoSeq(path = file_path)
-
-ntable <- productiveSeq(stable, aggregate = "junction")
-
-msa <- alignSeq(ntable, repertoire_id = "IGH_MVQ92552A_BL", type = "junction", 
-         method = "ClustalW")
-
+study_table <- LymphoSeq2::readImmunoSeq(path = file_path, threads = 1)
+study_table <- LymphoSeq2::topSeqs(study_table, top = 100)
+nucleotide_table <- LymphoSeq2::productiveSeq(study_table, aggregate = "junction")
+msa <- LymphoSeq2::alignSeq(nucleotide_table,
+  repertoire_id = "IGH_MVQ92552A_BL",
+  type = "junction_aa", method = "ClustalW"
+)
+LymphoSeq2::plotAlignment(msa)
 }
 \seealso{
-The function utilizes ggmsa package for visualizations. Further details
-on ggmsa can be found at the link mentioned below.
+The function utilizes ggmsa package for visualizations. Further
+details on ggmsa can be found at the link mentioned below.
 \url{https://cran.r-project.org/web/packages/ggmsa/vignettes/ggmsa.html}
 }

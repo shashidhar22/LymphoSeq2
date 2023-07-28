@@ -4,7 +4,7 @@ library(tidyverse)
 
 test_that("Number of k-mers are counted correctly", {
     junction <- "ATCGATCAC"
-    study_table <- LymphoSeq2::readImmunoSeq("test_data/015V06013979_CFAR.tsv")
+    study_table <- LymphoSeq2::readImmunoSeq("test_data/015V06013979_CFAR.tsv", threads = 1)
     ktable <- LymphoSeq2::countKmer(study_table = study_table, k = 3)
     num_rows <- base::nrow(ktable)
     rep_id <- study_table %>% 

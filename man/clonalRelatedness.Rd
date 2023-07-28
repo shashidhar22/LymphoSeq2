@@ -4,21 +4,21 @@
 \alias{clonalRelatedness}
 \title{Clonal relatedness}
 \usage{
-clonalRelatedness(study_table, editDistance = 10)
+clonalRelatedness(study_table, edit_distance = 10)
 }
 \arguments{
-\item{study_table}{A tibble of unproductive or productive junction
-sequences or productive junction sequences.  Junction and duplicate_count are
-required columns.}
+\item{study_table}{A tibble of raw or productive nucleotide junction sequences.
+"junction" and "duplicate_count" are required columns.}
 
-\item{editDistance}{An integer giving the minimum edit distance that the
-sequence must be less than or equal to. See details below.}
+\item{edit_distance}{An integer giving the minimum edit distance that the
+sequence must be less than or equal to. See details below. Deafult 10 (the default)}
 }
 \value{
-Returns a tibble with the calculated clonal relatedness for each repertoire_id.
+Returns a tibble with the calculated clonal relatedness for each
+repertoire_id.
 }
 \description{
-Calculates the clonal relatedness for each repertoire_id in a study.
+Calculates the clonal relatedness for each repertoire in a study.
 }
 \details{
 Clonal relatedness is the proportion of junction sequences that
@@ -34,13 +34,11 @@ the sequences differ by a single amino acid or junction.
 }
 \examples{
 file_path <- system.file("extdata", "IGH_sequencing", package = "LymphoSeq2")
-
-stable <- readImmunoSeq(path = file_path)
-
-clonal_relatedness <- clonalRelatedness(stable, editDistance = 10)
-
+study_table <- LymphoSeq2::readImmunoSeq(path = file_path, threads = 1) 
+study_table <- LymphoSeq2::topSeqs(study_table, top = 100)
+clonal_relatedness <- LymphoSeq2::clonalRelatedness(study_table, edit_distance = 10)
 # Merge results with clonality table
-clonality <- clonality(stable)
+clonality <- LymphoSeq2::clonality(study_table)
 merged <- dplyr::full_join(clonality, clonal_relatedness, by = "repertoire_id")
 
 }

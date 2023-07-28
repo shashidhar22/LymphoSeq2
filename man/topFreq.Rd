@@ -8,26 +8,35 @@ topFreq(productive_table, frequency = 0.1)
 }
 \arguments{
 \item{productive_table}{A tibble of productive amino acid sequences
-imported using the function LymphoSeq function productiveSeq where the
+imported using the function LymphoSeq2 function \code{\link[=productiveSeq]{productiveSeq()}} where the
 aggregate parameter was set to "junction_aa".}
 
 \item{frequency}{The minimum frequency that the sequence appears in any of
 the listed samples.}
 }
 \value{
-A data frame of amino acid sequences and the number of samples that
+A tibble of amino acid sequences and the number of samples that
 the sequence appears in along with the minimum, maximum, and mean frequency
 across all samples.
+}
+\description{
+Creates a table of the top productive amino acid sequences that have a
+specified minimum frequency threshold and reports the number of samples that
+the sequence appears in along with the minimum, maximum, and mean frequency
+across all samples.  For T cell receptor beta sequences, the percent prevalence
+and antigen specificity of that sequence is also provided.
+}
+\details{
 For T cell receptor beta sequences, additionally reported is the
 \\% prevalence that the sequence appears in 55 healthy donor blood samples.
 Also provided is the antigen specificity of that sequence if known by
 comparing it to a database of previously reported sequences in the
 literature.
 }
-\description{
-Creates a data frame of the top productive amino acid sequences that have a
-specified minimum frequency threshold and reports the number of samples that
-the sequence appears in along with the minimum, maximum, and mean frequency
-across all samples.  For T cell receptor beta sequences, the \\% prevalence
-and antigen specificity of that sequence is also provided.
+\examples{
+file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
+study_table <- LymphoSeq2::readImmunoSeq(path = file_path, threads = 1)
+study_table <- LymphoSeq2::topSeqs(study_table, top = 100)
+amino_table <- LymphoSeq2::productiveSeq(study_table = study_table, aggregate = "junction_aa")
+top_freq <- LymphoSeq2::topFreq(productive_table = amino_table, frequency = 0.1)
 }

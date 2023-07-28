@@ -8,23 +8,47 @@ scoringMatrix(productive_table, mode = "Bhattacharyya")
 }
 \arguments{
 \item{productive_table}{A tibble of productive sequences generated
-by the LymphoSeq function productiveSeq.  "duplicate_frequency" and "junction_aa"
-are a required columns.}
+by the LymphoSeq function \code{\link[=productiveSeq]{productiveSeq()}}.  "duplicate_frequency" and
+"junction_aa" are a required columns.}
 
-\item{mode}{The mode to use for calculating pairwise similarity. Can take the values
-"Bhattacharyya", "Similarity", "Sorensen", or "PSI". Default is "Bhattacharyya".}
+\item{mode}{The mode to use for calculating pairwise similarity. Can take the
+values "Bhattacharyya", "Similarity", "Sorensen", or "PSI". Default is
+"Bhattacharyya".}
 }
 \value{
-A data frame of Bhattacharyya coefficients, Similarity scores, Sorensen Index, or
-Percent Similarity Index calculated from all pairwise comparisons from a list of
-repertoire_id data frames.  Both metrics measure the amount of overlap between two samples.
-The value ranges from 0 to 1 where 1 indicates the sequence frequencies are
-identical in the two samples and 0 indicates no shared frequencies.
+A data frame of Bhattacharyya coefficients, Similarity scores,
+Sorensen Index, or Percent Similarity Index calculated from all pairwise
+comparisons from a list of repertoire_id data frames. Both metrics measure
+the amount of overlap between two samples. The value ranges from 0 to 1 where
+1 indicates the sequence frequencies are identical in the two samples and 0
+indicates no shared frequencies.
 }
 \description{
 Calculates the Bhattacharyya coefficient, Similarity score, Sorensen Index, or
 Percent Similarity Index of all pairwise comparison from a list of data frames.
 }
+\examples{
+file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
+study_table <- LymphoSeq2::readImmunoSeq(path = file_path, threads = 1)
+study_table <- LymphoSeq2::topSeqs(study_table, top = 100)
+amino_table <- LymphoSeq2::productiveSeq(study_table, aggregate = "junction_aa")
+bhattacharyya_matrix <- LymphoSeq2::scoringMatrix(
+  productive_table = amino_table,
+  mode = "Bhattacharyya"
+)
+similarity_matrix <- LymphoSeq2::scoringMatrix(
+  productive_table = amino_table,
+  mode = "Similarity"
+)
+sorensen_matrix <- LymphoSeq2::scoringMatrix(
+  productive_table = amino_table,
+  mode = "Sorensen"
+)
+psi_matrix <- LymphoSeq2::scoringMatrix(
+  productive_table = amino_table,
+  mode = "PSI"
+)
+}
 \seealso{
-\code{\link{pairwisePlot}} for plotting results as a heat map.
+\code{\link[=pairwisePlot]{pairwisePlot()}} for plotting results as a heat map.
 }
