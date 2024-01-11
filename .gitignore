@@ -7,3 +7,6 @@ docs
 inst/doc
 /doc/
 /Meta/
+man/
+vignettes/
+.code-workspace
