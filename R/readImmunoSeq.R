@@ -46,14 +46,14 @@ readImmunoSeq <- function(path,
   file_info <- file.info(file_paths)
   file_paths <- rownames(file_info)[file_info$size > 0]
   if (file_num != length(file_paths)) {
-    warning(str_c("One or more of the files you are trying to import has no",
-      "sequences and will be ignored.", sep = " "),
+    warning(stringr::str_c("One or more of the files you are trying to import",
+      " has no sequences and will be ignored.", sep = " "),
       call. = FALSE
     )
   }
 
   progress_bar <- progress::progress_bar$new(
-    format = str_c("Reading AIRR-Seq files [:bar] :current/:total",
+    format = stringr::str_c("Reading AIRR-Seq files [:bar] :current/:total",
       "(:percent) eta: :eta elapsed: :elapsed", sep = " "),
     total = length(file_paths), clear = FALSE, width = 100
   )
