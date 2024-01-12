@@ -126,9 +126,7 @@ the sequences different by a single amino acid or junction.</p>
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">file_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"TCRB_sequencing"</span>, package <span class="op">=</span> <span class="st">"LymphoSeq2"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">study_table</span> <span class="op">&lt;-</span> <span class="fu">LymphoSeq2</span><span class="fu">::</span><span class="fu"><a href="readImmunoSeq.html">readImmunoSeq</a></span><span class="op">(</span>path <span class="op">=</span> <span class="va">file_path</span>, threads <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in str_c("Reading AIRR-Seq files [:bar] :current/:total", "(:percent) eta: :eta elapsed: :elapsed",     sep = " "):</span> could not find function "str_c"</span>
 <span class="r-in"><span><span class="va">study_table</span> <span class="op">&lt;-</span> <span class="fu">LymphoSeq2</span><span class="fu">::</span><span class="fu"><a href="topSeqs.html">topSeqs</a></span><span class="op">(</span><span class="va">study_table</span>, top <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in eval(expr, envir, enclos):</span> object 'study_table' not found</span>
 <span class="r-in"><span><span class="va">aa1</span> <span class="op">&lt;-</span> <span class="st">"CASSPVSNEQFF"</span></span></span>
 <span class="r-in"><span><span class="va">aa2</span> <span class="op">&lt;-</span> <span class="st">"CASSQEVPPYQAFF"</span></span></span>
 <span class="r-in"><span><span class="fu">LymphoSeq2</span><span class="fu">::</span><span class="fu">searchSeq</span><span class="op">(</span></span></span>
@@ -138,7 +136,17 @@ the sequences different by a single amino acid or junction.</p>
 <span class="r-in"><span>  edit_distance <span class="op">=</span> <span class="fl">0</span>,</span></span>
 <span class="r-in"><span>  match <span class="op">=</span> <span class="st">"global"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in eval(expr, envir, enclos):</span> object 'study_table' not found</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 147</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   sequence_id    sequence sequence_aa rev_comp productive vj_in_frame stop_codon</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> TRB_Unsorted_… CTGATTC… CASSPVSNEQ… FALSE    FALSE      <span style="color: #BB0000;">NA</span>          FALSE     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 140 more variables: complete_vdj &lt;lgl&gt;, locus &lt;chr&gt;, v_call &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   d_call &lt;chr&gt;, d2_call &lt;chr&gt;, j_call &lt;chr&gt;, c_call &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   sequence_alignment &lt;chr&gt;, sequence_alignment_aa &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   germline_alignment &lt;chr&gt;, germline_alignment_aa &lt;chr&gt;, junction &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   junction_aa &lt;chr&gt;, np1 &lt;chr&gt;, np1_aa &lt;chr&gt;, np2 &lt;chr&gt;, np2_aa &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   np3 &lt;chr&gt;, np3_aa &lt;chr&gt;, cdr1 &lt;chr&gt;, cdr1_aa &lt;chr&gt;, cdr2 &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   cdr2_aa &lt;chr&gt;, cdr3 &lt;chr&gt;, cdr3_aa &lt;chr&gt;, fwr1 &lt;chr&gt;, fwr1_aa &lt;chr&gt;, …</span></span>
 <span class="r-in"><span><span class="fu">LymphoSeq2</span><span class="fu">::</span><span class="fu">searchSeq</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  study_table <span class="op">=</span> <span class="va">study_table</span>,</span></span>
 <span class="r-in"><span>  sequence <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">aa1</span>, <span class="va">aa2</span><span class="op">)</span>,</span></span>
@@ -146,7 +154,18 @@ the sequences different by a single amino acid or junction.</p>
 <span class="r-in"><span>  edit_distance <span class="op">=</span> <span class="fl">0</span>,</span></span>
 <span class="r-in"><span>  match <span class="op">=</span> <span class="st">"global"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in eval(expr, envir, enclos):</span> object 'study_table' not found</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 2 × 147</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   sequence_id    sequence sequence_aa rev_comp productive vj_in_frame stop_codon</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> TRB_Unsorted_… CTGATTC… CASSPVSNEQ… FALSE    FALSE      <span style="color: #BB0000;">NA</span>          FALSE     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> TRB_Unsorted_… ATCAATT… CASSQEVPPY… FALSE    FALSE      <span style="color: #BB0000;">NA</span>          FALSE     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 140 more variables: complete_vdj &lt;lgl&gt;, locus &lt;chr&gt;, v_call &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   d_call &lt;chr&gt;, d2_call &lt;chr&gt;, j_call &lt;chr&gt;, c_call &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   sequence_alignment &lt;chr&gt;, sequence_alignment_aa &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   germline_alignment &lt;chr&gt;, germline_alignment_aa &lt;chr&gt;, junction &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   junction_aa &lt;chr&gt;, np1 &lt;chr&gt;, np1_aa &lt;chr&gt;, np2 &lt;chr&gt;, np2_aa &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   np3 &lt;chr&gt;, np3_aa &lt;chr&gt;, cdr1 &lt;chr&gt;, cdr1_aa &lt;chr&gt;, cdr2 &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   cdr2_aa &lt;chr&gt;, cdr3 &lt;chr&gt;, cdr3_aa &lt;chr&gt;, fwr1 &lt;chr&gt;, fwr1_aa &lt;chr&gt;, …</span></span>
 <span class="r-in"><span><span class="fu">LymphoSeq2</span><span class="fu">::</span><span class="fu">searchSeq</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  study_table <span class="op">=</span> <span class="va">study_table</span>,</span></span>
 <span class="r-in"><span>  sequence <span class="op">=</span> <span class="va">aa1</span>,</span></span>
@@ -154,7 +173,17 @@ the sequences different by a single amino acid or junction.</p>
 <span class="r-in"><span>  edit_distance <span class="op">=</span> <span class="fl">1</span>,</span></span>
 <span class="r-in"><span>  match <span class="op">=</span> <span class="st">"global"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in eval(expr, envir, enclos):</span> object 'study_table' not found</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 147</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   sequence_id    sequence sequence_aa rev_comp productive vj_in_frame stop_codon</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> TRB_Unsorted_… CTGATTC… CASSPVSNEQ… FALSE    FALSE      <span style="color: #BB0000;">NA</span>          FALSE     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 140 more variables: complete_vdj &lt;lgl&gt;, locus &lt;chr&gt;, v_call &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   d_call &lt;chr&gt;, d2_call &lt;chr&gt;, j_call &lt;chr&gt;, c_call &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   sequence_alignment &lt;chr&gt;, sequence_alignment_aa &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   germline_alignment &lt;chr&gt;, germline_alignment_aa &lt;chr&gt;, junction &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   junction_aa &lt;chr&gt;, np1 &lt;chr&gt;, np1_aa &lt;chr&gt;, np2 &lt;chr&gt;, np2_aa &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   np3 &lt;chr&gt;, np3_aa &lt;chr&gt;, cdr1 &lt;chr&gt;, cdr1_aa &lt;chr&gt;, cdr2 &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   cdr2_aa &lt;chr&gt;, cdr3 &lt;chr&gt;, cdr3_aa &lt;chr&gt;, fwr1 &lt;chr&gt;, fwr1_aa &lt;chr&gt;, …</span></span>
 <span class="r-in"><span><span class="va">nt</span> <span class="op">&lt;-</span> <span class="st">"CTGATTCTGGAGTCCGCCAGCACCAACCAGACATCTATGTACCTCTGTGCCAGCAGTCCGGTAAGCAATGAGCAGTTCTTCGGGCCA"</span></span></span>
 <span class="r-in"><span><span class="fu">LymphoSeq2</span><span class="fu">::</span><span class="fu">searchSeq</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  study_table <span class="op">=</span> <span class="va">study_table</span>,</span></span>
@@ -163,7 +192,17 @@ the sequences different by a single amino acid or junction.</p>
 <span class="r-in"><span>  edit_distance <span class="op">=</span> <span class="fl">3</span>,</span></span>
 <span class="r-in"><span>  match <span class="op">=</span> <span class="st">"global"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in eval(expr, envir, enclos):</span> object 'study_table' not found</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 147</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   sequence_id    sequence sequence_aa rev_comp productive vj_in_frame stop_codon</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> TRB_Unsorted_… CTGATTC… CASSPVSNEQ… FALSE    FALSE      <span style="color: #BB0000;">NA</span>          FALSE     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 140 more variables: complete_vdj &lt;lgl&gt;, locus &lt;chr&gt;, v_call &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   d_call &lt;chr&gt;, d2_call &lt;chr&gt;, j_call &lt;chr&gt;, c_call &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   sequence_alignment &lt;chr&gt;, sequence_alignment_aa &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   germline_alignment &lt;chr&gt;, germline_alignment_aa &lt;chr&gt;, junction &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   junction_aa &lt;chr&gt;, np1 &lt;chr&gt;, np1_aa &lt;chr&gt;, np2 &lt;chr&gt;, np2_aa &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   np3 &lt;chr&gt;, np3_aa &lt;chr&gt;, cdr1 &lt;chr&gt;, cdr1_aa &lt;chr&gt;, cdr2 &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   cdr2_aa &lt;chr&gt;, cdr3 &lt;chr&gt;, cdr3_aa &lt;chr&gt;, fwr1 &lt;chr&gt;, fwr1_aa &lt;chr&gt;, …</span></span>
 <span class="r-in"><span><span class="fu">LymphoSeq2</span><span class="fu">::</span><span class="fu">searchSeq</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  study_table <span class="op">=</span> <span class="va">study_table</span>,</span></span>
 <span class="r-in"><span>  sequence <span class="op">=</span> <span class="st">"CASSPVS"</span>,</span></span>
@@ -171,7 +210,14 @@ the sequences different by a single amino acid or junction.</p>
 <span class="r-in"><span>  edit_distance <span class="op">=</span> <span class="fl">0</span>,</span></span>
 <span class="r-in"><span>  match <span class="op">=</span> <span class="st">"global"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in eval(expr, envir, enclos):</span> object 'study_table' not found</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 0 × 147</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 147 variables: sequence_id &lt;chr&gt;, sequence &lt;chr&gt;, sequence_aa &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   rev_comp &lt;lgl&gt;, productive &lt;lgl&gt;, vj_in_frame &lt;lgl&gt;, stop_codon &lt;lgl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   complete_vdj &lt;lgl&gt;, locus &lt;chr&gt;, v_call &lt;chr&gt;, d_call &lt;chr&gt;, d2_call &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   j_call &lt;chr&gt;, c_call &lt;chr&gt;, sequence_alignment &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   sequence_alignment_aa &lt;chr&gt;, germline_alignment &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   germline_alignment_aa &lt;chr&gt;, junction &lt;chr&gt;, junction_aa &lt;chr&gt;, np1 &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   np1_aa &lt;chr&gt;, np2 &lt;chr&gt;, np2_aa &lt;chr&gt;, np3 &lt;chr&gt;, np3_aa &lt;chr&gt;, …</span></span>
 <span class="r-in"><span><span class="fu">LymphoSeq2</span><span class="fu">::</span><span class="fu">searchSeq</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  study_table <span class="op">=</span> <span class="va">study_table</span>,</span></span>
 <span class="r-in"><span>  sequence <span class="op">=</span> <span class="va">nt</span>,</span></span>
@@ -179,7 +225,14 @@ the sequences different by a single amino acid or junction.</p>
 <span class="r-in"><span>  edit_distance <span class="op">=</span> <span class="fl">0</span>,</span></span>
 <span class="r-in"><span>  match <span class="op">=</span> <span class="st">"global"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in eval(expr, envir, enclos):</span> object 'study_table' not found</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 0 × 147</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 147 variables: sequence_id &lt;chr&gt;, sequence &lt;chr&gt;, sequence_aa &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   rev_comp &lt;lgl&gt;, productive &lt;lgl&gt;, vj_in_frame &lt;lgl&gt;, stop_codon &lt;lgl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   complete_vdj &lt;lgl&gt;, locus &lt;chr&gt;, v_call &lt;chr&gt;, d_call &lt;chr&gt;, d2_call &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   j_call &lt;chr&gt;, c_call &lt;chr&gt;, sequence_alignment &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   sequence_alignment_aa &lt;chr&gt;, germline_alignment &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   germline_alignment_aa &lt;chr&gt;, junction &lt;chr&gt;, junction_aa &lt;chr&gt;, np1 &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   np1_aa &lt;chr&gt;, np2 &lt;chr&gt;, np2_aa &lt;chr&gt;, np3 &lt;chr&gt;, np3_aa &lt;chr&gt;, …</span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
