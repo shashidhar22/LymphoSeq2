@@ -13,12 +13,15 @@ knitr::opts_chunk$set(
 )
 ```
 
-# LymphoSeq2
+# LymphoSeq2 <a href="https://shashidhar22.github.io/LymphoSeq2"><img src="man/figures/logo.png" align="right" height="138" alt="LymphoSeq2 website" /></a>
+
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/shashidhar22/LymphoSeq2/workflows/R-CMD-check/badge.svg)](https://github.com/shashidhar22/LymphoSeq2/actions)
 <!-- badges: end -->
 
+## Overview
+ 
 Adaptive Immune Receptor Repertoire Sequencing (AIRR-seq) provides a unique opportunity to interrogate the adaptive
 immune repertoire under various clinical conditions. The utility offered by this technology has quickly garnered interest
 from a community of clinicians and researchers investigating the immunological landscapes of a large spectrum of health
@@ -40,9 +43,8 @@ To import AIRR-Seq data using `LymphoSeq2` we can use the `readImmunoSeq` functi
 
 ```{r import_data}
 library(LymphoSeq2)
-study_files <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2") 
+study_files <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
 study_table <- LymphoSeq2::readImmunoSeq(study_files)
-
 ```
 
 To get a quick summary of repertoire characteristics, use the `clonality` function. This will calculate many standard repertoire diversity metrics such `clonality`, `gini coefficient`, `convergence`, and `unique productive sequence` for each of the repertoires in the input dataset.
