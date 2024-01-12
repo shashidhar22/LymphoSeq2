@@ -13,16 +13,20 @@
 #' @param threads Number of threads.
 #' @return Returns a tibble with MiAIRR headers and repertoire_id
 #' @examples
-#' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
-#' study_table <- LymphoSeq2::readImmunoSeq(path = file_path, recursive = FALSE,
-#'   threads = 1)
+#' file_path <- system.file("extdata", "TCRB_sequencing",
+#'  package = "LymphoSeq2")
+#' study_table <- LymphoSeq2::readImmunoSeq(
+#'   path = file_path, recursive = FALSE,
+#'   threads = 1
+#' )
 #' study_table <- LymphoSeq2::topSeqs(study_table, top = 100)
 #'
 #' @export
-#' @import magrittr
-readImmunoSeq <- function(path, recursive = FALSE, threads = parallel::detectCores() / 2) {
+readImmunoSeq <- function(path,
+                          recursive = FALSE,
+                          threads = parallel::detectCores() / 2) {
   Sys.setenv("VROOM_SHOW_PROGRESS" = "false")
-  if(floor(threads) == 0) {
+  if (floor(threads) == 0) {
     threads <- as.integer(1)
   }
   if (length(path) > 1) {
@@ -42,18 +46,20 @@ readImmunoSeq <- function(path, recursive = FALSE, threads = parallel::detectCor
   file_info <- file.info(file_paths)
   file_paths <- rownames(file_info)[file_info$size > 0]
   if (file_num != length(file_paths)) {
-    warning("One or more of the files you are trying to import has no sequences and will be ignored.",
+    warning(str_c("One or more of the files you are trying to import has no",
+      "sequences and will be ignored.", sep = " "),
       call. = FALSE
     )
   }
 
   progress_bar <- progress::progress_bar$new(
-    format = "Reading AIRR-Seq files [:bar] :current/:total (:percent) eta: :eta elapsed: :elapsed",
+    format = str_c("Reading AIRR-Seq files [:bar] :current/:total",
+      "(:percent) eta: :eta elapsed: :elapsed", sep = " "),
     total = length(file_paths), clear = FALSE, width = 100
   )
   progress_bar$tick(0)
-  file_list <- file_paths %>%
-    purrr::map(~ getStandard(.x, progress_bar, threads = threads)) %>%
+  file_list <- file_paths |>
+    purrr::map(~ getStandard(.x, progress_bar, threads = threads)) |>
     dplyr::bind_rows()
   progress_bar$terminate()
   return(file_list)
@@ -63,19 +69,19 @@ readImmunoSeq <- function(path, recursive = FALSE, threads = parallel::detectCor
 #' @keywords internal
 #' @param clone_file A .tsv file to identify the file type
 #' @return Returns "immunoSEQLegacy", "immunoSEQ", "10X", "BGI"
-#' @import magrittr
 #' @noRd
 getFileType <- function(col_names) {
-  colname_file <- system.file("extdata", "Accepted_file_types.csv", package = "LymphoSeq2")
+  colname_file <- system.file("extdata", "Accepted_file_types.csv",
+    package = "LymphoSeq2")
   colname_table <- vroom::vroom(colname_file, show_col_types = FALSE)
-  immunoseq <- colname_table %>%
-    dplyr::pull(immunoseq_v3) %>%
+  immunoseq <- colname_table |>
+    dplyr::pull(immunoseq_v3) |>
     purrr::discard(is.na)
-  tenx <- colname_table %>%
-    dplyr::pull(tenx) %>%
+  tenx <- colname_table |>
+    dplyr::pull(tenx) |>
     purrr::discard(is.na)
-  bgi <- colname_table %>%
-    dplyr::pull(bgi) %>%
+  bgi <- colname_table |>
+    dplyr::pull(bgi) |>
     purrr::discard(is.na)
 
   if (all(col_names %in% immunoseq)) {
@@ -92,23 +98,24 @@ getFileType <- function(col_names) {
 
 #' [getStandard()] Converts AIRR-Seq data into MiAIRR compatible format
 #' @keywords internal
-#' @param clone_file A .tsv file to read in and standardize its fields to be MiAIRR compliant
+#' @param clone_file A .tsv file to read in and standardize its fields to be 
+#'  MiAIRR compliant.
 #' @param progress Progress bar
 #' @param threads Number of threads for parallel processing
 #' @return Tibble of given data with MiAIRR fields
 #'
-#' @import magrittr
 #' @noRd
 getStandard <- function(clone_file, progress, threads) {
   progress$tick()
-  airr_headers_path <- system.file("extdata", "AIRR_fields.csv", package = "LymphoSeq2")
+  airr_headers_path <- system.file("extdata", "AIRR_fields.csv",
+    package = "LymphoSeq2")
   airr_fields <- vroom::vroom(airr_headers_path,
     trim_ws = TRUE,
     show_col_types = FALSE
   )
   AIRR_fields_res <- getAIRRFields(clone_file, threads)
   matching_fields <- AIRR_fields_res$matching_fields
-  file_type = AIRR_fields_res$file_type
+  file_type <- AIRR_fields_res$file_type
   col_read <- names(matching_fields)
   clone_data <- suppressWarnings(
     classes = c("vroom_mismatched_column_name", "vroom_parse_issue"),
@@ -122,62 +129,95 @@ getStandard <- function(clone_file, progress, threads) {
       .name_repair = ~ stringr::str_replace_all(., matching_fields)
     )
   )
-  existing_match <- airr_fields %>%
-    colnames() %>%
+  existing_match <- airr_fields |>
+    colnames() |>
     intersect(colnames(clone_data))
   if (length(existing_match) == 155) {
     return(clone_data)
   }
-  existing_airr_data <- clone_data %>%
+  existing_airr_data <- clone_data |>
     dplyr::select(dplyr::all_of(existing_match))
-  clone_data <- dplyr::bind_rows(airr_fields, existing_airr_data) %>%
+  clone_data <- dplyr::bind_rows(airr_fields, existing_airr_data) |>
     dplyr::slice(-1)
   file_name <- tools::file_path_sans_ext(basename(clone_file))
-  clone_data <- clone_data %>%
+  clone_data <- clone_data |>
     dplyr::mutate(
       repertoire_id = file_name,
-      d2_call = dplyr::if_else(!is.na(d2_call), stringr::str_split(d2_call, ",")[[1]][2], d2_call),
-      cdr3 = stringr::str_sub(junction, 4L, -4L),
-      cdr3_aa = stringr::str_sub(junction_aa, 2L, -2L),
-      cdr1_end = dplyr::if_else(is.na(cdr1_end), cdr1_end, cdr1_end + cdr1_start),
-      cdr2_end = dplyr::if_else(is.na(cdr2_end), cdr2_end, cdr2_end + cdr2_start),
-      cdr3_end = dplyr::if_else(is.na(cdr3_end), cdr3_end, cdr3_end + cdr3_start),
+      d2_call = dplyr::if_else(!is.na(d2_call),
+          stringr::str_split(d2_call, ",")[[1]][2], d2_call),
+          cdr3 = stringr::str_sub(junction, 4L, -4L),
+          cdr3_aa = stringr::str_sub(junction_aa, 2L, -2L),
+      cdr1_end = dplyr::if_else(is.na(cdr1_end),
+          cdr1_end,
+          cdr1_end + cdr1_start),
+      cdr2_end = dplyr::if_else(is.na(cdr2_end),
+          cdr2_end,
+          cdr2_end + cdr2_start),
+      cdr3_end = dplyr::if_else(is.na(cdr3_end),
+          cdr3_end,
+          cdr3_end + cdr3_start),
       sequence_id = dplyr::row_number(),
-      sequence = dplyr::if_else(is.na(sequence) & !is.na(junction), junction, sequence),
-      junction = dplyr::if_else(is.na(junction) & !is.na(sequence), sequence, junction),
-      sequence_aa = dplyr::if_else(is.na(sequence_aa) & !is.na(junction_aa), junction_aa, sequence_aa),
-      junction_aa = dplyr::if_else(is.na(junction_aa) & !is.na(sequence_aa), sequence_aa, junction_aa)
+      sequence = dplyr::if_else(is.na(sequence) & !is.na(junction),
+          junction,
+          sequence),
+      junction = dplyr::if_else(is.na(junction) & !is.na(sequence),
+          sequence,
+          junction),
+      sequence_aa = dplyr::if_else(is.na(sequence_aa) & !is.na(junction_aa),
+          junction_aa,
+          sequence_aa),
+      junction_aa = dplyr::if_else(is.na(junction_aa) & !is.na(sequence_aa),
+          sequence_aa,
+          junction_aa)
     )
   if (file_type == "BGI") {
-    clone_data <- clone_data %>%
+    clone_data <- clone_data |>
       dplyr::mutate(
-            junction = dplyr::if_else(stringr::str_detect(junction, "x"), stringr::str_remove_all(junction, "x"), junction),
-            junction = dplyr::if_else(stringr::str_detect(junction, "[A-Z]+"), stringr::str_remove_all(junction, "[A-Z]+"), junction),
-            junction = toupper(junction),
-            junction_aa = dplyr::if_else(stringr::str_detect(junction_aa, "x"), stringr::str_remove_all(junction_aa, "x"), junction_aa),
-            junction_aa = dplyr::if_else(stringr::str_detect(junction_aa, "[A-Z]+"), stringr::str_remove_all(junction_aa, "[A-Z]+"), junction_aa),
-            junction_aa = toupper(junction_aa)
+        junction = dplyr::if_else(stringr::str_detect(junction, "x"),
+            stringr::str_remove_all(junction, "x"),
+            junction),
+        junction = dplyr::if_else(stringr::str_detect(junction, "[A-Z]+"),
+            stringr::str_remove_all(junction, "[A-Z]+"),
+            junction),
+        junction = toupper(junction),
+        junction_aa = dplyr::if_else(stringr::str_detect(junction_aa, "x"),
+            stringr::str_remove_all(junction_aa, "x"),
+            junction_aa),
+        junction_aa = dplyr::if_else(stringr::str_detect(junction_aa, "[A-Z]+"),
+            stringr::str_remove_all(junction_aa, "[A-Z]+"),
+            junction_aa),
+        junction_aa = toupper(junction_aa)
       )
   } else {
-    clone_data <- clone_data %>%
+    clone_data <- clone_data |>
       dplyr::mutate(
-        junction = dplyr::if_else(stringr::str_detect(junction, "[a-z]+"), toupper(stringr::str_extract(junction, "[a-z]{2,}")), junction),
-        junction_aa = dplyr::if_else(stringr::str_detect(junction_aa, "[a-z]+"), toupper(stringr::str_extract(junction_aa, "[a-z]{2,}")), junction_aa)
+        junction = dplyr::if_else(stringr::str_detect(junction, "[a-z]+"),
+            toupper(stringr::str_extract(junction, "[a-z]{2,}")),
+            junction),
+        junction_aa = dplyr::if_else(stringr::str_detect(junction_aa, "[a-z]+"),
+            toupper(stringr::str_extract(junction_aa, "[a-z]{2,}")),
+            junction_aa)
       )
   }
-  clone_data <- clone_data %>% 
+  clone_data <- clone_data |>
     dplyr::mutate(
       sequence = junction,
       sequence_aa = junction_aa,
       junction_length = stringr::str_length(junction),
       junction_aa_length = stringr::str_length(junction_aa),
       rev_comp = FALSE,
-      stop_codon = dplyr::if_else(stringr::str_detect(sequence, "\\*") | stringr::str_detect(sequence_aa, "\\*") |
-        is.na(sequence) | is.na(sequence_aa), TRUE, FALSE),
+      stop_codon = dplyr::if_else(stringr::str_detect(sequence, "\\*") |
+        stringr::str_detect(sequence_aa, "\\*") | is.na(sequence) |
+        is.na(sequence_aa),
+          TRUE, 
+          FALSE),
       productive = stop_codon,
       v_call = stringr::str_remove(v_call, "/\\w+$"),
       j_call = stringr::str_remove(j_call, "/\\w+$"),
-      complete_vdj = dplyr::if_else(is.na(v_call) | is.na(d_call) | is.na(j_call), FALSE, TRUE),
+      complete_vdj = dplyr::if_else(is.na(v_call) | is.na(d_call) |
+        is.na(j_call),
+          FALSE,
+          TRUE),
       duplicate_frequency = duplicate_count / sum(duplicate_count),
       reading_frame = dplyr::if_else(stop_codon, "out-of-frame", "in-frame"),
       v_call = stringr::str_c(stringr::str_extract(v_call, "[A-Z]+"),
@@ -202,7 +242,8 @@ getStandard <- function(clone_file, progress, threads) {
       v_family = stringr::str_extract(v_call, "[A-Z]+\\d+"),
       d_family = stringr::str_extract(d_call, "[A-Z]+\\d+"),
       bio_identity = stringr::str_c(junction_aa, v_call, j_call, sep = "_"),
-      sequence_id = stringr::str_c(repertoire_id, dplyr::row_number(), sep = "_"),
+      sequence_id = stringr::str_c(repertoire_id, dplyr::row_number(),
+        sep = "_"),
       clone_id = bio_identity
     )
   return(clone_data)
@@ -216,7 +257,6 @@ getStandard <- function(clone_file, progress, threads) {
 #' @param threads Number of threads for parallel processing
 #' @return Named vector of corresponding AIRR fields
 #'
-#' @import magrittr
 #' @noRd
 getAIRRFields <- function(clone_file, threads) {
   clone_table <- vroom::vroom(clone_file,
@@ -226,18 +266,19 @@ getAIRRFields <- function(clone_file, threads) {
   col_names <- base::colnames(clone_table)
   input_type <- getFileType(col_names)
   if (input_type == "immunoSEQ") {
-    count_method <- clone_table %>%
-      dplyr::pull(counting_method) %>%
+    count_method <- clone_table |>
+      dplyr::pull(counting_method) |>
       base::unique()
-    ## NOTE: These following fields need to be modified when the data is read
-    ## 1. d2_call = When it contains a list with the first values being equal to d_call, extract the second element
-    ## 2. cdr3 = Remove the first and last codon
-    ## 3. cdr3_aa = Remove the first and last amino acid
-    ## 4. bioidentity = Reformat in IMGT format
-    ## 5. v_call, d_call, d2_call, j_call = Reformat in IMGT format
-    ## 6. cd*_end = Add value to cdr*start -3
-    ## 7. cd*_start = Subtract 3 from value
-    ## 8. junction_aa_length = Divide value by 3
+    # NOTE: These following fields need to be modified when the data is read
+    # 1. d2_call = When it contains a list with the first values being equal to
+    #    d_call, extract the second element.
+    # 2. cdr3 = Remove the first and last codon
+    # 3. cdr3_aa = Remove the first and last amino acid
+    # 4. bioidentity = Reformat in IMGT format
+    # 5. v_call, d_call, d2_call, j_call = Reformat in IMGT format
+    # 6. cd*_end = Add value to cdr*start -3
+    # 7. cd*_start = Subtract 3 from value
+    # 8. junction_aa_length = Divide value by 3
     matching_fields <- c(
       "bio_indetity" = "sequence_id",
       "rearrangement" = "sequence", "amino_acid" = "sequence_aa",
@@ -296,7 +337,8 @@ getAIRRFields <- function(clone_file, threads) {
       "count (reads)", "count", "templates"
     )
     if (length(intersect(col_names, count_cols)) == 0) {
-      matching_fields <- c(matching_fields, "estimatedNumberGenomes" = "duplicate_count")
+      matching_fields <- c(matching_fields,
+        "estimatedNumberGenomes" = "duplicate_count")
     }
   } else if (input_type == "10X") {
     matching_fields <- col_names

@@ -6,8 +6,8 @@
 #' sequencing imported by the LymphoSeq2 function [readImmunoSeq()].
 #' "repertoire_id" and "junction" are required columns.
 #' @param k The length of k-mers to find.
-#' @param separate A boolean value. 
-#'  * `TRUE` (the default):  separate the counts of each k-mer by repertoire_id. 
+#' @param separate A boolean value.
+#'  * `TRUE` (the default):  separate the counts of each k-mer by repertoire_id.
 #'  * `FALSE` : show cumulative counts instead.
 #' @return A tibble with the k-mer and its counts. The counts can be cumulative
 #' counts of the entire study_table or counts for each repertoire_id.
@@ -15,44 +15,52 @@
 #' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
 #' study_table <- LymphoSeq2::readImmunoSeq(path = file_path, threads = 1)
 #' study_table <- LymphoSeq2::topSeqs(study_table, top = 100)
-#' kmer_table <- LymphoSeq2::countKmer(study_table = study_table, k = 5, 
-#'   separate = TRUE)
+#' kmer_table <- LymphoSeq2::countKmer(
+#'   study_table = study_table, k = 5,
+#'   separate = TRUE
+#' )
 #'
 #' @export
-#' @import magrittr 
+#' @import magrittr
 countKmer <- function(study_table, k, separate = TRUE) {
-    if (separate) {
-        kmer_counts <- study_table %>%
-            dplyr::group_by(repertoire_id) %>%
-            dplyr::group_split() %>%
-            purrr::map(~calculateCounts(.x, k)) %>% 
-            dplyr::bind_rows() %>% 
-          tidyr::pivot_wider(id_cols = Kmer, names_from = repertoire_id, 
-                             values_from = Count)
-        return(kmer_counts)
-    } else {
-        kmer_counts <- calculateCounts(study_table, k)
-        return(kmer_counts)
-    }
+  if (separate) {
+    kmer_counts <- study_table %>%
+      dplyr::group_by(repertoire_id) %>%
+      dplyr::group_split() %>%
+      purrr::map(~ calculateCounts(.x, k)) %>%
+      dplyr::bind_rows() %>%
+      tidyr::pivot_wider(
+        id_cols = Kmer, names_from = repertoire_id,
+        values_from = Count
+      )
+    return(kmer_counts)
+  } else {
+    kmer_counts <- calculateCounts(study_table, k)
+    return(kmer_counts)
+  }
 }
 #' Calculate k-mer counts
 #' @inheritParams countKmer
 calculateCounts <- function(study_table, k) {
-    seq <- dplyr::pull(study_table, "junction") %>%
-        stats::na.omit()
-    rep_id <- study_table %>% 
-      dplyr::pull(repertoire_id) %>% 
-      unique()
-    kmer_counts <- purrr::map(seq,
-            function(x) Biostrings::oligonucleotideFrequency(Biostrings::DNAString(x), k))
-    kmer_counts <- purrr::map(kmer_counts,
-            function(x) data.frame(Kmer = names(x), Count = unname(x))) %>%
-        dplyr::bind_rows() %>%
-        dplyr::group_by(Kmer) %>%
-        dplyr::summarise(Count = sum(Count)) %>% 
-      dplyr::ungroup() %>% 
-      dplyr::mutate(repertoire_id = rep_id)
-    return(kmer_counts)
+  seq <- dplyr::pull(study_table, "junction") %>%
+    stats::na.omit()
+  rep_id <- study_table %>%
+    dplyr::pull(repertoire_id) %>%
+    unique()
+  kmer_counts <- purrr::map(
+    seq,
+    function(x) Biostrings::oligonucleotideFrequency(Biostrings::DNAString(x), k)
+  )
+  kmer_counts <- purrr::map(
+    kmer_counts,
+    function(x) data.frame(Kmer = names(x), Count = unname(x))
+  ) %>%
+    dplyr::bind_rows() %>%
+    dplyr::group_by(Kmer) %>%
+    dplyr::summarise(Count = sum(Count)) %>%
+    dplyr::ungroup() %>%
+    dplyr::mutate(repertoire_id = rep_id)
+  return(kmer_counts)
 }
 
 #' Plot kmer distributions
@@ -70,21 +78,27 @@ calculateCounts <- function(study_table, k) {
 #' kmer_table <- LymphoSeq2::countKmer(study_table = study_table, k = 5, separate = TRUE)
 #' kmer_distributions <- LymphoSeq2::kmerPlot(kmer_table, top = 10)
 #' @export
-#' @import magrittr 
+#' @import magrittr
 kmerPlot <- function(kmer_table, top = 10) {
-    kmer_table <- kmer_table %>%
-        tidyr::pivot_longer(!Kmer, names_to = "repertoire_id", 
-            values_to = "count")
-    rep_num <- length(unique(kmer_table$repertoire_id))
-    kmer_table <- kmer_table %>%
-        dplyr::group_by(Kmer) %>%
-        dplyr::mutate(total = sum(count)) %>%
-        dplyr::arrange(desc(total)) %>%
-        head(top * rep_num)
-    bar <- ggplot2::ggplot(kmer_table, ggplot2::aes(fill = repertoire_id, y = count, 
-            x = Kmer)) +
-        ggplot2::geom_bar(position = "stack", stat = "identity") + 
-        ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, vjust = 0.5, 
-            hjust = 1))
-    return(bar)
+  kmer_table <- kmer_table %>%
+    tidyr::pivot_longer(!Kmer,
+      names_to = "repertoire_id",
+      values_to = "count"
+    )
+  rep_num <- length(unique(kmer_table$repertoire_id))
+  kmer_table <- kmer_table %>%
+    dplyr::group_by(Kmer) %>%
+    dplyr::mutate(total = sum(count)) %>%
+    dplyr::arrange(desc(total)) %>%
+    head(top * rep_num)
+  bar <- ggplot2::ggplot(kmer_table, ggplot2::aes(
+    fill = repertoire_id, y = count,
+    x = Kmer
+  )) +
+    ggplot2::geom_bar(position = "stack", stat = "identity") +
+    ggplot2::theme(axis.text.x = ggplot2::element_text(
+      angle = 90, vjust = 0.5,
+      hjust = 1
+    ))
+  return(bar)
 }

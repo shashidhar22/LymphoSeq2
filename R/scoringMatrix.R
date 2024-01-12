@@ -102,7 +102,7 @@ scoringMatrix <- function(productive_table, mode = "Bhattacharyya") {
 #'
 #' @param sample_list A list of two tibble corresponding derived from the
 #' `productiveSeq()`function in LymphoSeq2. "duplicate_frequency",
-#' "junction_aa", and "repertoire_id" columns are necessary for the calculation 
+#' "junction_aa", and "repertoire_id" columns are necessary for the calculation
 #' of the Bhattacharyya coefficient.
 #'
 #' @return A tibble with one row and three columns sample1, sample2,
@@ -137,7 +137,7 @@ bhattacharyyaCoefficient <- function(sample_list) {
 #'
 #' @param sample_list A list of two tibble corresponding derived from the
 #' [productiveSeq()] function in LymphoSeq2. "duplicate_frequency",
-#' "junction_aa", and "repertoire_id" columns are necessary for the calculation 
+#' "junction_aa", and "repertoire_id" columns are necessary for the calculation
 #' of the Bhattacharyya coefficient.
 #' @return Returns the similarity score, a measure of the amount of
 #' overlap between two samples.  The value ranges from 0 to 1 where 1 indicates
@@ -173,7 +173,7 @@ similarityScore <- function(sample_list) {
 #'
 #' @param sample_list A list of two tibble corresponding derived from the
 #' [productiveSeq()] function in LymphoSeq2. "duplicate_frequency",
-#' "junction_aa", and "repertoire_id" columns are necessary for the calculation 
+#' "junction_aa", and "repertoire_id" columns are necessary for the calculation
 #' of the Bhattacharyya coefficient.
 #' @return Returns the similarity score, a measure of the amount of
 #' overlap between two samples.  The value ranges from 0 to 1 where 1 indicates
@@ -216,7 +216,7 @@ sorensenIndex <- function(sample_list) {
 #'
 #' @param sample_list A list of two tibble corresponding derived from the
 #' [productiveSeq()] function in LymphoSeq2. "duplicate_frequency",
-#' "junction_aa", and "repertoire_id" columns are necessary for the calculation 
+#' "junction_aa", and "repertoire_id" columns are necessary for the calculation
 #' of the Bhattacharyya coefficient.
 #' @return Returns the similarity score, a measure of the amount of
 #' overlap between two samples.  The value ranges from 0 to 1 where 1 indicates

@@ -1,6 +1,6 @@
 #' Select productive sequences
 #'
-#'@description
+#' @description
 #' [productiveSeq()] Select productive nucleotide/amino acid CDR3 sequences
 #' from a tibble containing raw AIRR formatted data. Aggregation of the raw data
 #' is either done on the productive CDR3 amino acid sequence (junction_aa) or
@@ -19,9 +19,9 @@
 #' @param aggregate Indicates whether the values of "duplicate_count" and
 #' "duplicate_frequency" should be aggregated by amino acid or junction sequence.
 #' Acceptable values are "junction_aa" or "junction".
-#' @param prevalence A Boolean value 
+#' @param prevalence A Boolean value
 #'  * `TRUE` : Add a new column the study table giving the prevalence of each CDR3 amino acid
-#' sequence in 55 healthy donor peripheral blood samples.  
+#' sequence in 55 healthy donor peripheral blood samples.
 #'  * `FALSE` (the default): Do not add prevelance information
 #' @return Returns a list of data frames of productive amino acid sequences with
 #' recomputed values for "duplicate_count", "duplicate_frequency".
@@ -66,7 +66,7 @@ productiveSeq <- function(study_table, aggregate = "junction_aa", prevalence = F
   return(agg_table)
 }
 #' Group productive sequences by repertoire
-#' 
+#'
 #' @keywords internal
 #' @inheritParams productiveSeq
 #' @param progress_bar Progress bar

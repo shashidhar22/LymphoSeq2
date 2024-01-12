@@ -4,11 +4,11 @@
 #'
 #' @param study_table A tibble consisting of antigen receptor sequences
 #' imported by the LymphoSeq function [readImmunoSeq()].
-#' @param type A character vector indicating whether "junction_aa" or "junction" 
-#' sequences should be exported.  If "junction_aa" is specified, then run 
+#' @param type A character vector indicating whether "junction_aa" or "junction"
+#' sequences should be exported.  If "junction_aa" is specified, then run
 #' [LymphoSeq2::productiveSeq()] first.
-#' @param names A character vector of one or more column names to name the 
-#' sequences.If "rank" is specified, then the rank order of the sequences by 
+#' @param names A character vector of one or more column names to name the
+#' sequences.If "rank" is specified, then the rank order of the sequences by
 #' frequency is used.
 #' @return Exports fasta files to the working directory.
 #' @examples
@@ -16,13 +16,19 @@
 #' # Export raw data
 #' study_table <- LymphoSeq2::readImmunoSeq(path = file_path, threads = 1)
 #' study_table <- LymphoSeq2::topSeqs(study_table, top = 100)
-#' LymphoSeq2::exportFasta(study_table = study_table, type = "junction", 
-#'   names = c("junction_aa", "duplicate_count"))
+#' LymphoSeq2::exportFasta(
+#'   study_table = study_table, type = "junction",
+#'   names = c("junction_aa", "duplicate_count")
+#' )
 #' # Export only productive junction amino acid sequences
-#' amino_table <- LymphoSeq2::productiveSeq(study_table = study_table, 
-#'   aggregate = "junction_aa")
-#' LymphoSeq2::exportFasta(study_table = amino_table, type = "junction_aa", 
-#'   names = "duplicate_frequency")
+#' amino_table <- LymphoSeq2::productiveSeq(
+#'   study_table = study_table,
+#'   aggregate = "junction_aa"
+#' )
+#' LymphoSeq2::exportFasta(
+#'   study_table = amino_table, type = "junction_aa",
+#'   names = "duplicate_frequency"
+#' )
 #' @export
 #' @import magrittr
 exportFasta <- function(study_table, type = "junction",
@@ -48,7 +54,7 @@ exportFasta <- function(study_table, type = "junction",
   message(paste("Fasta files saved to", getwd()))
 }
 #' Write FASTA file
-#' 
+#'
 #' @inheritParams exportFasta
 writeFasta <- function(study_table, type) {
   repertoire_id <- study_table$repertoire_id[1]

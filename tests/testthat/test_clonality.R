@@ -6,19 +6,19 @@ test_that("Check if summary statistics for test data are correct", {
   stable <- LymphoSeq2::readImmunoSeq("test_data/015V06013979_CFAR.tsv", threads = 1)
   ctable <- LymphoSeq2::clonality(stable)
   ttseq <- ctable %>%
-           dplyr::pull(total_sequences)
+    dplyr::pull(total_sequences)
   tupseq <- ctable %>%
-            dplyr::pull(unique_productive_sequences)
-  ttcount <- ctable %>% 
-             dplyr::pull(total_count)
+    dplyr::pull(unique_productive_sequences)
+  ttcount <- ctable %>%
+    dplyr::pull(total_count)
   tclonality <- ctable %>%
-                dplyr::pull(clonality)
+    dplyr::pull(clonality)
   tcon <- ctable %>%
     dplyr::pull(convergence)
-  tgc <- ctable %>% 
-         dplyr::pull(gini_coefficient)
+  tgc <- ctable %>%
+    dplyr::pull(gini_coefficient)
   ttps <- ctable %>%
-          dplyr::pull(top_productive_sequence)
+    dplyr::pull(top_productive_sequence)
   expect_equal(ttseq, 1000)
   expect_equal(tupseq, 836)
   expect_equal(ttcount, 2404)

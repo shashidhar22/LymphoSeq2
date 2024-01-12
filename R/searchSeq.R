@@ -91,7 +91,7 @@ searchSeq <- function(study_table, sequence, seq_type = "junction", edit_distanc
 #'
 #' @describeIn searchSeq Find all sequences below edit distance threshold from query list
 #' @param query_list List of productive CDR3 nucleotide or amino acid sequences
-#' @return Tibble of sequences that differ from the input sequence by the edit distance 
+#' @return Tibble of sequences that differ from the input sequence by the edit distance
 #' threshold provided
 findSeq <- function(sequence, query_list, edit_distance, seq_type, match) {
   if (match == "global") {

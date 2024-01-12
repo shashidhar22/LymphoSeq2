@@ -1,6 +1,6 @@
 #' Common sequences in two or more repertoire_ids
 #'
-#' Creates a data frame of the common sequences in two or more repertoire_ids, 
+#' Creates a data frame of the common sequences in two or more repertoire_ids,
 #' reporting their frequencies in each.
 #'
 #' @param study_table A list of productive amino acid sequences generated
@@ -15,8 +15,10 @@
 #' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
 #' study_table <- LymphoSeq2::readImmunoSeq(path = file_path, threads = 1)
 #' study_table <- LymphoSeq2::topSeqs(study_table, top = 100)
-#' amino_table <- LymphoSeq2::productiveSeq(study_table = study_table,
-#'   aggregate = "junction_aa")
+#' amino_table <- LymphoSeq2::productiveSeq(
+#'   study_table = study_table,
+#'   aggregate = "junction_aa"
+#' )
 #' LymphoSeq2::commonSeqs(
 #'   repertoire_ids = c("TRB_Unsorted_0", "TRB_Unsorted_32"),
 #'   study_table = amino_table

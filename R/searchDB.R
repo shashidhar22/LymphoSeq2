@@ -41,7 +41,7 @@ searchDB <- function(study_table, dbname = "all", chain = "trb") {
 }
 #' Create a antigen specific T-cells database
 #'
-#' @description 
+#' @description
 #' This function takes as input path to the flat file versions of IEDB,
 #' McPAS-TCR, and VdjDB slim in that order and generates an RDA file of all
 #' T-cells and B-cells recorded to show antigenic specificity in these three

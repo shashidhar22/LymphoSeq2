@@ -1,7 +1,7 @@
 #' Visualize multiple sequence alignment of CDR3 sequences
 #'
 #' Generate MSA alignment figures from the results of [alignSeq()]
-#' 
+#'
 #' @param msa An msa object obtained from [alignSeq()] function in LymphoSeq2.
 #' @return Multiple sequence alignment plot.
 #' @seealso The function utilizes ggmsa package for visualizations. Further
@@ -21,16 +21,19 @@
 #' @export
 #' @import ggmsa
 plotAlignment <- function(msa) {
-  if (class(msa)[1] == "MsaDNAMultipleAlignment"){
+  if (class(msa)[1] == "MsaDNAMultipleAlignment") {
     msa <- Biostrings::DNAMultipleAlignment(msa)
     names(msa@unmasked) <- paste(names(msa@unmasked),
-        seq(1:length(names(msa@unmasked))), sep = "_")
+      seq(1:length(names(msa@unmasked))),
+      sep = "_"
+    )
     ggmsa::ggmsa(msa, font = NULL, color = "Chemistry_NT") + ggmsa::geom_msaBar()
   } else {
     msa <- Biostrings::AAMultipleAlignment(msa)
     names(msa@unmasked) <- paste(names(msa@unmasked),
-      seq(1:length(names(msa@unmasked))), sep = "_")
+      seq(1:length(names(msa@unmasked))),
+      sep = "_"
+    )
     ggmsa::ggmsa(msa, font = NULL, color = "Chemistry_AA") + ggmsa::geom_msaBar()
-    
   }
 }

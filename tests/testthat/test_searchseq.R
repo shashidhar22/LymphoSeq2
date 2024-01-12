@@ -7,13 +7,13 @@ test_that("Find all nucleotide sequences with edit distance ten", {
   ntable <- LymphoSeq2::productiveSeq(stable, aggregate = "junction")
   seq <- "TTGGAGCTGGGGGACTCGGCCCTTTATCTTTGCGCCAGCAGCTCCGGGACAGGGGGCTCGGGCAATCAGCCCCAGCATTTTGGTGAT"
   nlist <- ntable %>%
-           dplyr::pull(junction) %>%
-           base::unique()
+    dplyr::pull(junction) %>%
+    base::unique()
   edist <- utils::adist(seq, nlist, partial = FALSE)
   elist <- nlist[(edist <= 10)]
   slist <- LymphoSeq2::searchSeq(ntable, seq, edit_distance = 10) %>%
-           dplyr::pull(junction) %>%
-           base::unique()
+    dplyr::pull(junction) %>%
+    base::unique()
   expect_equal(slist, elist)
 })
 

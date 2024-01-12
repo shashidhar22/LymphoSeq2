@@ -5,7 +5,7 @@
 #' McPAS-TCR, and VdjDB slim in that order and generates an RDA file of all
 #' T-cells and B-cells recorded to show antigenic specificity in these three
 #' databases. This is a script for internal use and will be run once every six
-#' months to update the databases. 
+#' months to update the databases.
 #' @format ## `antigen_db`
 #' A tibble with 320,786 rows and 16 columns:
 #' \describe{
@@ -26,7 +26,7 @@
 #'   \item{trb_j_call}{T-cell receptor beta chain J gene}
 #'   \item{Species}{Species}
 #' }
-#' @source 
+#' @source
 #' The flat files for this function can be
 #' downloaded at the following links:
 #' 1. IEDB: https://www.iedb.org/downloader.php?file_name=doc/receptor_full_v3.zip
@@ -39,7 +39,7 @@
 #' Prevalence TRB
 #'
 #' @description
-#' The database describes the frequency at which a CDR3 amino acid sequence was 
+#' The database describes the frequency at which a CDR3 amino acid sequence was
 #' found in cohort of 55 PBMC samples from healthy individuals
 #' @format ## `prevalenceTRB`
 #' A tibble with 11,724,294 rows and 2 columns:
@@ -47,7 +47,7 @@
 #'   \item{prevalence}{Frequency of sequences in 55 healthy PBMC samples}
 #'   \item{aminoAcid}{T-cell receptor beta chain amino acid sequence}
 #' }
-#' @source 
+#' @source
 #' TCR beta sequencing data from PBMCs of 55 healthy individuals
 "prevalenceTRB"
 #' Published TRB
@@ -65,7 +65,7 @@
 #'   \item{antigen}{Antigen name}
 #'   \item{epitope}{Known epitope sequence}
 #' }
-#' @source 
-#' T-cells previously published T-cell beta chain CDR3 amino acid sequences 
+#' @source
+#' T-cells previously published T-cell beta chain CDR3 amino acid sequences
 #' with known antigenic specificity
 "publishedTRB"

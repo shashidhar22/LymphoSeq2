@@ -39,8 +39,8 @@ topFreq <- function(productive_table, frequency = 0.1) {
       numberSamples = length(duplicate_frequency > 0)
     ) %>%
     dplyr::arrange(desc(numberSamples), desc(meanFrequency))
-  #data("prevalenceTRB")
-  #data("publishedTRB")
+  # data("prevalenceTRB")
+  # data("publishedTRB")
   top_freq <- dplyr::left_join(top_freq, prevalenceTRB, by = c("junction_aa" = "aminoAcid")) %>%
     dplyr::mutate(prevalence = tidyr::replace_na(0))
   antigen_table <- publishedTRB %>%

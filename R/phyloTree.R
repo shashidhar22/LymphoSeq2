@@ -9,8 +9,8 @@
 #' columns.
 #' @param repertoire_ids A character vector indicating the name of the
 #' repertoire_id in the study table.
-#' @param type A character vector indicating whether `"junction_aa"` or 
-#' `"junction"` (the default) sequences should be compared. 
+#' @param type A character vector indicating whether `"junction_aa"` or
+#' `"junction"` (the default) sequences should be compared.
 #' @param layout A character vector indicating the tree layout. Options include
 #' `"rectangular"` (the default), `"slanted"`, `"fan"`, `"circular"`, `"radial"`
 #' and `"unrooted"`.
@@ -99,19 +99,25 @@ phyloTree <- function(study_table, repertoire_ids, type = "junction",
     duplicate_count = sample_table$duplicate_count,
     geneFamilies = geneFamilies,
     junction_aa = sample_table$junction_aa,
-    duplicate_frequency = base::round(sample_table$duplicate_frequency, 
-                                      digits = 2),
+    duplicate_frequency = base::round(sample_table$duplicate_frequency,
+      digits = 2
+    ),
     dominant = c("Yes", rep("No", base::nrow(sample_table) - 1))
   )
   getPalette <- grDevices::colorRampPalette(RColorBrewer::brewer.pal(9, "Set1"))
   tree_plot <- ggtree::ggtree(tree, layout = layout) %<+% tree_annotation +
-    ggtree::geom_tippoint(ggplot2::aes_string(color = "geneFamilies", 
-                                              shape = "dominant"), size = 3) +
+    ggtree::geom_tippoint(ggplot2::aes_string(
+      color = "geneFamilies",
+      shape = "dominant"
+    ), size = 3) +
     ggplot2::scale_color_manual(
-      values = getPalette(length(unique(geneFamilies)))) +
+      values = getPalette(length(unique(geneFamilies)))
+    ) +
     ggplot2::guides(shape = FALSE) +
-    ggplot2::theme(legend.position = "bottom", 
-                   legend.key = ggplot2::element_rect(colour = "white")) +
+    ggplot2::theme(
+      legend.position = "bottom",
+      legend.key = ggplot2::element_rect(colour = "white")
+    ) +
     ggplot2::labs(color = "")
   if (label == TRUE) {
     tree_plot <- tree_plot +

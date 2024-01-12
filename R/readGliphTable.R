@@ -16,7 +16,7 @@
 #' to one junction_aa
 #' @examples
 #' file_path <- base::system.file("extdata", "TCRB_gliph", package = "LymphoSeq2")
-#' gliph_table <- LymphoSeq2::readGliph(file_path) 
+#' gliph_table <- LymphoSeq2::readGliph(file_path)
 #' @export
 #' @import magrittr
 readGliph <- function(gliph_path) {
