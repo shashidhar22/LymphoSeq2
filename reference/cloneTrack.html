@@ -64,8 +64,8 @@ parameter was set to "junction_aa"</p></dd>
 
 <dt>sample_list</dt>
 <dd><p>A character vector of one or more repertoire_ids to track.
-If set to NULL (the default), all repertoire_ids in the sequence matrix will be
-tracked.</p></dd>
+If set to NULL (the default), all repertoire_ids in the sequence matrix will
+be tracked.</p></dd>
 
 
 <dt>sequence_track</dt>
@@ -85,11 +85,14 @@ unique sequence.</p>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">file_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"TCRB_sequencing"</span>, package <span class="op">=</span> <span class="st">"LymphoSeq2"</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">file_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"TCRB_sequencing"</span>,</span></span>
+<span class="r-in"><span> package <span class="op">=</span> <span class="st">"LymphoSeq2"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">study_table</span> <span class="op">&lt;-</span> <span class="fu">LymphoSeq2</span><span class="fu">::</span><span class="fu"><a href="readImmunoSeq.html">readImmunoSeq</a></span><span class="op">(</span>path <span class="op">=</span> <span class="va">file_path</span>, threads <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">study_table</span> <span class="op">&lt;-</span> <span class="fu">LymphoSeq2</span><span class="fu">::</span><span class="fu"><a href="topSeqs.html">topSeqs</a></span><span class="op">(</span><span class="va">study_table</span>, top <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">amino_table</span> <span class="op">&lt;-</span> <span class="fu">LymphoSeq2</span><span class="fu">::</span><span class="fu"><a href="productiveSeq.html">productiveSeq</a></span><span class="op">(</span>study_table <span class="op">=</span> <span class="va">study_table</span>, </span></span>
-<span class="r-in"><span>  aggregate <span class="op">=</span> <span class="st">"junction_aa"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">amino_table</span> <span class="op">&lt;-</span> <span class="fu">LymphoSeq2</span><span class="fu">::</span><span class="fu"><a href="productiveSeq.html">productiveSeq</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  study_table <span class="op">=</span> <span class="va">study_table</span>,</span></span>
+<span class="r-in"><span>  aggregate <span class="op">=</span> <span class="st">"junction_aa"</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">top_freq</span> <span class="op">&lt;-</span> <span class="fu">LymphoSeq2</span><span class="fu">::</span><span class="fu"><a href="topFreq.html">topFreq</a></span><span class="op">(</span><span class="va">amino_table</span>, frequency <span class="op">=</span> <span class="fl">0.001</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="co"># Track clones without mapping or tracking specific sequences</span></span></span>
 <span class="r-in"><span><span class="fu">LymphoSeq2</span><span class="fu">::</span><span class="fu">cloneTrack</span><span class="op">(</span><span class="va">amino_table</span><span class="op">)</span></span></span>
@@ -140,8 +143,10 @@ unique sequence.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 4 more variables: reading_frame &lt;chr&gt;, duplicate_count &lt;dbl&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   duplicate_frequency &lt;dbl&gt;, seen &lt;int&gt;</span></span>
 <span class="r-in"><span><span class="co"># Track the top 10 clones from top.freq</span></span></span>
-<span class="r-in"><span><span class="fu">LymphoSeq2</span><span class="fu">::</span><span class="fu">cloneTrack</span><span class="op">(</span>study_table <span class="op">=</span> <span class="va">amino_table</span>, </span></span>
-<span class="r-in"><span>  sequence_track <span class="op">=</span> <span class="va">top_freq</span><span class="op">$</span><span class="va">junction_aa</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">LymphoSeq2</span><span class="fu">::</span><span class="fu">cloneTrack</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  study_table <span class="op">=</span> <span class="va">amino_table</span>,</span></span>
+<span class="r-in"><span>  sequence_track <span class="op">=</span> <span class="va">top_freq</span><span class="op">$</span><span class="va">junction_aa</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 75 × 12</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    repertoire_id junction_aa     v_call d_call j_call v_family d_family j_family</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   </span>
@@ -159,8 +164,10 @@ unique sequence.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 4 more variables: reading_frame &lt;chr&gt;, duplicate_count &lt;dbl&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   duplicate_frequency &lt;dbl&gt;, seen &lt;int&gt;</span></span>
 <span class="r-in"><span><span class="co"># Track clones mapping to the CD4 and CD8 samples while ignoring all others</span></span></span>
-<span class="r-in"><span><span class="fu">LymphoSeq2</span><span class="fu">::</span><span class="fu">cloneTrack</span><span class="op">(</span>study_table <span class="op">=</span> <span class="va">amino_table</span>, </span></span>
-<span class="r-in"><span>  sample_list <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"TRB_CD4_949"</span>, <span class="st">"TRB_CD8_949"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">LymphoSeq2</span><span class="fu">::</span><span class="fu">cloneTrack</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  study_table <span class="op">=</span> <span class="va">amino_table</span>,</span></span>
+<span class="r-in"><span>  sample_list <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"TRB_CD4_949"</span>, <span class="st">"TRB_CD8_949"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 161 × 12</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    repertoire_id junction_aa     v_call d_call j_call v_family d_family j_family</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   </span>
@@ -177,7 +184,8 @@ unique sequence.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 151 more rows</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 4 more variables: reading_frame &lt;chr&gt;, duplicate_count &lt;dbl&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   duplicate_frequency &lt;dbl&gt;, seen &lt;int&gt;</span></span>
-<span class="r-in"><span><span class="co"># Track clones mapping to the CD4 and CD8 samples and track 2 specific sequences</span></span></span>
+<span class="r-in"><span><span class="co"># Track clones mapping to the CD4 and CD8 samples and track 2 specific </span></span></span>
+<span class="r-in"><span><span class="co">#sequences</span></span></span>
 <span class="r-in"><span><span class="fu">LymphoSeq2</span><span class="fu">::</span><span class="fu">cloneTrack</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  study_table <span class="op">=</span> <span class="va">amino_table</span>, sample_list <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"TRB_CD4_949"</span>, <span class="st">"TRB_CD8_949"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  sequence_track <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"CASSPPTGERDTQYF"</span>, <span class="st">"CASSQDRTGQYGYTF"</span><span class="op">)</span></span></span>

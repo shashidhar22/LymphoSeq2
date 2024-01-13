@@ -65,16 +65,16 @@ by the LymphoSeq2 function <code><a href="productiveSeq.html">productiveSeq()</a
 
 
 <dt>repertoire_ids</dt>
-<dd><p>A character vector of two or more repertoire_id names in
-study_table.</p></dd>
+<dd><p>A character vector of two or more repertoire_id names
+in study_table.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p>Returns a data frame of the common sequences between two or more files
-displaying their frequencies in each.</p>
+<p>Returns a data frame of the common sequences between two or more
+files displaying their frequencies in each.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
@@ -84,11 +84,14 @@ displaying their frequencies in each.</p>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">file_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"TCRB_sequencing"</span>, package <span class="op">=</span> <span class="st">"LymphoSeq2"</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">file_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"TCRB_sequencing"</span>,</span></span>
+<span class="r-in"><span> package <span class="op">=</span> <span class="st">"LymphoSeq2"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">study_table</span> <span class="op">&lt;-</span> <span class="fu">LymphoSeq2</span><span class="fu">::</span><span class="fu"><a href="readImmunoSeq.html">readImmunoSeq</a></span><span class="op">(</span>path <span class="op">=</span> <span class="va">file_path</span>, threads <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">study_table</span> <span class="op">&lt;-</span> <span class="fu">LymphoSeq2</span><span class="fu">::</span><span class="fu"><a href="topSeqs.html">topSeqs</a></span><span class="op">(</span><span class="va">study_table</span>, top <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">amino_table</span> <span class="op">&lt;-</span> <span class="fu">LymphoSeq2</span><span class="fu">::</span><span class="fu"><a href="productiveSeq.html">productiveSeq</a></span><span class="op">(</span>study_table <span class="op">=</span> <span class="va">study_table</span>,</span></span>
-<span class="r-in"><span>  aggregate <span class="op">=</span> <span class="st">"junction_aa"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">amino_table</span> <span class="op">&lt;-</span> <span class="fu">LymphoSeq2</span><span class="fu">::</span><span class="fu"><a href="productiveSeq.html">productiveSeq</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  study_table <span class="op">=</span> <span class="va">study_table</span>,</span></span>
+<span class="r-in"><span>  aggregate <span class="op">=</span> <span class="st">"junction_aa"</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">LymphoSeq2</span><span class="fu">::</span><span class="fu">commonSeqs</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  repertoire_ids <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"TRB_Unsorted_0"</span>, <span class="st">"TRB_Unsorted_32"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  study_table <span class="op">=</span> <span class="va">amino_table</span></span></span>

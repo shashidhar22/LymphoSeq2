@@ -77,12 +77,17 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
 <div class="page-header">
-<img src="logo.png" class="logo" alt=""><h1 id="lymphoseq2">LymphoSeq2<a class="anchor" aria-label="anchor" href="#lymphoseq2"></a>
+<img src="logo.png" class="logo" alt=""><h1 id="lymphoseq2-">LymphoSeq2 
+<a class="anchor" aria-label="anchor" href="#lymphoseq2-"></a>
 </h1>
 </div>
 <!-- badges: start -->
 
+<div class="section level2">
+<h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
+</h2>
 <p>Adaptive Immune Receptor Repertoire Sequencing (AIRR-seq) provides a unique opportunity to interrogate the adaptive immune repertoire under various clinical conditions. The utility offered by this technology has quickly garnered interest from a community of clinicians and researchers investigating the immunological landscapes of a large spectrum of health and disease states. LymphoSeq2 is a toolkit that allows users to import, manipulate and visualize AIRR-Seq data from various AIRR-Seq assays such as Adaptive ImmunoSEQ and BGI-IRSeq, with support for 10X VDJ sequencing coming soon. The platform also supports the importing of AIRR-seq data processed using the MiXCR pipeline. The vignette highlights some of the key features of LymphoSeq2.</p>
+</div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
@@ -98,14 +103,7 @@
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/shashidhar22/LymphoSeq2" class="external-link">LymphoSeq2</a></span><span class="op">)</span></span>
 <span><span class="co">#&gt; Loading required package: data.table</span></span>
-<span><span class="co">#&gt; Registered S3 methods overwritten by 'ggalt':</span></span>
-<span><span class="co">#&gt;   method                  from   </span></span>
-<span><span class="co">#&gt;   grid.draw.absoluteGrob  ggplot2</span></span>
-<span><span class="co">#&gt;   grobHeight.absoluteGrob ggplot2</span></span>
-<span><span class="co">#&gt;   grobWidth.absoluteGrob  ggplot2</span></span>
-<span><span class="co">#&gt;   grobX.absoluteGrob      ggplot2</span></span>
-<span><span class="co">#&gt;   grobY.absoluteGrob      ggplot2</span></span>
-<span><span class="va">study_files</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"TCRB_sequencing"</span>, package <span class="op">=</span> <span class="st">"LymphoSeq2"</span><span class="op">)</span> </span>
+<span><span class="va">study_files</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"TCRB_sequencing"</span>, package <span class="op">=</span> <span class="st">"LymphoSeq2"</span><span class="op">)</span></span>
 <span><span class="va">study_table</span> <span class="op">&lt;-</span> <span class="fu">LymphoSeq2</span><span class="fu">::</span><span class="fu"><a href="reference/readImmunoSeq.html">readImmunoSeq</a></span><span class="op">(</span><span class="va">study_files</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Registered S3 methods overwritten by 'readr':</span></span>
 <span><span class="co">#&gt;   method                    from </span></span>
@@ -122,41 +120,41 @@
 <code class="sourceCode R"><span><span class="va">summary_table</span> <span class="op">&lt;-</span> <span class="fu">LymphoSeq2</span><span class="fu">::</span><span class="fu"><a href="reference/clonality.html">clonality</a></span><span class="op">(</span><span class="va">study_table</span><span class="op">)</span></span>
 <span><span class="va">summary_table</span></span>
 <span><span class="co">#&gt; # A tibble: 10 × 8</span></span>
-<span><span class="co">#&gt;    repertoire_id     total_seq…¹ uniqu…² total…³ clona…⁴ gini_…⁵ top_p…⁶ conve…⁷</span></span>
-<span><span class="co">#&gt;    &lt;chr&gt;                   &lt;int&gt;   &lt;int&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt;  1 TRB_CD4_949              1000     845   25769   0.443   0.867   30.1     1   </span></span>
-<span><span class="co">#&gt;  2 TRB_CD8_949              1000     794   26239   0.431   0.903   19.3     1.01</span></span>
-<span><span class="co">#&gt;  3 TRB_CD8_CMV_369           414     281    1794   0.332   0.761   16.5     1.12</span></span>
-<span><span class="co">#&gt;  4 TRB_Unsorted_0           1000     838   18161   0.281   0.818    5.77    1   </span></span>
-<span><span class="co">#&gt;  5 TRB_Unsorted_1320        1000     838  178190   0.422   0.902   14.6     1   </span></span>
-<span><span class="co">#&gt;  6 TRB_Unsorted_1496        1000     832   33669   0.389   0.881   14.2     1   </span></span>
-<span><span class="co">#&gt;  7 TRB_Unsorted_32           920     767   31078   0.134   0.601    4.87    1.01</span></span>
-<span><span class="co">#&gt;  8 TRB_Unsorted_369         1000     830  339413   0.426   0.845   29.7     1   </span></span>
-<span><span class="co">#&gt;  9 TRB_Unsorted_83          1000     823  236732   0.338   0.777   23.6     1   </span></span>
-<span><span class="co">#&gt; 10 TRB_Unsorted_949         1000     831    6549   0.306   0.765   13.8     1   </span></span>
-<span><span class="co">#&gt; # … with abbreviated variable names ¹​total_sequences,</span></span>
-<span><span class="co">#&gt; #   ²​unique_productive_sequences, ³​total_count, ⁴​clonality, ⁵​gini_coefficient,</span></span>
-<span><span class="co">#&gt; #   ⁶​top_productive_sequence, ⁷​convergence</span></span></code></pre></div>
+<span><span class="co">#&gt;    repertoire_id    total_sequences unique_productive_se…¹ total_count clonality</span></span>
+<span><span class="co">#&gt;    &lt;chr&gt;                      &lt;int&gt;                  &lt;int&gt;       &lt;dbl&gt;     &lt;dbl&gt;</span></span>
+<span><span class="co">#&gt;  1 TRB_CD4_949                 1000                    845       25769     0.443</span></span>
+<span><span class="co">#&gt;  2 TRB_CD8_949                 1000                    794       26239     0.431</span></span>
+<span><span class="co">#&gt;  3 TRB_CD8_CMV_369              414                    281        1794     0.332</span></span>
+<span><span class="co">#&gt;  4 TRB_Unsorted_0              1000                    838       18161     0.281</span></span>
+<span><span class="co">#&gt;  5 TRB_Unsorted_13…            1000                    838      178190     0.422</span></span>
+<span><span class="co">#&gt;  6 TRB_Unsorted_14…            1000                    832       33669     0.389</span></span>
+<span><span class="co">#&gt;  7 TRB_Unsorted_32              920                    767       31078     0.134</span></span>
+<span><span class="co">#&gt;  8 TRB_Unsorted_369            1000                    830      339413     0.426</span></span>
+<span><span class="co">#&gt;  9 TRB_Unsorted_83             1000                    823      236732     0.338</span></span>
+<span><span class="co">#&gt; 10 TRB_Unsorted_949            1000                    831        6549     0.306</span></span>
+<span><span class="co">#&gt; # ℹ abbreviated name: ¹​unique_productive_sequences</span></span>
+<span><span class="co">#&gt; # ℹ 3 more variables: gini_coefficient &lt;dbl&gt;, top_productive_sequence &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   convergence &lt;dbl&gt;</span></span></code></pre></div>
 <p>To compare samples with varying depth of sequencing, you can use the <code>clonality</code> function to sample down all repertoires to a minimum number of sequences. Since we randomly sample sequences from each repertoire, in this mode the <code>clonality</code> function will repeat this operation for a user specified number of <code>iterations</code> and caculate the average value for all the diversity metrics.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sampled_summary</span> <span class="op">&lt;-</span> <span class="fu">LymphoSeq2</span><span class="fu">::</span><span class="fu"><a href="reference/clonality.html">clonality</a></span><span class="op">(</span><span class="va">study_table</span>, rarefy <span class="op">=</span> <span class="cn">TRUE</span>, iterations <span class="op">=</span> <span class="fl">5</span>, min_count <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span></span>
 <span><span class="va">sampled_summary</span></span>
 <span><span class="co">#&gt; # A tibble: 10 × 8</span></span>
-<span><span class="co">#&gt;    repertoire_id     total_seq…¹ uniqu…² total…³ clona…⁴ gini_…⁵ top_p…⁶ conve…⁷</span></span>
-<span><span class="co">#&gt;    &lt;chr&gt;                   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt;  1 TRB_CD4_949              156.    129     1000  0.319    0.735   31.3     1   </span></span>
-<span><span class="co">#&gt;  2 TRB_CD8_949              192.    154.    1000  0.293    0.734   18.6     1.01</span></span>
-<span><span class="co">#&gt;  3 TRB_CD8_CMV_369          266     183.    1000  0.303    0.723   17.1     1.09</span></span>
-<span><span class="co">#&gt;  4 TRB_Unsorted_0           254.    212.    1000  0.158    0.616    6.11    1.00</span></span>
-<span><span class="co">#&gt;  5 TRB_Unsorted_1320        191.    156.    1000  0.277    0.726   14.6     1.02</span></span>
-<span><span class="co">#&gt;  6 TRB_Unsorted_1496        206     168.    1000  0.260    0.710   14.0     1.00</span></span>
-<span><span class="co">#&gt;  7 TRB_Unsorted_32          417.    349.    1000  0.0952   0.466    5.54    1.01</span></span>
-<span><span class="co">#&gt;  8 TRB_Unsorted_369         245.    203     1000  0.336    0.711   30.2     1   </span></span>
-<span><span class="co">#&gt;  9 TRB_Unsorted_83          320.    264.    1000  0.261    0.639   23.4     1   </span></span>
-<span><span class="co">#&gt; 10 TRB_Unsorted_949         301.    249.    1000  0.222    0.630   13.0     1.00</span></span>
-<span><span class="co">#&gt; # … with abbreviated variable names ¹​total_sequences,</span></span>
-<span><span class="co">#&gt; #   ²​unique_productive_sequences, ³​total_count, ⁴​clonality, ⁵​gini_coefficient,</span></span>
-<span><span class="co">#&gt; #   ⁶​top_productive_sequence, ⁷​convergence</span></span></code></pre></div>
+<span><span class="co">#&gt;    repertoire_id    total_sequences unique_productive_se…¹ total_count clonality</span></span>
+<span><span class="co">#&gt;    &lt;chr&gt;                      &lt;dbl&gt;                  &lt;dbl&gt;       &lt;dbl&gt;     &lt;dbl&gt;</span></span>
+<span><span class="co">#&gt;  1 TRB_CD4_949                 160.                   134         1000    0.311 </span></span>
+<span><span class="co">#&gt;  2 TRB_CD8_949                 190.                   150.        1000    0.301 </span></span>
+<span><span class="co">#&gt;  3 TRB_CD8_CMV_369             276                    188.        1000    0.298 </span></span>
+<span><span class="co">#&gt;  4 TRB_Unsorted_0              248.                   209         1000    0.157 </span></span>
+<span><span class="co">#&gt;  5 TRB_Unsorted_13…            184.                   149         1000    0.282 </span></span>
+<span><span class="co">#&gt;  6 TRB_Unsorted_14…            217                    182.        1000    0.262 </span></span>
+<span><span class="co">#&gt;  7 TRB_Unsorted_32             416.                   350.        1000    0.0928</span></span>
+<span><span class="co">#&gt;  8 TRB_Unsorted_369            244.                   200.        1000    0.338 </span></span>
+<span><span class="co">#&gt;  9 TRB_Unsorted_83             307.                   250         1000    0.272 </span></span>
+<span><span class="co">#&gt; 10 TRB_Unsorted_949            307                    255.        1000    0.221 </span></span>
+<span><span class="co">#&gt; # ℹ abbreviated name: ¹​unique_productive_sequences</span></span>
+<span><span class="co">#&gt; # ℹ 3 more variables: gini_coefficient &lt;dbl&gt;, top_productive_sequence &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   convergence &lt;dbl&gt;</span></span></code></pre></div>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
