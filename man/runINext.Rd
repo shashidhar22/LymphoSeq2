@@ -17,15 +17,15 @@ repertoire diversity. The method used to generate the rarefaction curve
 is derived from Chao et al., (2014) using the iNEXT library
 }
 \examples{
-library(magrittr)
-file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
-study_table <- LymphoSeq2::readImmunoSeq(path = file_path, threads = 1) \%>\% 
-LymphoSeq2::topSeqs(top = 100)
+file_path <- system.file("extdata", "TCRB_sequencing",
+ package = "LymphoSeq2")
+study_table <- LymphoSeq2::readImmunoSeq(path = file_path, threads = 1) |>
+  LymphoSeq2::topSeqs(top = 100)
 amino_table <- LymphoSeq2::productiveSeq(study_table,
   aggregate = "junction_aa",
   prevalence = TRUE
 )
-amino_table <- amino_table \%>\%
+amino_table <- amino_table |>
   dplyr::filter(repertoire_id == "TRB_Unsorted_1320")
 rarefaction_table <- LymphoSeq2::runINext(amino_table)
 }

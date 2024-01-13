@@ -13,47 +13,50 @@
 #' @seealso An excellent resource for examples on how to reformat a ggplot can
 #' be found in the R Graphics Cookbook online (\url{http://www.cookbook-r.com/Graphs/}).
 #' @examples
-#' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
+#' file_path <- system.file("extdata", "TCRB_sequencing",
+#'  package = "LymphoSeq2")
 #' study_table <- LymphoSeq2::readImmunoSeq(path = file_path, threads = 1)
-#' amino_table <- LymphoSeq2::productiveSeq(study_table = study_table, aggregate = "junction_aa")
+#' amino_table <- LymphoSeq2::productiveSeq(study_table = study_table,
+#'  aggregate = "junction_aa")
 #' LymphoSeq2::topSeqsPlot(study_table = amino_table, top = 10)
 #' # Display the number of sequences at the top of bar plot and add a title
 #' n <- as.character(nrow(study_table))
 #' LymphoSeq2::topSeqsPlot(study_table = amino_table, top = 10) +
-#'   ggplot2::annotate("text", x = 1:length(n), y = 105, label = n, color = "black") +
+#'   ggplot2::annotate("text", x = 1:length(n), y = 105, label = n,
+#'     color = "black") +
 #'   ggplot2::expand_limits(y = c(0, 110)) + ggplot2::ggtitle("Top sequences") +
 #'   ggplot2::scale_x_discrete(limits = names(n))
 #' @export
-#' @import magrittr
 topSeqsPlot <- function(study_table, top = 10) {
-  dominant <- study_table %>%
-    dplyr::group_by(repertoire_id) %>%
-    dplyr::arrange(desc(duplicate_frequency)) %>%
-    dplyr::slice_head(n = top) %>%
-    dplyr::select(repertoire_id, junction_aa, duplicate_frequency) %>%
+  dominant <- study_table |>
+    dplyr::group_by(repertoire_id) |>
+    dplyr::arrange(desc(duplicate_frequency)) |>
+    dplyr::slice_head(n = top) |>
+    dplyr::select(repertoire_id, junction_aa, duplicate_frequency) |>
     dplyr::mutate(
       Sequence = 1:dplyr::n(),
       Sequence = as.factor(Sequence)
-    ) %>%
-    dplyr::rename(Frequency = duplicate_frequency) %>%
+    ) |>
+    dplyr::rename(Frequency = duplicate_frequency) |>
     dplyr::ungroup()
 
-  subdominant <- dominant %>%
-    dplyr::group_by(repertoire_id) %>%
+  subdominant <- dominant |>
+    dplyr::group_by(repertoire_id) |>
     dplyr::summarize(
       Frequency = 1 - sum(Frequency),
       junction_aa = "All other sequences"
-    ) %>%
-    dplyr::select(repertoire_id, junction_aa, Frequency) %>%
-    dplyr::mutate(Sequence = as.factor(11)) %>%
+    ) |>
+    dplyr::select(repertoire_id, junction_aa, Frequency) |>
+    dplyr::mutate(Sequence = as.factor(11)) |>
     dplyr::ungroup()
-  topfreq <- dplyr::bind_rows(dominant, subdominant) %>%
-    dplyr::arrange(repertoire_id, Sequence, desc(Frequency)) %>%
+  topfreq <- dplyr::bind_rows(dominant, subdominant) |>
+    dplyr::arrange(repertoire_id, Sequence, desc(Frequency)) |>
     dplyr::mutate(Frequency = Frequency * 100)
-  getPalette <- grDevices::colorRampPalette(RColorBrewer::brewer.pal(11, "Spectral"))
-  sample_order <- subdominant %>%
-    dplyr::arrange(Frequency) %>%
-    dplyr::select(repertoire_id) %>%
+  getPalette <- grDevices::colorRampPalette(
+      RColorBrewer::brewer.pal(11, "Spectral"))
+  sample_order <- subdominant |>
+    dplyr::arrange(Frequency) |>
+    dplyr::select(repertoire_id) |>
     dplyr::pull()
   ggplot2::ggplot(topfreq, ggplot2::aes_string(
     x = "repertoire_id",
@@ -70,7 +73,10 @@ topSeqsPlot <- function(study_table, top = 10) {
     ggplot2::scale_y_continuous(expand = c(0, 0)) +
     ggplot2::theme(legend.position = "none") +
     ggplot2::theme(
-      axis.text.x = ggplot2::element_text(angle = 90, vjust = 0.5, hjust = 1, size = 10),
+      axis.text.x = ggplot2::element_text(angle = 90,
+                                          vjust = 0.5,
+                                          hjust = 1,
+                                          size = 10),
       axis.text.y = ggplot2::element_text(size = 10)
     ) +
     ggplot2::labs(x = "", y = "Frequency (%)")

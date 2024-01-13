@@ -15,10 +15,10 @@
 #' expanding the junction_aa column such that each row in the tibble corresponds
 #' to one junction_aa
 #' @examples
-#' file_path <- base::system.file("extdata", "TCRB_gliph", package = "LymphoSeq2")
+#' file_path <- base::system.file("extdata", "TCRB_gliph",
+#'  package = "LymphoSeq2")
 #' gliph_table <- LymphoSeq2::readGliph(file_path)
 #' @export
-#' @import magrittr
 readGliph <- function(gliph_path) {
   gliph_files <- base::list.files(
     path = gliph_path,
@@ -30,8 +30,8 @@ readGliph <- function(gliph_path) {
     total = length(gliph_files), clear = FALSE, width = 60
   )
   progress_bar$tick(0)
-  gliph_table <- gliph_files %>%
-    purrr::map(~ getGliphTable(.x, progress_bar)) %>%
+  gliph_table <- gliph_files |>
+    purrr::map(~ getGliphTable(.x, progress_bar)) |>
     dplyr::bind_rows()
   return(gliph_table)
 }
@@ -44,8 +44,10 @@ getGliphTable <- function(gliph_path, progress_bar) {
   progress_bar$tick()
   sample <- tools::file_path_sans_ext(base::basename(gliph_path))
   base::options(readr.show_progress = FALSE)
-  gliph_table <- readr::read_tsv(gliph_path, col_names = c("gliph_count", "spec_group", "junction_aa"), col_types = readr::cols()) %>%
-    dplyr::mutate(repertoire_id = sample) %>%
+  gliph_table <- readr::read_tsv(gliph_path,
+      col_names = c("gliph_count", "spec_group", "junction_aa"),
+      col_types = readr::cols()) |>
+    dplyr::mutate(repertoire_id = sample) |>
     tidyr::separate_rows(junction_aa, sep = " ")
   return(gliph_table)
 }

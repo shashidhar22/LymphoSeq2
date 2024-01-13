@@ -28,9 +28,12 @@ Adaptive Biotechnologies ImmunoSEQ analyzer, BGI IR-SEQ, MiXCR and stores
 them as MiAIRR compliant tibble.
 }
 \examples{
-file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
-study_table <- LymphoSeq2::readImmunoSeq(path = file_path, recursive = FALSE,
-  threads = 1)
+file_path <- system.file("extdata", "TCRB_sequencing",
+ package = "LymphoSeq2")
+study_table <- LymphoSeq2::readImmunoSeq(
+  path = file_path, recursive = FALSE,
+  threads = 1
+)
 study_table <- LymphoSeq2::topSeqs(study_table, top = 100)
 
 }

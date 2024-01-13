@@ -12,13 +12,14 @@
 #' epitope, HLA type, and PubMed ID (PMID) for the reference where the sequence
 #' was characterized.
 #' @examples
-#' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
+#' file_path <- system.file("extdata", "TCRB_sequencing",
+#'  package = "LymphoSeq2")
 #' study_table <- LymphoSeq2::readImmunoSeq(path = file_path, threads = 1)
 #' study_table <- LymphoSeq2::topSeqs(study_table, top = 100)
-#' amino_table <- LymphoSeq2::productiveSeq(study_table = study_table, aggregate = "junction_aa")
+#' amino_table <- LymphoSeq2::productiveSeq(study_table = study_table,
+#'  aggregate = "junction_aa")
 #' LymphoSeq2::searchPublished(amino_table)
 #' @export
-#' @import magrittr
 searchPublished <- function(study_table) {
   study_table <- dplyr::left_join(study_table, LymphoSeq2::publishedTRB,
     by = c("junction_aa" = "aminoAcid")

@@ -12,7 +12,8 @@
 #' frequency is used.
 #' @return Exports fasta files to the working directory.
 #' @examples
-#' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
+#' file_path <- system.file("extdata", "TCRB_sequencing",
+#'  package = "LymphoSeq2")
 #' # Export raw data
 #' study_table <- LymphoSeq2::readImmunoSeq(path = file_path, threads = 1)
 #' study_table <- LymphoSeq2::topSeqs(study_table, top = 100)
@@ -30,26 +31,25 @@
 #'   names = "duplicate_frequency"
 #' )
 #' @export
-#' @import magrittr
 exportFasta <- function(study_table, type = "junction",
                         names = c("rank", "junction_aa", "duplicate_count")) {
   if (type == "junction") {
-    study_table <- study_table %>%
-      dplyr::arrange(repertoire_id, dplyr::desc(duplicate_frequency)) %>%
-      tibble::rowid_to_column() %>%
-      dplyr::mutate(sequences = junction) %>%
+    study_table <- study_table |>
+      dplyr::arrange(repertoire_id, dplyr::desc(duplicate_frequency)) |>
+      tibble::rowid_to_column() |>
+      dplyr::mutate(sequences = junction) |>
       tidyr::unite(fasta_name, names)
   } else if (type == "junction_aa") {
     study_table <- LymphoSeq2::productiveSeq(study_table)
-    study_table <- study_table %>%
-      dplyr::arrange(repertoire_id, dplyr::desc(duplicate_frequency)) %>%
-      tibble::rowid_to_column() %>%
-      dplyr::mutate(sequences = junction_aa) %>%
+    study_table <- study_table |>
+      dplyr::arrange(repertoire_id, dplyr::desc(duplicate_frequency)) |>
+      tibble::rowid_to_column() |>
+      dplyr::mutate(sequences = junction_aa) |>
       tidyr::unite(fasta_name, names)
   }
-  study_table %>%
-    dplyr::group_by(repertoire_id) %>%
-    dplyr::group_split() %>%
+  study_table |>
+    dplyr::group_by(repertoire_id) |>
+    dplyr::group_split() |>
     purrr::map(~ writeFasta(.x, type))
   message(paste("Fasta files saved to", getwd()))
 }

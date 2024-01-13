@@ -1,7 +1,8 @@
 #' Bhattacharyya, Similarity, Sorensen, or PSI matrix
 #'
-#' Calculates the Bhattacharyya coefficient, Similarity score, Sorensen Index, or
-#' Percent Similarity Index of all pairwise comparison from a list of data frames.
+#' Calculates the Bhattacharyya coefficient, Similarity score, Sorensen Index,
+#' or Percent Similarity Index of all pairwise comparison from a list of data
+#' frames.
 #'
 #' @param productive_table A tibble of productive sequences generated
 #' by the LymphoSeq function [productiveSeq()].  "duplicate_frequency" and
@@ -16,10 +17,12 @@
 #' 1 indicates the sequence frequencies are identical in the two samples and 0
 #' indicates no shared frequencies.
 #' @examples
-#' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
+#' file_path <- system.file("extdata", "TCRB_sequencing",
+#'  package = "LymphoSeq2")
 #' study_table <- LymphoSeq2::readImmunoSeq(path = file_path, threads = 1)
 #' study_table <- LymphoSeq2::topSeqs(study_table, top = 100)
-#' amino_table <- LymphoSeq2::productiveSeq(study_table, aggregate = "junction_aa")
+#' amino_table <- LymphoSeq2::productiveSeq(study_table,
+#'  aggregate = "junction_aa")
 #' bhattacharyya_matrix <- LymphoSeq2::scoringMatrix(
 #'   productive_table = amino_table,
 #'   mode = "Bhattacharyya"
@@ -38,50 +41,49 @@
 #' )
 #' @seealso [LymphoSeq2::pairwisePlot()] for plotting results as a heat map.
 #' @export
-#' @import magrittr
 scoringMatrix <- function(productive_table, mode = "Bhattacharyya") {
-  sample_list <- productive_table %>%
+  sample_list <- productive_table |>
     dplyr::select(
       repertoire_id, junction_aa, duplicate_frequency,
       duplicate_count
-    ) %>%
-    dplyr::group_by(repertoire_id) %>%
+    ) |>
+    dplyr::group_by(repertoire_id) |>
     dplyr::group_split()
   if (mode == "Bhattacharyya") {
-    scoring_matrix <- list(sample_list, sample_list) %>%
-      purrr::cross() %>%
-      purrr::map(bhattacharyyaCoefficient) %>%
-      dplyr::bind_rows() %>%
+    scoring_matrix <- list(sample_list, sample_list) |>
+      purrr::cross() |>
+      purrr::map(bhattacharyyaCoefficient) |>
+      dplyr::bind_rows() |>
       tidyr::pivot_wider(
         id_cols = sample1,
         names_from = sample2,
         values_from = bhattacharyya_coefficient
       )
   } else if (mode == "Similarity") {
-    scoring_matrix <- list(sample_list, sample_list) %>%
-      purrr::cross() %>%
-      purrr::map(similarityScore) %>%
-      dplyr::bind_rows() %>%
+    scoring_matrix <- list(sample_list, sample_list) |>
+      purrr::cross() |>
+      purrr::map(similarityScore) |>
+      dplyr::bind_rows() |>
       tidyr::pivot_wider(
         id_cols = sample1,
         names_from = sample2,
         values_from = similarityScore
       )
   } else if (mode == "Sorensen") {
-    scoring_matrix <- list(sample_list, sample_list) %>%
-      purrr::cross() %>%
-      purrr::map(sorensenIndex) %>%
-      dplyr::bind_rows() %>%
+    scoring_matrix <- list(sample_list, sample_list) |>
+      purrr::cross() |>
+      purrr::map(sorensenIndex) |>
+      dplyr::bind_rows() |>
       tidyr::pivot_wider(
         id_cols = sample1,
         names_from = sample2,
         values_from = sorensenIndex
       )
   } else if (mode == "PSI") {
-    scoring_matrix <- list(sample_list, sample_list) %>%
-      purrr::cross() %>%
-      purrr::map(percentSI) %>%
-      dplyr::bind_rows() %>%
+    scoring_matrix <- list(sample_list, sample_list) |>
+      purrr::cross() |>
+      purrr::map(percentSI) |>
+      dplyr::bind_rows() |>
       tidyr::pivot_wider(
         id_cols = sample1,
         names_from = sample2,
@@ -89,8 +91,8 @@ scoringMatrix <- function(productive_table, mode = "Bhattacharyya") {
       )
   }
   row_names <- scoring_matrix$sample1
-  scoring_matrix <- scoring_matrix %>%
-    dplyr::select(-sample1) %>%
+  scoring_matrix <- scoring_matrix |>
+    dplyr::select(-sample1) |>
     as.matrix()
   rownames(scoring_matrix) <- row_names
   return(scoring_matrix)
@@ -109,7 +111,6 @@ scoringMatrix <- function(productive_table, mode = "Bhattacharyya") {
 #' bhattacharyya coefficient
 #'
 #' @seealso [LymphoSeq2::scoringMatrix()]
-#' @import magrittr
 #' @export
 bhattacharyyaCoefficient <- function(sample_list) {
   sample1 <- sample_list[[1]]
@@ -117,7 +118,7 @@ bhattacharyyaCoefficient <- function(sample_list) {
   sample_merged <- dplyr::full_join(sample1, sample2,
     by = "junction_aa",
     suffix = c("_p", "_q")
-  ) %>%
+  ) |>
     dplyr::mutate(
       duplicate_frequency_p = tidyr::replace_na(duplicate_frequency_p, 0),
       duplicate_frequency_q = tidyr::replace_na(duplicate_frequency_q, 0)
@@ -144,20 +145,20 @@ bhattacharyyaCoefficient <- function(sample_list) {
 #' the sequence frequencies are identical in the two samples and 0
 #' indicates no shared frequencies.
 #' @seealso [LymphoSeq2::scoringMatrix()]
-#' @import magrittr
 #' @export
 similarityScore <- function(sample_list) {
   sample1 <- sample_list[[1]]
   sample2 <- sample_list[[2]]
-  s1 <- sample1 %>%
-    dplyr::filter(junction_aa %in% sample2$junction_aa) %>%
-    dplyr::summarise(total = sum(duplicate_count)) %>%
+  s1 <- sample1 |>
+    dplyr::filter(junction_aa %in% sample2$junction_aa) |>
+    dplyr::summarise(total = sum(duplicate_count)) |>
     base::as.integer()
-  s2 <- sample2 %>%
-    dplyr::filter(junction_aa %in% sample1$junction_aa) %>%
-    dplyr::summarise(total = sum(duplicate_count)) %>%
+  s2 <- sample2 |>
+    dplyr::filter(junction_aa %in% sample1$junction_aa) |>
+    dplyr::summarise(total = sum(duplicate_count)) |>
     base::as.integer()
-  score <- (s1 + s2) / (base::sum(sample1$duplicate_count) + base::sum(sample2$duplicate_count))
+  score <- (s1 + s2) / (base::sum(sample1$duplicate_count) +
+    base::sum(sample2$duplicate_count))
   similarity_score <- tibble::tibble(
     sample1 = sample1$repertoire_id[1],
     sample2 = sample2$repertoire_id[1],
@@ -180,25 +181,25 @@ similarityScore <- function(sample_list) {
 #' the sequence frequencies are identical in the two samples and 0
 #' indicates no shared frequencies.
 #' @seealso [LymphoSeq2::scoringMatrix()]
-#' @import magrittr
 #' @export
 sorensenIndex <- function(sample_list) {
   sample1 <- sample_list[[1]]
   sample2 <- sample_list[[2]]
-  intersection <- dplyr::inner_join(sample1, sample2, by = "junction_aa", suffix = c("_1", "_2"))
+  intersection <- dplyr::inner_join(sample1, sample2, by = "junction_aa",
+    suffix = c("_1", "_2"))
   unique_sample1 <- dplyr::anti_join(sample1, sample2, by = "junction_aa")
   unique_sample2 <- dplyr::anti_join(sample2, sample1, by = "junction_aa")
-  a <- intersection %>%
-    dplyr::pull(junction_aa) %>%
-    unique() %>%
+  a <- intersection |>
+    dplyr::pull(junction_aa) |>
+    unique() |>
     length()
-  b <- unique_sample1 %>%
-    dplyr::pull(junction_aa) %>%
-    unique() %>%
+  b <- unique_sample1 |>
+    dplyr::pull(junction_aa) |>
+    unique() |>
     length()
-  c <- unique_sample2 %>%
-    dplyr::pull(junction_aa) %>%
-    unique() %>%
+  c <- unique_sample2 |>
+    dplyr::pull(junction_aa) |>
+    unique() |>
     length()
   sorensen_index <- (2 * a) / ((2 * a) + b + c)
   sorensen_score <- tibble::tibble(
@@ -223,28 +224,32 @@ sorensenIndex <- function(sample_list) {
 #' the sequence frequencies are identical in the two samples and 0
 #' indicates no shared frequencies.
 #' @seealso [LymphoSeq2::scoringMatrix()]
-#' @import magrittr
 #' @export
 percentSI <- function(sample_list) {
   sample1 <- sample_list[[1]]
   sample2 <- sample_list[[2]]
-  combined <- dplyr::full_join(sample1, sample2, by = "junction_aa", suffix = c("_1", "_2")) %>%
-    dplyr::select(junction_aa, duplicate_frequency_1, duplicate_frequency_2) %>%
+  combined <- dplyr::full_join(sample1, sample2, by = "junction_aa",
+      suffix = c("_1", "_2")) |>
+    dplyr::select(junction_aa, duplicate_frequency_1, duplicate_frequency_2) |>
     dplyr::mutate(
       duplicate_frequency_1 = tidyr::replace_na(duplicate_frequency_1, 0),
       duplicate_frequency_2 = tidyr::replace_na(duplicate_frequency_2, 0)
-    ) %>%
-    dplyr::group_by(junction_aa, duplicate_frequency_1, duplicate_frequency_2) %>%
-    dplyr::summarize(min_count = min(duplicate_frequency_1, duplicate_frequency_2)) %>%
+    ) |>
+    dplyr::group_by(
+      junction_aa,
+      duplicate_frequency_1,
+      duplicate_frequency_2) |>
+    dplyr::summarize(min_count = min(duplicate_frequency_1,
+                                     duplicate_frequency_2)) |>
     dplyr::ungroup()
-  min_sum <- combined %>%
-    dplyr::pull(min_count) %>%
+  min_sum <- combined |>
+    dplyr::pull(min_count) |>
     sum()
-  sum_sample1 <- combined %>%
-    dplyr::pull(duplicate_frequency_1) %>%
+  sum_sample1 <- combined |>
+    dplyr::pull(duplicate_frequency_1) |>
     sum()
-  sum_sample2 <- combined %>%
-    dplyr::pull(duplicate_frequency_2) %>%
+  sum_sample2 <- combined |>
+    dplyr::pull(duplicate_frequency_2) |>
     sum()
   percent_si <- 200 * sum(min_sum) / (sum_sample1 + sum_sample2)
   psi_score <- tibble::tibble(

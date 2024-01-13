@@ -38,11 +38,12 @@ Acceptable values are \code{"global"} and \code{"partial"}. See details below.}
 Returns the rows for every instance in the list of data frames where
 the searched sequence(s) appeared.
 
-Tibble of sequences that differ from the input sequence by the edit distance
-threshold provided
+Tibble of sequences that differ from the input sequence by the
+edit distance threshold provided
 }
 \description{
-Search for one or more amino acid or junction CDR3 sequences in a study tibble.
+Search for one or more amino acid or junction CDR3 sequences in a study
+tibble.
 }
 \details{
 An exact partial match means the searched sequence is contained
@@ -57,11 +58,13 @@ the sequences different by a single amino acid or junction.
 }
 \section{Functions}{
 \itemize{
-\item \code{findSeq}: Find all sequences below edit distance threshold from query list
-}}
+\item \code{findSeq()}: Find all sequences below edit distance threshold from
+query list.
 
+}}
 \examples{
-file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
+file_path <- system.file("extdata", "TCRB_sequencing",
+ package = "LymphoSeq2")
 study_table <- LymphoSeq2::readImmunoSeq(path = file_path, threads = 1)
 study_table <- LymphoSeq2::topSeqs(study_table, top = 100)
 aa1 <- "CASSPVSNEQFF"

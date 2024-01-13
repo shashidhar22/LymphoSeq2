@@ -37,12 +37,12 @@
 #' diversity and is derived from the Lorenz curve.  The Lorenz curve is drawn
 #' such that x-axis represents the cumulative percentage of unique sequences and
 #' the y-axis represents the cumulative percentage of reads.  A line passing
-#' through the origin with a slope of 1 reflects equal frequencies of all clones.
-#' The Gini coefficient is the ratio of the area between the line of equality
-#' and the observed Lorenz curve over the total area under the line of equality.
-#' Both Gini coefficient and clonality are reported on a scale from 0 to 1 where
-#' 0 indicates all sequences have the same frequency and 1 indicates the
-#' repertoire is dominated by a single sequence.
+#' through the origin with a slope of 1 reflects equal frequencies of all
+#' clones.The Gini coefficient is the ratio of the area between the line of
+#' equality and the observed Lorenz curve over the total area under the line of
+#' equality.Both Gini coefficient and clonality are reported on a scale from 0
+#' to 1, where 0 indicates all sequences have the same frequency and 1 indicates
+#' therepertoire is dominated by a single sequence.
 #'
 #' TCR/BCR convergence is defined as the average number of productive CDR3
 #' nucleotide sequences that form the same productive CDR3 amino acid sequence.
@@ -57,7 +57,8 @@
 #' enable comparison of repertoire samples from different experiments and
 #' different tissue of origin
 #' @examples
-#' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
+#' file_path <- system.file("extdata", "TCRB_sequencing",
+#'  package = "LymphoSeq2")
 #' study_table <- LymphoSeq2::readImmunoSeq(path = file_path, threads = 1)
 #' study_table <- LymphoSeq2::topSeqs(study_table, top = 100)
 #' raw_clonality <- LymphoSeq2::clonality(study_table)
@@ -68,31 +69,33 @@
 #' )
 #' @seealso [LymphoSeq2::lorenzCurve()]
 #' @export
-#' @import magrittr
-clonality <- function(study_table, rarefy = FALSE, iterations = 100, min_count = 1000) {
+clonality <- function(study_table,
+                      rarefy = FALSE,
+                      iterations = 100,
+                      min_count = 1000) {
   if (rarefy) {
-    low_count <- study_table %>%
-      dplyr::group_by(repertoire_id) %>%
-      dplyr::summarize(total = sum(duplicate_count)) %>%
-      dplyr::filter(total < min_count) %>%
+    low_count <- study_table |>
+      dplyr::group_by(repertoire_id) |>
+      dplyr::summarize(total = sum(duplicate_count)) |>
+      dplyr::filter(total < min_count) |>
       dplyr::pull(repertoire_id)
     if (length(low_count) >= 1) {
-      warning(stringr::str_c("Dropping the following samples since they have less than ",
-        min_count, "sequences \n", stringr::str_c(low_count, sep = ""),
-        sep = ""
+      warning(stringr::str_c("Dropping the following samples since they have",
+        "less than ", min_count, "sequences \n",
+        stringr::str_c(low_count, sep = ""), sep = ""
       ))
     }
-    study_table <- study_table %>%
-      dplyr::filter(!(repertoire_id %in% low_count)) %>%
-      dplyr::group_by(repertoire_id) %>%
-      dplyr::group_split() %>%
-      purrr::map(~ iterativeSummary(.x, iterations, min_count)) %>%
+    study_table <- study_table |>
+      dplyr::filter(!(repertoire_id %in% low_count)) |>
+      dplyr::group_by(repertoire_id) |>
+      dplyr::group_split() |>
+      purrr::map(~ iterativeSummary(.x, iterations, min_count)) |>
       dplyr::bind_rows()
   } else {
-    study_table <- study_table %>%
-      dplyr::group_by(repertoire_id) %>%
-      dplyr::group_split() %>%
-      purrr::map(summarySeq) %>%
+    study_table <- study_table |>
+      dplyr::group_by(repertoire_id) |>
+      dplyr::group_split() |>
+      purrr::map(summarySeq) |>
       dplyr::bind_rows()
   }
 
@@ -105,21 +108,21 @@ clonality <- function(study_table, rarefy = FALSE, iterations = 100, min_count =
 #' @return Tibble summarizing the sequence information for each repertoire_id
 #'
 #' @export
-#' @import magrittr
 
 summarySeq <- function(study_table) {
   productive <- LymphoSeq2::productiveSeq(study_table, aggregate = "junction")
-  frequency <- productive %>%
+  frequency <- productive |>
     dplyr::pull(duplicate_frequency)
-  counts <- productive %>%
+  counts <- productive |>
     dplyr::pull(duplicate_count)
   entropy <- -base::sum(frequency * base::log2(frequency), na.rm = TRUE)
-  clonality <- 1 - base::round(entropy / base::log2(base::nrow(productive)), digits = 6)
-  convergence <- productive %>%
-    LymphoSeq2::topSeqs(top = 100) %>%
-    dplyr::group_by(junction_aa) %>%
-    dplyr::summarise(convergence = length(unique(junction))) %>%
-    dplyr::pull(convergence) %>%
+  clonality <- 1 - base::round(entropy / base::log2(base::nrow(productive)),
+    digits = 6)
+  convergence <- productive |>
+    LymphoSeq2::topSeqs(top = 100) |>
+    dplyr::group_by(junction_aa) |>
+    dplyr::summarise(convergence = length(unique(junction))) |>
+    dplyr::pull(convergence) |>
     mean()
   study_summary <- tibble::tibble(
     repertoire_id = study_table$repertoire_id[1],
@@ -142,15 +145,15 @@ summarySeq <- function(study_table) {
 #'
 #' @export
 iterativeSummary <- function(study_table, iterations, min_count = 1000) {
-  uncount_table <- study_table %>%
+  uncount_table <- study_table |>
     tidyr::uncount(weights = duplicate_count)
 
   summary_table <- purrr::map(
     1:iterations,
     \(i)sampledSummary(uncount_table, min_count)
-  ) %>%
-    dplyr::bind_rows() %>%
-    dplyr::group_by(repertoire_id) %>%
+  ) |>
+    dplyr::bind_rows() |>
+    dplyr::group_by(repertoire_id) |>
     dplyr::summarise_all(mean)
   return(summary_table)
 }
@@ -164,12 +167,13 @@ iterativeSummary <- function(study_table, iterations, min_count = 1000) {
 #'
 #' @export
 sampledSummary <- function(study_table, min_count) {
-  study_table <- tibble::as_tibble(study_table) %>%
-    dplyr::sample_n(min_count) %>%
-    dplyr::select(-duplicate_frequency) %>%
-    dplyr::group_by_all() %>%
-    dplyr::summarise(duplicate_count = dplyr::n()) %>%
-    dplyr::mutate(duplicate_frequency = duplicate_count / sum(duplicate_count)) %>%
+  study_table <- tibble::as_tibble(study_table) |>
+    dplyr::sample_n(min_count) |>
+    dplyr::select(-duplicate_frequency) |>
+    dplyr::group_by_all() |>
+    dplyr::summarise(duplicate_count = dplyr::n()) |>
+    dplyr::mutate(
+      duplicate_frequency = duplicate_count / sum(duplicate_count)) |>
     dplyr::ungroup()
   summary_table <- summarySeq(study_table)
   return(summary_table)

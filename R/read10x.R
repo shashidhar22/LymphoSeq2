@@ -10,7 +10,6 @@
 #'  * `FALSE` (the default): Open file using path
 #' @return Returns a tibble with MiAIRR headers and repertoire_id
 #' @export
-#' @import magrittr
 read10x <- function(path, recursive = FALSE) {
   if (length(path) > 1) {
     file_paths <- path
@@ -29,12 +28,13 @@ read10x <- function(path, recursive = FALSE) {
   file_info <- file.info(file_paths)
   file_paths <- rownames(file_info)[file_info$size > 0]
   if (file_num != length(file_paths)) {
-    warning("One or more of the files you are trying to import has no sequences and will be ignored.",
+    warning(str_c("One or more of the files you are trying to import has no",
+        "sequences and will be ignored.", sep = " "),
       call. = FALSE
     )
   }
-  file_list <- file_paths %>%
-    purrr::map(~ standardize10x(.x)) %>%
+  file_list <- file_paths |>
+    purrr::map(~ standardize10x(.x)) |>
     dplyr::bind_rows()
   return(file_list)
 }
@@ -47,7 +47,8 @@ read10x <- function(path, recursive = FALSE) {
 #' @return A tibble with alpha and beta chains collapsed
 #' @export
 collpase_chains <- function(clone_file) {
-  clone_data <- readr::read_tsv(clone_file, na = c("", "NA", "Nan", "NaN", "unresolved"))
+  clone_data <- readr::read_tsv(clone_file,
+    na = c("", "NA", "Nan", "NaN", "unresolved"))
 
   double_fields <- c(
     "v_sequence_start", "v_sequence_end",
@@ -57,16 +58,16 @@ collpase_chains <- function(clone_file) {
     "junction_length", "junction_aa_length",
     "consensus_count", "duplicate_count"
   )
-  collapsed_data <- clone_data %>%
-    dplyr::group_by(cell_id) %>%
-    dplyr::group_split() %>%
-    purrr::map(~ mostPrevalent(., clone_data)) %>%
-    dplyr::bind_rows() %>%
+  collapsed_data <- clone_data |>
+    dplyr::group_by(cell_id) |>
+    dplyr::group_split() |>
+    purrr::map(~ mostPrevalent(., clone_data)) |>
+    dplyr::bind_rows() |>
     dtplyr::lazy_dt()
-  collapsed_data <- collapsed_data %>%
-    dplyr::group_by(cell_id, clone_id) %>%
-    dplyr::summarise_all(~ paste(., collapse = ".")) %>%
-    dplyr::as_tibble() %>%
+  collapsed_data <- collapsed_data |>
+    dplyr::group_by(cell_id, clone_id) |>
+    dplyr::summarise_all(~ paste(., collapse = ".")) |>
+    dplyr::as_tibble() |>
     dplyr::mutate_at(
       double_fields,
       function(x) as.double(x)
@@ -92,33 +93,33 @@ selectChain <- function(barcode_data, clone_data, chain = "TRA") {
   } else {
     opp_chain <- "TRA"
   }
-  vdj_TRx <- barcode_data %>%
-    dtplyr::lazy_dt() %>%
-    dplyr::filter(grepl(chain, v_call)) %>%
-    dplyr::select(c(junction, v_call, j_call, d_call)) %>%
+  vdj_TRx <- barcode_data |>
+    dtplyr::lazy_dt() |>
+    dplyr::filter(grepl(chain, v_call)) |>
+    dplyr::select(c(junction, v_call, j_call, d_call)) |>
     dplyr::as_tibble()
 
   if (nrow(vdj_TRx) > 1) {
     TRx_count <- purrr::map(
       1:nrow(vdj_TRx),
       function(x) {
-        clone_lazy_data <- clone_data %>%
+        clone_lazy_data <- clone_data |>
           dtplyr::lazy_dt()
-        clone_lazy_data %>%
+        clone_lazy_data |>
           dplyr::filter(
             junction == vdj_TRx$junction[x],
             v_call == vdj_TRx$v_call[x],
             d_call == vdj_TRx$d_call[x] | is.na(d_call),
             j_call == vdj_TRx$j_call[x]
-          ) %>%
-          dplyr::as_tibble() %>%
+          ) |>
+          dplyr::as_tibble() |>
           nrow()
       }
     )
-    barcode_data <- barcode_data %>%
-      dtplyr::lazy_dt() %>%
+    barcode_data <- barcode_data |>
+      dtplyr::lazy_dt() |>
       dplyr::filter(grepl(opp_chain, v_call) |
-        v_call == vdj_TRx$v_call[which.max(TRx_count)]) %>%
+        v_call == vdj_TRx$v_call[which.max(TRx_count)]) |>
       dplyr::as_tibble()
   }
   return(barcode_data)
@@ -136,7 +137,7 @@ selectChain <- function(barcode_data, clone_data, chain = "TRA") {
 #' @return A tibble containing the most frequent alpha chain and
 #' the most frequent beta chain.
 mostPrevalent <- function(barcode_data, clone_data) {
-  ab_chains <- barcode_data %>%
+  ab_chains <- barcode_data |>
     dplyr::pull(v_call)
   if (length(ab_chains) > 2) {
     barcode_data <- selectChain(barcode_data, clone_data, chain = "TRA")
@@ -149,30 +150,47 @@ mostPrevalent <- function(barcode_data, clone_data) {
 #' @param clone_file A single .tsv file from 10x Genomics
 #' @return A tibble standardized 10X data.
 standardize10x <- function(clone_file) {
-  airr_headers_path <- system.file("extdata", "AIRR_fields.csv", package = "LymphoSeq2")
+  airr_headers_path <- system.file("extdata", "AIRR_fields.csv",
+    package = "LymphoSeq2")
   empty_airr_frame <- readr::read_csv(airr_headers_path, trim_ws = TRUE)
   file_info <- collpase_chains(clone_file)
   if (ncol(file_info) == 144) {
     return(file_info)
   }
   clone_frame <- dplyr::right_join(empty_airr_frame, file_info)
-  clone_frame <- clone_frame %>%
+  clone_frame <- clone_frame |>
     dplyr::mutate(
       sequence_id = dplyr::row_number(),
       junction_length = stringr::str_length(junction),
       junction_aa_length = stringr::str_length(junction_aa),
       rev_comp = FALSE,
-      stop_codon = dplyr::if_else(stringr::str_detect(sequence, "\\*") | stringr::str_detect(sequence_aa, "\\*") |
-        is.na(sequence) | is.na(sequence_aa), TRUE, FALSE),
-      productive = dplyr::if_else(stringr::str_detect(sequence, "\\*") | stringr::str_detect(sequence_aa, "\\*") |
-        is.na(sequence) | is.na(sequence_aa), FALSE, TRUE),
-      v_call = dplyr::if_else(stringr::str_detect(v_call, "/"), "unresolved", v_call),
-      j_call = dplyr::if_else(stringr::str_detect(j_call, "/"), "unresolved", j_call),
-      complete_vdj = dplyr::if_else(is.na(v_call) | is.na(d_call) | is.na(j_call) |
-        stringr::str_detect(v_call, "unresolved") | stringr::str_detect(d_call, "unresolved") |
-        stringr::str_detect(j_call, "unresolved"), FALSE, TRUE),
+      stop_codon = dplyr::if_else(stringr::str_detect(sequence, "\\*") |
+        stringr::str_detect(sequence_aa, "\\*") |
+        is.na(sequence) |
+        is.na(sequence_aa),
+        TRUE,
+        FALSE),
+      productive = dplyr::if_else(stringr::str_detect(sequence, "\\*") |
+        stringr::str_detect(sequence_aa, "\\*") |
+        is.na(sequence) |
+        is.na(sequence_aa),
+        FALSE,
+        TRUE),
+      v_call = dplyr::if_else(stringr::str_detect(v_call, "/"),
+        "unresolved", v_call),
+      j_call = dplyr::if_else(stringr::str_detect(j_call, "/"),
+        "unresolved", j_call),
+      complete_vdj = dplyr::if_else(is.na(v_call) |
+        is.na(d_call) |
+        is.na(j_call) |
+        stringr::str_detect(v_call, "unresolved") |
+        stringr::str_detect(d_call, "unresolved") |
+        stringr::str_detect(j_call, "unresolved"),
+        FALSE,
+        TRUE),
       duplicate_frequency = duplicate_count / sum(duplicate_count),
-      reading_frame = dplyr::if_else(stringr::str_detect(sequence_aa, "\\*"), "out-of-frame", "in-frame"),
+      reading_frame = dplyr::if_else(stringr::str_detect(sequence_aa, "\\*"),
+        "out-of-frame", "in-frame"),
       v_family = dplyr::if_else(stringr::str_detect(v_call, "(TRB|TCRB)V"),
         stringr::str_extract(v_call, "(TRB|TCRB)V\\d+"), "unrecognized"
       ),

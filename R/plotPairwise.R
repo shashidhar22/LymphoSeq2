@@ -12,10 +12,12 @@
 #' The functions to create the similarity matrices can be found
 #' here: [LymphoSeq2::scoringMatrix()]
 #' @examples
-#' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
+#' file_path <- system.file("extdata", "TCRB_sequencing",
+#'  package = "LymphoSeq2")
 #' study_table <- LymphoSeq2::readImmunoSeq(path = file_path, threads = 1)
 #' study_table <- LymphoSeq2::topSeqs(study_table, top = 100)
-#' amino_table <- LymphoSeq2::productiveSeq(study_table, aggregate = "junction_aa")
+#' amino_table <- LymphoSeq2::productiveSeq(study_table,
+#'  aggregate = "junction_aa")
 #' # Plot similarity using Similarity score
 #' similarity_matrix <- LymphoSeq2::scoringMatrix(
 #'   productive_table = amino_table,
@@ -34,18 +36,17 @@
 #'   ggplot2::labs(fill = "Similarity score") +
 #'   ggplot2::ggtitle("Pairwise similarity score")
 #' @export
-#' @import magrittr
 pairwisePlot <- function(matrix) {
   samples <- rownames(matrix)
   matrix[base::lower.tri(matrix)] <- NA
-  matrix <- matrix %>%
-    tibble::as_tibble() %>%
-    dplyr::mutate(repertoire_id = samples) %>%
-    dplyr::select(repertoire_id, dplyr::everything()) %>%
+  matrix <- matrix |>
+    tibble::as_tibble() |>
+    dplyr::mutate(repertoire_id = samples) |>
+    dplyr::select(repertoire_id, dplyr::everything()) |>
     tidyr::pivot_longer(-repertoire_id,
       names_to = "repertoire_id_y",
       values_to = "score", values_drop_na = TRUE
-    ) %>%
+    ) |>
     dplyr::arrange(repertoire_id, repertoire_id_y)
   ggplot2::ggplot(data = matrix, ggplot2::aes_string(
     x = "repertoire_id", y = "repertoire_id_y",

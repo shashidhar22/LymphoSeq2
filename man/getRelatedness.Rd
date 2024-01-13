@@ -7,11 +7,11 @@
 getRelatedness(study_table, edit_distance = 10)
 }
 \arguments{
-\item{study_table}{A tibble of raw or productive nucleotide junction sequences.
-"junction" and "duplicate_count" are required columns.}
+\item{study_table}{A tibble of raw or productive nucleotide junction
+sequences."junction" and "duplicate_count" are required columns.}
 
 \item{edit_distance}{An integer giving the minimum edit distance that the
-sequence must be less than or equal to. See details below. Deafult 10 (the default)}
+sequence must be less than or equal to. See details below. Deafault: 10}
 }
 \description{
 Calculates the clonal relatedness of a repertoire.

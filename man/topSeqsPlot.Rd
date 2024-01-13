@@ -25,14 +25,17 @@ The plot is made using the package ggplot2 and can be reformatted
 using ggplot2 functions.  See examples below.
 }
 \examples{
-file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
+file_path <- system.file("extdata", "TCRB_sequencing",
+ package = "LymphoSeq2")
 study_table <- LymphoSeq2::readImmunoSeq(path = file_path, threads = 1)
-amino_table <- LymphoSeq2::productiveSeq(study_table = study_table, aggregate = "junction_aa")
+amino_table <- LymphoSeq2::productiveSeq(study_table = study_table,
+ aggregate = "junction_aa")
 LymphoSeq2::topSeqsPlot(study_table = amino_table, top = 10)
 # Display the number of sequences at the top of bar plot and add a title
 n <- as.character(nrow(study_table))
 LymphoSeq2::topSeqsPlot(study_table = amino_table, top = 10) +
-  ggplot2::annotate("text", x = 1:length(n), y = 105, label = n, color = "black") +
+  ggplot2::annotate("text", x = 1:length(n), y = 105, label = n,
+    color = "black") +
   ggplot2::expand_limits(y = c(0, 110)) + ggplot2::ggtitle("Top sequences") +
   ggplot2::scale_x_discrete(limits = names(n))
 }

@@ -28,6 +28,7 @@ expanding the junction_aa column such that each row in the tibble corresponds
 to one junction_aa
 }
 \examples{
-file_path <- base::system.file("extdata", "TCRB_gliph", package = "LymphoSeq2")
-gliph_table <- LymphoSeq2::readGliph(file_path) 
+file_path <- base::system.file("extdata", "TCRB_gliph",
+ package = "LymphoSeq2")
+gliph_table <- LymphoSeq2::readGliph(file_path)
 }

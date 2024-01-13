@@ -19,8 +19,8 @@ include \code{"VJ"} or \code{"DJ"}.}
 gene colors respectively.}
 }
 \value{
-Returns a chord diagram showing VJ or DJ gene associations from one or
-more samples.
+Returns a chord diagram showing VJ or DJ gene associations from one
+or more samples.
 }
 \description{
 Creates a chord diagram showing VJ or DJ gene associations from one or more
@@ -32,10 +32,12 @@ number of samples or number of sequences that make up that recombination
 event. The thicker the ribbon, the higher the frequency of the recombination.
 }
 \examples{
-file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
+file_path <- system.file("extdata", "TCRB_sequencing",
+ package = "LymphoSeq2")
 study_table <- LymphoSeq2::readImmunoSeq(file_path, threads = 1)
 study_table <- LymphoSeq2::topSeqs(study_table, top = 100)
-nucleotide_table <- LymphoSeq2::productiveSeq(study_table, aggregate = "junction")
+nucleotide_table <- LymphoSeq2::productiveSeq(study_table,
+ aggregate = "junction")
 top_seqs <- LymphoSeq2::topSeqs(nucleotide_table, top = 100)
 chordDiagramVDJ(top_seqs,
   association = "VJ",

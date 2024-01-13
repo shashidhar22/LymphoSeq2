@@ -21,24 +21,26 @@
 #' be found in the R Graphics Cookbook online
 #' (\url{http://www.cookbook-r.com/Graphs/}).
 #' @examples
-#' library(magrittr)
-#' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
+#' file_path <- system.file("extdata", "TCRB_sequencing",
+#'  package = "LymphoSeq2")
 #' # Plot Lorenz curve with raw data
-#' study_table <- LymphoSeq2::readImmunoSeq(path = file_path, threads = 1) %>%
+#' study_table <- LymphoSeq2::readImmunoSeq(path = file_path, threads = 1) |>
 #'   LymphoSeq2::topSeqs(top = 100)
-#' repertoire_ids <- study_table %>%
-#'   dplyr::pull(repertoire_id) %>%
+#' repertoire_ids <- study_table |>
+#'   dplyr::pull(repertoire_id) |>
 #'   unique()
-#' LymphoSeq2::lorenzCurve(repertoire_ids = repertoire_ids, study_table = study_table)
+#' LymphoSeq2::lorenzCurve(repertoire_ids = repertoire_ids,
+#'  study_table = study_table)
 #' # Plot Lorenz curve with productive amino acid sequences
 #' amino_table <- LymphoSeq2::productiveSeq(
 #'   study_table = study_table,
 #'   aggregate = "junction_aa"
 #' )
-#' repertoire_ids <- amino_table %>%
-#'   dplyr::pull(repertoire_id) %>%
+#' repertoire_ids <- amino_table |>
+#'   dplyr::pull(repertoire_id) |>
 #'   unique()
-#' LymphoSeq2::lorenzCurve(repertoire_ids = repertoire_ids, study_table = amino_table)
+#' LymphoSeq2::lorenzCurve(repertoire_ids = repertoire_ids,
+#'  study_table = amino_table)
 #' # Change the legend labels, line colors, and add a title
 #' repertoire_ids <- c(
 #'   "TRB_Unsorted_0", "TRB_Unsorted_32",
@@ -61,12 +63,11 @@
 #'   ) +
 #'   ggplot2::ggtitle("Lorenz curve")
 #' @export
-#' @import magrittr
 lorenzCurve <- function(repertoire_ids, study_table) {
-  lorenz <- study_table %>%
-    dplyr::group_by(repertoire_id) %>%
-    dplyr::group_split() %>%
-    purrr::map(LymphoSeq2::getLorenz) %>%
+  lorenz <- study_table |>
+    dplyr::group_by(repertoire_id) |>
+    dplyr::group_split() |>
+    purrr::map(LymphoSeq2::getLorenz) |>
     dplyr::bind_rows()
   getPalette <- grDevices::colorRampPalette(
     RColorBrewer::brewer.pal(9, "Set1")

@@ -7,8 +7,8 @@ test_that("Number of k-mers are counted correctly", {
   study_table <- LymphoSeq2::readImmunoSeq("test_data/015V06013979_CFAR.tsv", threads = 1)
   ktable <- LymphoSeq2::countKmer(study_table = study_table, k = 3)
   num_rows <- base::nrow(ktable)
-  rep_id <- study_table %>%
-    dplyr::pull(repertoire_id) %>%
+  rep_id <- study_table |>
+    dplyr::pull(repertoire_id) |>
     unique()
   Kmer <- c(
     "AAA", "AAC", "AAG", "AAT", "ACA", "ACC", "ACG", "ACT", "AGA",
@@ -30,6 +30,7 @@ test_that("Number of k-mers are counted correctly", {
   )
   kmer_table <- tibble::tibble(Kmer, Count)
   kmer_table <- magrittr::set_colnames(kmer_table, c("Kmer", rep_id))
+                
   expect_equal(num_rows, 64)
   expect_equal(ktable, kmer_table)
 })

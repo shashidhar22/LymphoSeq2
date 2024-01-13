@@ -17,7 +17,8 @@ repertoire diversity. The method used to generate the rarefaction curve
 is derived from Chao et al., (2014) using the iNEXT library
 }
 \examples{
-file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
+file_path <- system.file("extdata", "TCRB_sequencing",
+ package = "LymphoSeq2")
 study_table <- LymphoSeq2::readImmunoSeq(path = file_path, threads = 1)
 study_table <- LymphoSeq2::topSeqs(study_table, top = 100)
 LymphoSeq2::plotRarefactionCurve(study_table)

@@ -40,9 +40,6 @@
 #'   method = "ClustalW"
 #' )
 #' @export
-#' @importFrom Biostrings DNAStringSet
-#' @importFrom Biostrings AAStringSet
-#' @import msa
 alignSeq <- function(study_table, repertoire_ids = NULL,
                      sequence_list = NULL, edit_distance = 15,
                      type = "junction", method = "ClustalOmega",
@@ -95,7 +92,8 @@ alignSeq <- function(study_table, repertoire_ids = NULL,
       search_table <- search_table |>
         dplyr::filter(!!base::as.symbol(type) %in% searchSequence) |>
         LymphoSeq2::topSeqs(top = top)
-      message("Only 150 sequences sampled equally from each search group will be selected")
+      message(str_c("Only 150 sequences sampled equally from each search group",
+        "will be selected", sep = " "))
     }
   }
   # Select the string set according to the type provided by the user

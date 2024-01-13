@@ -1,7 +1,7 @@
 #' Common sequences bar plot
 #'
-#' Creates an UpSetR bar plot showing the number of intersecting sequences across
-#' multiple repertoire_ids. This function is useful when more than 3
+#' Creates an UpSetR bar plot showing the number of intersecting sequences
+#' across multiple repertoire_ids. This function is useful when more than 3
 #' repertoire_ids are being compared.
 #'
 #' @param amino_table A tibble of productive amino acid sequences
@@ -18,46 +18,47 @@
 #' @param labels A character vector indicating whether the number of
 #' intersecting sequences should be shown on the tops of the bars.Options
 #' include "yes" or "no".
-#' @return Returns an UpSetR bar plot showing the number of intersecting sequences
-#' across multiple repertoire_ids.
+#' @return Returns an UpSetR bar plot showing the number of intersecting
+#'  sequences across multiple repertoire_ids.
 #' @seealso [LymphoSeq2::productiveSeq()], [LymphoSeq2::commonSeqs()],
 #' [LymphoSeq2::commonSeqsVenn()], [LymphoSeq2::commonSeqsPlot()]
 #' @examples
-#' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
+#' file_path <- system.file("extdata", "TCRB_sequencing",
+#'  package = "LymphoSeq2")
 #' study_table <- LymphoSeq2::readImmunoSeq(path = file_path, threads = 1)
 #' study_table <- LymphoSeq2::topSeqs(study_table, top = 100)
-#' amino_table <- LymphoSeq2::productiveSeq(study_table, aggregate = "junction_aa")
+#' amino_table <- LymphoSeq2::productiveSeq(study_table,
+#'  aggregate = "junction_aa")
 #' LymphoSeq2::commonSeqsBar(amino_table, repertoire_ids = c(
 #'   "TRB_CD4_949", "TRB_CD8_949",
 #'   "TRB_Unsorted_949", "TRB_Unsorted_1320"
 #' ), color_sample = "TRB_CD8_949")
 #' @export
-#' @import magrittr
 commonSeqsBar <- function(amino_table, repertoire_ids, color_sample = NULL,
                           color_intersection = NULL, color = "#377eb8",
                           labels = "no") {
-  unique_seqs <- LymphoSeq2::uniqueSeqs(productive_table = amino_table) %>%
+  unique_seqs <- LymphoSeq2::uniqueSeqs(productive_table = amino_table) |>
     dplyr::pull(junction_aa)
   sequence_matrix <- LymphoSeq2::seqMatrix(
     amino_table = amino_table,
     sequences = unique_seqs
   )
-  junction_aa <- sequence_matrix %>%
+  junction_aa <- sequence_matrix |>
     dplyr::pull(junction_aa)
-  sequence_matrix <- sequence_matrix %>%
-    dplyr::select(-junction_aa) %>%
+  sequence_matrix <- sequence_matrix |>
+    dplyr::select(-junction_aa) |>
     base::as.matrix()
   sample_names <- colnames(sequence_matrix)
   sequence_matrix[sequence_matrix > 0] <- 1
-  sequence_matrix <- sequence_matrix %>%
+  sequence_matrix <- sequence_matrix |>
     base::as.data.frame()
   sequence_matrix[["junction_aa"]] <- junction_aa
   if (!is.null(color_sample)) {
     queryFunction <- function(row, sequence) {
       data <- (row[["junction_aa"]] %in% sequence)
     }
-    seq_list <- amino_table %>%
-      dplyr::filter(repertoire_id == color_sample) %>%
+    seq_list <- amino_table |>
+      dplyr::filter(repertoire_id == color_sample) |>
       dplyr::pull(junction_aa)
     upplot <- UpSetR::upset(sequence_matrix,
       sets = repertoire_ids, nsets = length(repertoire_ids),

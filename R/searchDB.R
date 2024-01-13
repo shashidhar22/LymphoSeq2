@@ -16,26 +16,27 @@
 #' @return Returns the input table annotated with the any recorded antigenic
 #' specificity from the public databases.
 #' @examples
-#' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
+#' file_path <- system.file("extdata", "TCRB_sequencing",
+#'  package = "LymphoSeq2")
 #' study_table <- LymphoSeq2::readImmunoSeq(path = file_path, threads = 1)
 #' study_table <- LymphoSeq2::topSeqs(study_table, top = 100)
-#' amino_table <- LymphoSeq2::productiveSeq(study_table = study_table, aggregate = "junction_aa")
+#' amino_table <- LymphoSeq2::productiveSeq(study_table = study_table,
+#'  aggregate = "junction_aa")
 #' top_seqs <- LymphoSeq2::topSeqs(productive_table = amino_table, top = 1)
 #' LymphoSeq2::searchDB(study_table = top_seqs, dbname = "all", chain = "trb")
 #' @export
-#' @import magrittr
 searchDB <- function(study_table, dbname = "all", chain = "trb") {
   if (dbname == "all") {
     dbname <- c("IEDB", "McPAS-TCR", "VdjDB")
   }
   if (chain == "tra" | chain == "light") {
-    annotated_table <- study_table %>%
+    annotated_table <- study_table |>
       dplyr::left_join(antigen_db, by = c("junction_aa" = "tra_cdr3_aa"))
   } else if (chain == "trb" | chain == "heavy") {
-    annotated_table <- study_table %>%
+    annotated_table <- study_table |>
       dplyr::left_join(antigen_db, by = c("junction_aa" = "trb_cdr3_aa"))
   }
-  annotated_table <- annotated_table %>%
+  annotated_table <- annotated_table |>
     dplyr::filter(source %in% dbname | is.na(source))
   return(annotated_table)
 }
@@ -55,22 +56,21 @@ searchDB <- function(study_table, dbname = "all", chain = "trb") {
 #' Note: The order of the input matters, please provide the flat file paths in
 #' this order IEDB, McPAS-TCR, VdjDB.
 #' @param db_path Path to IEDB, McPAS-TCR and VdjDB
-#' @import magrittr
 #' @export
 prepDB <- function(db_path = NULL) {
   if (is.null(db_path)) {
-    db_path <- system.file("extdata", "TCRDB", package = "LymphoSeq2") %>%
+    db_path <- system.file("extdata", "TCRDB", package = "LymphoSeq2") |>
       list.files(full.names = TRUE)
   }
   iedb <- readr::read_csv(db_path[1])
-  iedb <- iedb %>%
+  iedb <- iedb |>
     dplyr::select(
       Antigen, Organism, `Response Type`, `Chain 1 CDR3 Calculated`,
       `Calculated Chain 1 V Gene`, `Calculated Chain 1 J Gene`,
       `Chain 2 CDR3 Calculated`, `Calculated Chain 2 V Gene`,
       `Calculated Chain 2 J Gene`, `MHC Allele Names`,
       `Reference IRI`, Description
-    ) %>%
+    ) |>
     dplyr::rename(
       antigen = Antigen, pathology = Organism,
       cell_type = `Response Type`,
@@ -82,19 +82,19 @@ prepDB <- function(db_path = NULL) {
       trb_v_call = `Calculated Chain 2 V Gene`,
       trb_j_call = `Calculated Chain 2 J Gene`,
       mhc_allele = `MHC Allele Names`, reference = `Reference IRI`
-    ) %>%
+    ) |>
     dplyr::mutate(
       score = 1, source = "IEDB",
       reference = as.character(reference)
     )
   mcpas <- readr::read_csv(db_path[2])
-  mcpas <- mcpas %>%
-    dplyr::filter(Species == "Human") %>%
+  mcpas <- mcpas |>
+    dplyr::filter(Species == "Human") |>
     dplyr::select(
       Pathology, CDR3.alpha.aa, CDR3.beta.aa, Epitope.peptide, MHC,
       T.Cell.Type, TRAV, TRAJ, TRBV, TRBJ, Antigen.protein,
       Species, PubMed.ID
-    ) %>%
+    ) |>
     dplyr::rename(
       antigen = Antigen.protein, pathology = Pathology,
       cell_type = T.Cell.Type, epitope = Epitope.peptide,
@@ -102,38 +102,38 @@ prepDB <- function(db_path = NULL) {
       tra_j_call = TRAJ, mhc_allele = MHC,
       trb_cdr3_aa = CDR3.beta.aa, trb_v_call = TRBV,
       trb_j_call = TRBJ, reference = PubMed.ID
-    ) %>%
+    ) |>
     dplyr::mutate(
       score = 1, source = "McPAS-TCR",
       reference = as.character(reference)
     )
   vdjdb <- readr::read_tsv(db_path[3])
-  vdjdb <- vdjdb %>%
-    dplyr::filter(species == "HomoSapiens") %>%
+  vdjdb <- vdjdb |>
+    dplyr::filter(species == "HomoSapiens") |>
     dplyr::select(
       cdr3, gene, antigen.epitope, antigen.species, antigen.gene,
       v.segm, j.segm, mhc.a, reference.id, vdjdb.score
     )
-  vdjdb_tra <- vdjdb %>%
-    dplyr::filter(gene == "TRA") %>%
+  vdjdb_tra <- vdjdb |>
+    dplyr::filter(gene == "TRA") |>
     dplyr::rename(
       antigen = antigen.gene, pathology = antigen.species,
       epitope = antigen.epitope, tra_cdr3_aa = cdr3,
       tra_v_call = v.segm, tra_j_call = j.segm, mhc_allele = mhc.a,
       reference = reference.id, score = vdjdb.score
-    ) %>%
+    ) |>
     dplyr::mutate(
       cell_type = "T cell", source = "VDJdb",
       reference = as.character(reference)
     )
-  vdjdb_trb <- vdjdb %>%
-    dplyr::filter(gene == "TRB") %>%
+  vdjdb_trb <- vdjdb |>
+    dplyr::filter(gene == "TRB") |>
     dplyr::rename(
       antigen = antigen.gene, pathology = antigen.species,
       epitope = antigen.epitope, trb_cdr3_aa = cdr3,
       trb_v_call = v.segm, trb_j_call = j.segm, mhc_allele = mhc.a,
       reference = reference.id, score = vdjdb.score
-    ) %>%
+    ) |>
     dplyr::mutate(
       cell_type = "T cell", source = "VDJdb",
       reference = as.character(reference)

@@ -20,18 +20,21 @@ of gene names are used.  If TRUE, then family names are used and if FALSE,
 gene names are used.}
 }
 \value{
-Returns a data frame with the repertoire_id names, VDJ gene name, duplicate_count, and
-\\% frequency of the V, D, or J genes (each gene frequency should add to
-100\\% for each repertoire_id).
+Returns a data frame with the repertoire_id names, VDJ gene name,
+duplicate_count, and \\% frequency of the V, D, or J genes (each gene
+frequency should add to 100\\% for each repertoire_id).
 }
 \description{
 Creates a data frame of VDJ gene counts and frequencies.
 }
 \examples{
-file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
-study_table <- LymphoSeq2::readImmunoSeq(path = file_path, threads = 1) 
+file_path <- system.file("extdata", "TCRB_sequencing",
+ package = "LymphoSeq2")
+study_table <- LymphoSeq2::readImmunoSeq(path = file_path, threads = 1)
 study_table <- LymphoSeq2::topSeqs(study_table, top = 100)
-nucleotide_table <- LymphoSeq2::productiveSeq(study_table = study_table, 
-  aggregate = "junction")
+nucleotide_table <- LymphoSeq2::productiveSeq(
+  study_table = study_table,
+  aggregate = "junction"
+)
 LymphoSeq2::geneFreq(nucleotide_table, locus = "VDJ", family = FALSE)
 }

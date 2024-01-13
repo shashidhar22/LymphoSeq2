@@ -11,8 +11,8 @@ topSeqs(productive_table, top = 1)
 by the LymphoSeq2 function \code{\link[=productiveSeq]{productiveSeq()}}. "duplicate_frequency" and
 "junction_aa" are a required columns.}
 
-\item{top}{The number of top productive sequences in each data frame to subset
-by their frequencies.}
+\item{top}{The number of top productive sequences in each data frame to
+subset by their frequencies.}
 }
 \value{
 Returns a tibble of a selected number of top productive sequences
@@ -23,9 +23,11 @@ Creates a tibble of a selected number of top productive sequences
 from the study table.
 }
 \examples{
-file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
+file_path <- system.file("extdata", "TCRB_sequencing",
+ package = "LymphoSeq2")
 study_table <- LymphoSeq2::readImmunoSeq(path = file_path, threads = 1)
-amino_table <- LymphoSeq2::productiveSeq(study_table = study_table, aggregate = "junction_aa")
+amino_table <- LymphoSeq2::productiveSeq(study_table = study_table,
+ aggregate = "junction_aa")
 top_seqs <- LymphoSeq2::topSeqs(productive_table = amino_table, top = 1)
 }
 \seealso{

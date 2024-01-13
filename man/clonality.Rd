@@ -54,12 +54,12 @@ The Gini coefficient is an alternative metric used to calculate repertoire
 diversity and is derived from the Lorenz curve.  The Lorenz curve is drawn
 such that x-axis represents the cumulative percentage of unique sequences and
 the y-axis represents the cumulative percentage of reads.  A line passing
-through the origin with a slope of 1 reflects equal frequencies of all clones.
-The Gini coefficient is the ratio of the area between the line of equality
-and the observed Lorenz curve over the total area under the line of equality.
-Both Gini coefficient and clonality are reported on a scale from 0 to 1 where
-0 indicates all sequences have the same frequency and 1 indicates the
-repertoire is dominated by a single sequence.
+through the origin with a slope of 1 reflects equal frequencies of all
+clones.The Gini coefficient is the ratio of the area between the line of
+equality and the observed Lorenz curve over the total area under the line of
+equality.Both Gini coefficient and clonality are reported on a scale from 0
+to 1, where 0 indicates all sequences have the same frequency and 1 indicates
+therepertoire is dominated by a single sequence.
 
 TCR/BCR convergence is defined as the average number of productive CDR3
 nucleotide sequences that form the same productive CDR3 amino acid sequence.
@@ -75,7 +75,8 @@ enable comparison of repertoire samples from different experiments and
 different tissue of origin
 }
 \examples{
-file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
+file_path <- system.file("extdata", "TCRB_sequencing",
+ package = "LymphoSeq2")
 study_table <- LymphoSeq2::readImmunoSeq(path = file_path, threads = 1)
 study_table <- LymphoSeq2::topSeqs(study_table, top = 100)
 raw_clonality <- LymphoSeq2::clonality(study_table)

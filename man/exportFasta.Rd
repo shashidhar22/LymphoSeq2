@@ -29,15 +29,22 @@ Exports fasta files to the working directory.
 Export junction or amino acid sequences in fasta format.
 }
 \examples{
-file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
+file_path <- system.file("extdata", "TCRB_sequencing",
+ package = "LymphoSeq2")
 # Export raw data
 study_table <- LymphoSeq2::readImmunoSeq(path = file_path, threads = 1)
 study_table <- LymphoSeq2::topSeqs(study_table, top = 100)
-LymphoSeq2::exportFasta(study_table = study_table, type = "junction", 
-  names = c("junction_aa", "duplicate_count"))
+LymphoSeq2::exportFasta(
+  study_table = study_table, type = "junction",
+  names = c("junction_aa", "duplicate_count")
+)
 # Export only productive junction amino acid sequences
-amino_table <- LymphoSeq2::productiveSeq(study_table = study_table, 
-  aggregate = "junction_aa")
-LymphoSeq2::exportFasta(study_table = amino_table, type = "junction_aa", 
-  names = "duplicate_frequency")
+amino_table <- LymphoSeq2::productiveSeq(
+  study_table = study_table,
+  aggregate = "junction_aa"
+)
+LymphoSeq2::exportFasta(
+  study_table = amino_table, type = "junction_aa",
+  names = "duplicate_frequency"
+)
 }

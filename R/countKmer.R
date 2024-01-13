@@ -12,7 +12,8 @@
 #' @return A tibble with the k-mer and its counts. The counts can be cumulative
 #' counts of the entire study_table or counts for each repertoire_id.
 #' @examples
-#' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
+#' file_path <- system.file("extdata", "TCRB_sequencing",
+#'  package = "LymphoSeq2")
 #' study_table <- LymphoSeq2::readImmunoSeq(path = file_path, threads = 1)
 #' study_table <- LymphoSeq2::topSeqs(study_table, top = 100)
 #' kmer_table <- LymphoSeq2::countKmer(
@@ -21,14 +22,13 @@
 #' )
 #'
 #' @export
-#' @import magrittr
 countKmer <- function(study_table, k, separate = TRUE) {
   if (separate) {
-    kmer_counts <- study_table %>%
-      dplyr::group_by(repertoire_id) %>%
-      dplyr::group_split() %>%
-      purrr::map(~ calculateCounts(.x, k)) %>%
-      dplyr::bind_rows() %>%
+    kmer_counts <- study_table |>
+      dplyr::group_by(repertoire_id) |>
+      dplyr::group_split() |>
+      purrr::map(~ calculateCounts(.x, k)) |>
+      dplyr::bind_rows() |>
       tidyr::pivot_wider(
         id_cols = Kmer, names_from = repertoire_id,
         values_from = Count
@@ -42,23 +42,24 @@ countKmer <- function(study_table, k, separate = TRUE) {
 #' Calculate k-mer counts
 #' @inheritParams countKmer
 calculateCounts <- function(study_table, k) {
-  seq <- dplyr::pull(study_table, "junction") %>%
+  seq <- dplyr::pull(study_table, "junction") |>
     stats::na.omit()
-  rep_id <- study_table %>%
-    dplyr::pull(repertoire_id) %>%
+  rep_id <- study_table |>
+    dplyr::pull(repertoire_id) |>
     unique()
   kmer_counts <- purrr::map(
     seq,
-    function(x) Biostrings::oligonucleotideFrequency(Biostrings::DNAString(x), k)
+    function(x) Biostrings::oligonucleotideFrequency(Biostrings::DNAString(x),
+                                                     k)
   )
   kmer_counts <- purrr::map(
     kmer_counts,
     function(x) data.frame(Kmer = names(x), Count = unname(x))
-  ) %>%
-    dplyr::bind_rows() %>%
-    dplyr::group_by(Kmer) %>%
-    dplyr::summarise(Count = sum(Count)) %>%
-    dplyr::ungroup() %>%
+  ) |>
+    dplyr::bind_rows() |>
+    dplyr::group_by(Kmer) |>
+    dplyr::summarise(Count = sum(Count)) |>
+    dplyr::ungroup() |>
     dplyr::mutate(repertoire_id = rep_id)
   return(kmer_counts)
 }
@@ -72,24 +73,25 @@ calculateCounts <- function(study_table, k) {
 #' @param top The number of top k-mer to show
 #' @return A stacked bar chart showing k-mer distributions by repertoire_id
 #' @examples
-#' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
+#' file_path <- system.file("extdata", "TCRB_sequencing",
+#'  package = "LymphoSeq2")
 #' study_table <- LymphoSeq2::readImmunoSeq(path = file_path, threads = 1)
 #' study_table <- LymphoSeq2::topSeqs(study_table, top = 100)
-#' kmer_table <- LymphoSeq2::countKmer(study_table = study_table, k = 5, separate = TRUE)
+#' kmer_table <- LymphoSeq2::countKmer(study_table = study_table, k = 5,
+#'  separate = TRUE)
 #' kmer_distributions <- LymphoSeq2::kmerPlot(kmer_table, top = 10)
 #' @export
-#' @import magrittr
 kmerPlot <- function(kmer_table, top = 10) {
-  kmer_table <- kmer_table %>%
+  kmer_table <- kmer_table |>
     tidyr::pivot_longer(!Kmer,
       names_to = "repertoire_id",
       values_to = "count"
     )
   rep_num <- length(unique(kmer_table$repertoire_id))
-  kmer_table <- kmer_table %>%
-    dplyr::group_by(Kmer) %>%
-    dplyr::mutate(total = sum(count)) %>%
-    dplyr::arrange(desc(total)) %>%
+  kmer_table <- kmer_table |>
+    dplyr::group_by(Kmer) |>
+    dplyr::mutate(total = sum(count)) |>
+    dplyr::arrange(desc(total)) |>
     head(top * rep_num)
   bar <- ggplot2::ggplot(kmer_table, ggplot2::aes(
     fill = repertoire_id, y = count,

@@ -23,8 +23,8 @@ across all samples.
 Creates a table of the top productive amino acid sequences that have a
 specified minimum frequency threshold and reports the number of samples that
 the sequence appears in along with the minimum, maximum, and mean frequency
-across all samples.  For T cell receptor beta sequences, the percent prevalence
-and antigen specificity of that sequence is also provided.
+across all samples.  For T cell receptor beta sequences, the percent
+prevalence and antigen specificity of that sequence is also provided.
 }
 \details{
 For T cell receptor beta sequences, additionally reported is the
@@ -34,9 +34,12 @@ comparing it to a database of previously reported sequences in the
 literature.
 }
 \examples{
-file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
+file_path <- system.file("extdata", "TCRB_sequencing",
+ package = "LymphoSeq2")
 study_table <- LymphoSeq2::readImmunoSeq(path = file_path, threads = 1)
 study_table <- LymphoSeq2::topSeqs(study_table, top = 100)
-amino_table <- LymphoSeq2::productiveSeq(study_table = study_table, aggregate = "junction_aa")
-top_freq <- LymphoSeq2::topFreq(productive_table = amino_table, frequency = 0.1)
+amino_table <- LymphoSeq2::productiveSeq(study_table = study_table,
+ aggregate = "junction_aa")
+top_freq <- LymphoSeq2::topFreq(productive_table = amino_table,
+ frequency = 0.1)
 }

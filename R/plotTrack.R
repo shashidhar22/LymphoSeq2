@@ -13,7 +13,8 @@
 #' @param alphas Set alpha for the band
 #' @param breaks_pal Specify palette for the bands
 #' @examples
-#' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
+#' file_path <- system.file("extdata", "TCRB_sequencing",
+#'  package = "LymphoSeq2")
 #' study_table <- LymphoSeq2::readImmunoSeq(path = file_path, threads = 1)
 #' study_table <- LymphoSeq2::topSeqs(study_table, top = 100)
 #' amino_table <- LymphoSeq2::productiveSeq(study_table,
@@ -31,19 +32,18 @@
 #' @details The plot is made using the package ggplot2 and can be reformatted
 #' using ggplot2 functions.  See examples below.
 #' @export
-#' @import magrittr
 plotTrack <- function(clone_table, alist = NULL, apal = NULL, breaks = 2,
                       alphas = 0, breaks_pal = c("#7fc97f", "#beaed4")) {
   set.seed(12345)
   # Identify all common sequences across samples
-  acommon <- clone_table %>%
-    dplyr::filter(seen >= 2) %>%
-    LymphoSeq2::seqMatrix() %>%
-    dplyr::select(junction_aa) %>%
+  acommon <- clone_table |>
+    dplyr::filter(seen >= 2) |>
+    LymphoSeq2::seqMatrix() |>
+    dplyr::select(junction_aa) |>
     dplyr::pull(junction_aa)
-  clone_table <- clone_table %>%
-    dplyr::group_by(repertoire_id) %>%
-    dplyr::arrange(desc(duplicate_frequency)) %>%
+  clone_table <- clone_table |>
+    dplyr::group_by(repertoire_id) |>
+    dplyr::arrange(desc(duplicate_frequency)) |>
     dplyr::ungroup()
   if (!is.null(alist)) {
     if (is.null(apal)) {
@@ -51,14 +51,14 @@ plotTrack <- function(clone_table, alist = NULL, apal = NULL, breaks = 2,
       apal <- pal(length(alist))
     }
     names(apal) <- alist
-    clone_table <- clone_table %>%
+    clone_table <- clone_table |>
       dplyr::mutate(filler = dplyr::if_else(junction_aa %in% alist,
         apal[junction_aa],
         "grey"
       ))
-    cpal <- clone_table %>%
+    cpal <- clone_table |>
       dplyr::pull(filler)
-    names(cpal) <- clone_table %>%
+    names(cpal) <- clone_table |>
       dplyr::pull(junction_aa)
     sankey <- ggplot2::ggplot(
       clone_table,
@@ -79,7 +79,8 @@ plotTrack <- function(clone_table, alist = NULL, apal = NULL, breaks = 2,
       ggalluvial::geom_alluvium() +
       ggalluvial::geom_stratum(ggplot2::aes(y = duplicate_frequency)) +
       ggplot2::xlab("Repertoire ID") +
-      ggplot2::scale_fill_manual(values = cpal, breaks = alist, name = "CDR3 sequence") +
+      ggplot2::scale_fill_manual(values = cpal, breaks = alist,
+        name = "CDR3 sequence") +
       ggplot2::ylab("Frequency of CDR3 sequence") +
       ggplot2::theme_classic() +
       ggplot2::theme(
@@ -94,8 +95,10 @@ plotTrack <- function(clone_table, alist = NULL, apal = NULL, breaks = 2,
         alluvium = junction_aa, fill = junction_aa, label = junction_aa
       )
     ) +
-      ggplot2::geom_rect(xmin = 0, xmax = breaks + 0.5, ymin = -0.5, ymax = Inf, fill = breaks_pal[1], alpha = alphas) +
-      ggplot2::geom_rect(xmin = breaks + 0.5, xmax = Inf, ymin = -0.5, ymax = Inf, fill = breaks_pal[2], alpha = alphas) +
+      ggplot2::geom_rect(xmin = 0, xmax = breaks + 0.5, ymin = -0.5, ymax = Inf,
+        fill = breaks_pal[1], alpha = alphas) +
+      ggplot2::geom_rect(xmin = breaks + 0.5, xmax = Inf, ymin = -0.5,
+        ymax = Inf, fill = breaks_pal[2], alpha = alphas) +
       ggalluvial::geom_alluvium() +
       ggalluvial::geom_stratum(ggplot2::aes(y = duplicate_frequency)) +
       ggplot2::xlab("Repertoire ID") +

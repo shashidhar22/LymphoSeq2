@@ -7,11 +7,11 @@
 clonalRelatedness(study_table, edit_distance = 10)
 }
 \arguments{
-\item{study_table}{A tibble of raw or productive nucleotide junction sequences.
-"junction" and "duplicate_count" are required columns.}
+\item{study_table}{A tibble of raw or productive nucleotide junction
+sequences."junction" and "duplicate_count" are required columns.}
 
 \item{edit_distance}{An integer giving the minimum edit distance that the
-sequence must be less than or equal to. See details below. Deafult 10 (the default)}
+sequence must be less than or equal to. See details below. Deafault: 10}
 }
 \value{
 Returns a tibble with the calculated clonal relatedness for each
@@ -34,11 +34,13 @@ the sequences differ by a single amino acid or junction.
 }
 \examples{
 file_path <- system.file("extdata", "IGH_sequencing", package = "LymphoSeq2")
-study_table <- LymphoSeq2::readImmunoSeq(path = file_path, threads = 1) 
+study_table <- LymphoSeq2::readImmunoSeq(path = file_path, threads = 1)
 study_table <- LymphoSeq2::topSeqs(study_table, top = 100)
-clonal_relatedness <- LymphoSeq2::clonalRelatedness(study_table, edit_distance = 10)
+clonal_relatedness <- LymphoSeq2::clonalRelatedness(study_table,
+ edit_distance = 10)
 # Merge results with clonality table
 clonality <- LymphoSeq2::clonality(study_table)
-merged <- dplyr::full_join(clonality, clonal_relatedness, by = "repertoire_id")
+merged <- dplyr::full_join(clonality, clonal_relatedness,
+ by = "repertoire_id")
 
 }

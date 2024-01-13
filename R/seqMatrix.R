@@ -16,7 +16,8 @@
 #' rows and the \% frequency it appears in each "repertoire_id" as columns.
 #' @seealso [LymphoSeq2::topSeqs()] and [LymphoSeq2::uniqueSeqs()]
 #' @examples
-#' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
+#' file_path <- system.file("extdata", "TCRB_sequencing",
+#'  package = "LymphoSeq2")
 #' study_table <- LymphoSeq2::readImmunoSeq(path = file_path, threads = 1)
 #' study_table <- LymphoSeq2::topSeqs(study_table, top = 100)
 #' amino_table <- LymphoSeq2::productiveSeq(study_table,
@@ -34,33 +35,35 @@
 #' )
 #' # It can be helpful to combine top.freq and sequence.matrix
 #' top_freq <- LymphoSeq2::topFreq(amino_table, frequency = 0.001)
-#' sequence_matrix <- LymphoSeq2::seqMatrix(amino_table, sequences = top_freq$junction_aa)
+#' sequence_matrix <- LymphoSeq2::seqMatrix(amino_table,
+#'  sequences = top_freq$junction_aa)
 #' top_freq_matrix <- merge(top_freq, sequence_matrix)
 #' @export
-#' @import magrittr
-seqMatrix <- function(amino_table, sequences = NULL, by = "duplicate_frequency") {
+seqMatrix <- function(amino_table,
+                      sequences = NULL,
+                      by = "duplicate_frequency") {
   if (is.null(sequences)) {
-    sequences <- amino_table %>%
-      dplyr::pull(junction_aa) %>%
+    sequences <- amino_table |>
+      dplyr::pull(junction_aa) |>
       base::unique()
   }
   if (by == "duplicate_count") {
-    sequence_matrix <- amino_table %>%
+    sequence_matrix <- amino_table |>
       tidyr::pivot_wider(
         id_cols = junction_aa,
         names_from = repertoire_id,
         values_from = duplicate_count,
         values_fill = list(duplicate_count = 0L)
-      ) %>%
+      ) |>
       dplyr::filter(junction_aa %in% sequences)
   } else if (by == "duplicate_frequency") {
-    sequence_matrix <- amino_table %>%
+    sequence_matrix <- amino_table |>
       tidyr::pivot_wider(
         id_cols = junction_aa,
         names_from = repertoire_id,
         values_from = duplicate_frequency,
         values_fill = list(duplicate_frequency = 0.0)
-      ) %>%
+      ) |>
       dplyr::filter(junction_aa %in% sequences)
   }
   return(sequence_matrix)

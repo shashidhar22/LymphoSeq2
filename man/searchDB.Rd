@@ -29,10 +29,12 @@ Search for published T cell receptor beta CDR3 amino acid sequences with
 known antigen specificity in a list of data frames.
 }
 \examples{
-file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
+file_path <- system.file("extdata", "TCRB_sequencing",
+ package = "LymphoSeq2")
 study_table <- LymphoSeq2::readImmunoSeq(path = file_path, threads = 1)
 study_table <- LymphoSeq2::topSeqs(study_table, top = 100)
-amino_table <- LymphoSeq2::productiveSeq(study_table = study_table, aggregate = "junction_aa")
+amino_table <- LymphoSeq2::productiveSeq(study_table = study_table,
+ aggregate = "junction_aa")
 top_seqs <- LymphoSeq2::topSeqs(productive_table = amino_table, top = 1)
 LymphoSeq2::searchDB(study_table = top_seqs, dbname = "all", chain = "trb")
 }

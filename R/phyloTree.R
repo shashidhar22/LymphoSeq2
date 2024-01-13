@@ -56,31 +56,31 @@
 #' ) +
 #'   ggplot2::theme(legend.position = "none")
 #' @importFrom ggtree "%<+%"
-#' @import magrittr
 #' @export
 phyloTree <- function(study_table, repertoire_ids, type = "junction",
                       layout = "rectangular", label = TRUE) {
-  sample_table <- study_table %>%
+  sample_table <- study_table |>
     dplyr::filter(repertoire_id == repertoire_ids)
   if (base::nrow(study_table) < 3) {
-    stop("Cannot draw phlogenetic tree with less than 3 sequences.", call. = FALSE)
+    stop("Cannot draw phlogenetic tree with less than 3 sequences.",
+      call. = FALSE)
   }
   if (type == "junction") {
-    sample_table <- sample_table %>%
+    sample_table <- sample_table |>
       dplyr::filter(base::nchar(junction) >= 9)
     distance <- utils::adist(sample_table$junction, sample_table$junction)
     colnames(distance) <- rownames(distance) <- sample_table$junction
     names <- sample_table$junction
   }
   if (type == "junction_aa") {
-    sample_table <- sample_table %>%
+    sample_table <- sample_table |>
       dplyr::filter(base::nchar(junction_aa) >= 9)
     distance <- utils::adist(sample_table$junction_aa, sample_table$junction_aa)
     colnames(distance) <- rownames(distance) <- sample_table$junction_aa
     names <- sample_table$junction_aa
   }
   tree <- phangorn::NJ(distance)
-  geneFamilies <- sample_table %>%
+  geneFamilies <- sample_table |>
     dplyr::mutate(
       v_family = stringr::str_replace(v_family, "IGH|IGL|IGK|TCRB|TCRA", ""),
       v_family = stringr::str_replace(v_family, "unresolved", "UNR"),
@@ -92,7 +92,7 @@ phyloTree <- function(study_table, repertoire_ids, type = "junction",
       j_family = stringr::str_replace(j_family, "unresolved", "UNR"),
       j_family = stringr::str_replace_na(j_family, "UNR"),
       gene_families = paste(v_family, d_family, j_family)
-    ) %>%
+    ) |>
     dplyr::pull(gene_families)
   tree_annotation <- tibble::tibble(
     names = names,

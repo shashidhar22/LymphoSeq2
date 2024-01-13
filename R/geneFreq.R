@@ -11,11 +11,12 @@
 #' @param family A Boolean value indicating whether or not family names instead
 #' of gene names are used.  If TRUE, then family names are used and if FALSE,
 #' gene names are used.
-#' @return Returns a data frame with the repertoire_id names, VDJ gene name, duplicate_count, and
-#' \% frequency of the V, D, or J genes (each gene frequency should add to
-#' 100\% for each repertoire_id).
+#' @return Returns a data frame with the repertoire_id names, VDJ gene name,
+#'  duplicate_count, and \% frequency of the V, D, or J genes (each gene 
+#'  frequency should add to 100\% for each repertoire_id).
 #' @examples
-#' file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
+#' file_path <- system.file("extdata", "TCRB_sequencing",
+#'  package = "LymphoSeq2")
 #' study_table <- LymphoSeq2::readImmunoSeq(path = file_path, threads = 1)
 #' study_table <- LymphoSeq2::topSeqs(study_table, top = 100)
 #' nucleotide_table <- LymphoSeq2::productiveSeq(
@@ -24,59 +25,58 @@
 #' )
 #' LymphoSeq2::geneFreq(nucleotide_table, locus = "VDJ", family = FALSE)
 #' @export
-#' @import magrittr
 geneFreq <- function(nucleotide_table, locus = "VDJ", family = FALSE) {
   if (family) {
-    gene_names <- nucleotide_table %>%
+    gene_names <- nucleotide_table |>
       dplyr::select(
         repertoire_id, duplicate_count, v_family, j_family,
         d_family
-      ) %>%
+      ) |>
       tidyr::pivot_longer(
         cols = tidyr::contains("family"),
         values_to = "gene_name", names_to = "gene_type"
-      ) %>%
+      ) |>
       dplyr::filter(stringr::str_detect(
         gene_type,
         base::paste("[", locus, base::tolower(locus), "]", sep = "")
-      )) %>%
+      )) |>
       dtplyr::lazy_dt()
-    gene_names <- gene_names %>%
-      dplyr::group_by(repertoire_id, gene_name) %>%
+    gene_names <- gene_names |>
+      dplyr::group_by(repertoire_id, gene_name) |>
       dplyr::summarize(
         duplicate_count = sum(duplicate_count),
         gene_type = dplyr::first(gene_type)
-      ) %>%
-      dplyr::ungroup() %>%
-      dplyr::group_by(repertoire_id, gene_type) %>%
-      dplyr::mutate(gene_frequency = duplicate_count / sum(duplicate_count)) %>%
-      dplyr::ungroup() %>%
+      ) |>
+      dplyr::ungroup() |>
+      dplyr::group_by(repertoire_id, gene_type) |>
+      dplyr::mutate(gene_frequency = duplicate_count / sum(duplicate_count)) |>
+      dplyr::ungroup() |>
       dplyr::as_tibble()
   } else {
-    gene_names <- nucleotide_table %>%
+    gene_names <- nucleotide_table |>
       dplyr::select(
         repertoire_id, duplicate_count, v_call, j_call,
         d_call
-      ) %>%
+      ) |>
       tidyr::pivot_longer(
         cols = tidyr::contains("call"),
         values_to = "gene_name", names_to = "gene_type"
-      ) %>%
+      ) |>
       dplyr::filter(stringr::str_detect(
         gene_type,
         base::paste("[", locus, base::tolower(locus), "]", sep = "")
-      )) %>%
+      )) |>
       dtplyr::lazy_dt()
-    gene_names <- gene_names %>%
-      dplyr::group_by(repertoire_id, gene_name) %>%
+    gene_names <- gene_names |>
+      dplyr::group_by(repertoire_id, gene_name) |>
       dplyr::summarize(
         duplicate_count = sum(duplicate_count),
         gene_type = dplyr::first(gene_type)
-      ) %>%
-      dplyr::ungroup() %>%
-      dplyr::group_by(repertoire_id, gene_type) %>%
-      dplyr::mutate(gene_frequency = duplicate_count / sum(duplicate_count)) %>%
-      dplyr::ungroup() %>%
+      ) |>
+      dplyr::ungroup() |>
+      dplyr::group_by(repertoire_id, gene_type) |>
+      dplyr::mutate(gene_frequency = duplicate_count / sum(duplicate_count)) |>
+      dplyr::ungroup() |>
       dplyr::as_tibble()
   }
   return(gene_names)

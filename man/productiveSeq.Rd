@@ -9,16 +9,17 @@ productiveSeq(study_table, aggregate = "junction_aa", prevalence = FALSE)
 \arguments{
 \item{study_table}{A tibble consisting antigen receptor sequencing
 data imported by the LymphoSeq2 function \code{\link[=readImmunoSeq]{readImmunoSeq()}}. "junction_aa",
-"duplicate_count", and "duplicate_frequency" are required columns.}
+"duplicate_count", and "duplicate_frequency" are required columns}
 
 \item{aggregate}{Indicates whether the values of "duplicate_count" and
-"duplicate_frequency" should be aggregated by amino acid or junction sequence.
-Acceptable values are "junction_aa" or "junction".}
+"duplicate_frequency" should be aggregated by amino acid or
+junction sequence.
+Acceptable values are "junction_aa" or "junction"}
 
 \item{prevalence}{A Boolean value
 \itemize{
-\item \code{TRUE} : Add a new column the study table giving the prevalence of each CDR3 amino acid
-sequence in 55 healthy donor peripheral blood samples.
+\item \code{TRUE} : Add a new column the study table giving the prevalence of each
+CDR3 amino acid sequence in 55 healthy donor peripheral blood samples.
 \item \code{FALSE} (the default): Do not add prevelance information
 }}
 }
@@ -42,7 +43,8 @@ encoded by multiple unique junction sequences with differing V, D, and J
 genes.
 }
 \examples{
-file_path <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
+file_path <- system.file("extdata", "TCRB_sequencing", 
+ package = "LymphoSeq2")
 study_table <- LymphoSeq2::readImmunoSeq(path = file_path, threads = 1)
 study_table <- LymphoSeq2::topSeqs(study_table, top = 100)
 amino_table <- LymphoSeq2::productiveSeq(
