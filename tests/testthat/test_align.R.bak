@@ -1,5 +1,6 @@
 context("Perform multiple sequence alignment")
 library(LymphoSeq2)
+library(tidyverse)
 
 test_that("Align all sequences in all sample within edit distance of 15", {
   base::set.seed(12357)

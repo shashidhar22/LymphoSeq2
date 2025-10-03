@@ -1,5 +1,6 @@
 context("Get productive sequences")
 library(LymphoSeq2)
+library(tidyverse)
 
 test_that("Gather productive aminoacid sequences", {
   stable <- LymphoSeq2::readImmunoSeq(

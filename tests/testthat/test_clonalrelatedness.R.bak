@@ -1,5 +1,6 @@
 context("Calculate clonal realtedness of samples")
 library(LymphoSeq2)
+library(tidyverse)
 
 test_that("Calculate clonal relatedness of all sequences", {
   stable <- LymphoSeq2::readImmunoSeq("test_data/", threads = 1) |>

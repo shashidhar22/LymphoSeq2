@@ -1,5 +1,6 @@
 context("Read Immuno Seq")
 library(LymphoSeq2)
+library(tidyverse)
 
 test_that("Reads a single AIRR file correctly", {
   stable <- LymphoSeq2::readImmunoSeq("test_data/015V12001549_CFAR.tsv", threads = 1)
