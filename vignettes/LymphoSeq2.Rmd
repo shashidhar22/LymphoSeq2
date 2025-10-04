@@ -21,7 +21,9 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  cache = TRUE,
+  cache.path = "cache/"
 )
 ```
 
@@ -29,12 +31,20 @@ knitr::opts_chunk$set(
 library(LymphoSeq2)
 library(RColorBrewer)
 library(grDevices)
-library(wordcloud2)
 library(tidyverse)
 library(vroom)
+
+# wordcloud2 is optional for visualizations
+if (requireNamespace("wordcloud2", quietly = TRUE)) {
+  library(wordcloud2)
+  has_wordcloud2 <- TRUE
+} else {
+  has_wordcloud2 <- FALSE
+  message("Note: wordcloud2 package not available. Word cloud examples will be skipped.")
+}
 ```
 
-Adaptive Immune Receptor Repertoire Sequencing (AIRR-seq) provides a unique opportunity to interrogate the adaptive immune repertoire under various clinical conditions. The utility offered by this technology has quickly garnered interest from a community of clinicians and researchers investigating the immunological landscapes of a large spectrum of health and disease states. LymphoSeq2 is a toolkit that allows users to import, manipulate and visualize AIRR-Seq data from various AIRR-Seq assays such as Adaptive ImmunoSEQ and BGI-IRSeq, with support for 10X VDJ sequencing coming soon. The platform also supports the importing of AIRR-seq data processed using the MiXCR pipeline. The vignette highlights some of the key features of LymphoSeq2.
+Adaptive Immune Receptor Repertoire Sequencing (AIRR-seq) provides a unique opportunity to interrogate the adaptive immune repertoire under various clinical conditions. The utility offered by this technology has quickly garnered interest from a community of clinicians and researchers investigating the immunological landscapes of a large spectrum of health and disease states. LymphoSeq2 is a toolkit that allows users to import, manipulate and visualize AIRR-Seq data from various AIRR-Seq assays such as Adaptive ImmunoSEQ, BGI-IRSeq, and 10X VDJ sequencing. The platform also supports the importing of AIRR-seq data processed using the MiXCR pipeline. The vignette highlights some of the key features of LymphoSeq2.
 
 # Importing data
 
@@ -52,7 +62,7 @@ system.file("extdata", "IGH_sequencing", package = "LymphoSeq2") # For the IGH f
 ```{r readImmuno}
 study_files <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
 study_table <- LymphoSeq2::readImmunoSeq(study_files, threads = 1) %>%
-  topSeqs(top = 100)
+  topSeqs(top = 50)  # Reduced from 100 to speed up vignette building
 ```
 
 Looking at the `study_table` we see a tibble with 145 columns and 1000 rows
@@ -67,6 +77,40 @@ Since the study table is a tibble, we can use tidyverse syntax to extract a list
 study_table %>%
   dplyr::pull(repertoire_id) %>%
   unique()
+```
+
+# Working with 10X Genomics Single-Cell Data
+
+LymphoSeq2 supports 10X Genomics single-cell VDJ sequencing data, enabling analysis of paired TCR chains from individual T cells.
+
+## Reading 10X Data
+
+```{r read10x, eval=FALSE}
+# Automatically detects AIRR format or contig_annotations.csv
+sc_data <- read10x("path/to/airr_rearrangement.tsv")
+```
+
+## Merging Paired Chains
+
+```{r merge_chains, eval=FALSE}
+# Strict: only cells with exactly 1 TRA + 1 TRB
+paired <- merge_chains(sc_data, mode = "strict")
+
+# Best: select most frequent chain when multiples exist
+paired <- merge_chains(sc_data, mode = "best")
+```
+
+## Single-Cell Analysis
+
+```{r sc_analysis, eval=FALSE}
+# Works with all standard functions
+diversity <- clonality(paired)
+top_clones <- topSeqs(paired, top = 20)
+
+# Chain-specific gene usage
+alpha_v <- paired %>%
+  select(repertoire_id, duplicate_count, v_call = v_call_alpha) %>%
+  geneFreq(locus = "V")
 ```
 
 # Subsetting Data
@@ -396,17 +440,13 @@ LymphoSeq2::chordDiagramVDJ(
 )
 ```
 
-You can also visualize the results of `geneFreq` as a heat map, word cloud, our cumulative frequency bar plot with the support of additional R packages as shown below.
+You can also visualize the results of `geneFreq` as a heat map, word cloud, or cumulative frequency bar plot with the support of additional R packages as shown below.
 
-```{r wordcloud}
+```{r wordcloud, eval=has_wordcloud2}
 vGenes <- LymphoSeq2::geneFreq(nuc_table, locus = "V", family = TRUE)
-RedBlue <- grDevices::colorRampPalette(rev(RColorBrewer::brewer.pal(11, "RdBu")))(256)
-vtable <- vGenes %>%
-  dplyr::filter(repertoire_id == "TRB_Unsorted_83") %>%
-  dplyr::select(gene_name, gene_frequency)
-wordcloud2::wordcloud2(
-  data = vtable,
-  color = RedBlue
+LymphoSeq2::geneWordCloud(
+  gene_freq_table = vGenes,
+  repertoire_id = "TRB_Unsorted_83"
 )
 ```
 
