@@ -43,7 +43,8 @@ Imports:
     stringr,
     tibble,
     tidyr,
-    vroom
+    vroom,
+    tidyverse
 Remotes: YuLab-SMU/ggtree,
          YuLab-SMU/ggmsa
 License: Artistic-2.0
