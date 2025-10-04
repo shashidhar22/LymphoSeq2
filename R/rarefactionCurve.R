@@ -23,13 +23,13 @@ plotRarefactionCurve <- function(study_table) {
     purrr::map(runINext) |>
     dplyr::bind_rows()
   rarefaction_tables <- rarefaction_tables |>
-    dplyr::mutate(Method = dplyr::recode(Method,
-      Observed = "Interpolated",
-      Rarefaction = "Interpolated", Extrapolation = "Extrapolated"
+    dplyr::mutate(method = dplyr::recode(method,
+      observed = "interpolated",
+      interpolated = "interpolated", extrapolated = "extrapolated"
     ))
   rarefaction_curves <- ggplot2::ggplot(rarefaction_tables,
       ggplot2::aes(x = m, y = qD, fill = repertoire_id)) +
-    ggplot2::geom_line(ggplot2::aes(linetype = Method, color = repertoire_id),
+    ggplot2::geom_line(ggplot2::aes(linetype = method, color = repertoire_id),
                        size = 1.5) +
     ggplot2::geom_ribbon(ggplot2::aes(ymin = qD.LCL, ymax = qD.UCL),
                          alpha = 0.5) +
