@@ -4,7 +4,20 @@
 \alias{readImmunoSeq}
 \title{Read ImmunoSeq files}
 \usage{
-readImmunoSeq(path, recursive = FALSE, threads = parallel::detectCores()/2)
+readImmunoSeq(
+  path,
+  recursive = FALSE,
+  threads = parallel::detectCores()/2,
+  parallel = TRUE,
+  chunk_size = NULL,
+  max_memory_gb = 8,
+  streaming_mode = FALSE,
+  progress_detail = "basic",
+  return_type = "data.table",
+  use_arrow = "auto",
+  sample_mode = FALSE,
+  sample_size = 1e+06
+)
 }
 \arguments{
 \item{path}{Path to the directory containing tab-delimited files. Only files
@@ -18,14 +31,46 @@ the same as names of the files.}
 }}
 
 \item{threads}{Number of threads.}
+
+\item{parallel}{A Boolean value
+\itemize{
+\item \code{TRUE} (the default): Process files in parallel using future
+\item \code{FALSE}: Process files sequentially
+}}
+
+\item{chunk_size}{Integer specifying the number of files to process in each chunk
+for memory efficiency. Default is NULL (process all files at once).}
+
+\item{max_memory_gb}{Maximum memory to use in GB. If exceeded, will switch to
+chunked processing automatically. Default is 8GB.}
+
+\item{streaming_mode}{Boolean. If TRUE, processes extremely large files in
+streaming chunks to avoid memory limits. Default is FALSE.}
+
+\item{progress_detail}{Level of progress reporting: "none", "basic", "detailed".
+Default is "basic".}
+
+\item{return_type}{Character string specifying return type: "data.table" (default),
+"tibble" (tidyverse compatible), or "lazy_dt" (dtplyr - best of both worlds).
+lazy_dt provides tidyverse syntax with data.table performance.}
+
+\item{use_arrow}{Character or logical. Controls Apache Arrow usage for large datasets:
+"auto" (default) enables Arrow automatically for datasets >5GB, "always" forces Arrow,
+"never" disables Arrow, TRUE/FALSE for simple enable/disable.}
+
+\item{sample_mode}{Boolean. If TRUE, processes only a random sample of sequences
+from large datasets for quick analysis. Default is FALSE.}
+
+\item{sample_size}{Integer. Number of sequences to sample per file when sample_mode=TRUE.
+Default is 1,000,000.}
 }
 \value{
-Returns a tibble with MiAIRR headers and repertoire_id
+Returns a data.table or tibble with MiAIRR headers and repertoire_id
 }
 \description{
 \code{\link[=readImmunoSeq]{readImmunoSeq()}} Imports tab-separated value (.tsv) files exported by the
 Adaptive Biotechnologies ImmunoSEQ analyzer, BGI IR-SEQ, MiXCR and stores
-them as MiAIRR compliant tibble.
+them as MiAIRR compliant tibble. Optimized for large dataset performance.
 }
 \examples{
 file_path <- system.file("extdata", "TCRB_sequencing",

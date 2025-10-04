@@ -2,25 +2,23 @@
 % Please edit documentation in R/clonality.R
 \name{sampledSummary}
 \alias{sampledSummary}
-\title{Sample repertoire}
+\title{Sample repertoire to fixed depth and calculate diversity}
 \usage{
 sampledSummary(study_table, min_count)
 }
 \arguments{
-\item{study_table}{A tibble consisting of antigen receptor sequencing
-imported by the LymphoSeq2 function \code{\link[=readImmunoSeq]{readImmunoSeq()}}. "junction_aa",
-"duplicate_count", and "duplicate_frequency" are required columns. Note that
-clonality is usually calculated from productive junction sequences.
-Therefore, it is not recommended to run this function using a productive
-sequence list aggregated by amino acids.}
+\item{study_table}{A tibble of antigen receptor sequences from \code{\link[=readImmunoSeq]{readImmunoSeq()}}.
+Must contain "junction_aa", "duplicate_count", and "duplicate_frequency" columns.
+Use productive junction sequences (not aggregated by amino acid) for accurate
+clonality estimates.}
 
-\item{min_count}{The minimum depth to which each repertoire in the study must
-be sampled to. Default 1000 (the default)}
+\item{min_count}{Target sequencing depth for rarefaction (default 1000).
+Repertoires with fewer sequences than this will be excluded with a warning.}
 }
 \value{
-Tibble summarizing the sequence information for each repertoire_id
-randomly sampled to the minimum count
+Tibble with diversity metrics for the subsampled repertoire
 }
 \description{
-Sample repertoire
+Randomly sample sequences to a specified depth and compute diversity metrics.
+Used within bootstrap iterations for rarefied diversity estimation.
 }

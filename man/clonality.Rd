@@ -2,77 +2,75 @@
 % Please edit documentation in R/clonality.R
 \name{clonality}
 \alias{clonality}
-\title{Clonality (summary statistics)}
+\title{Calculate repertoire diversity metrics}
 \usage{
 clonality(study_table, rarefy = FALSE, iterations = 100, min_count = 1000)
 }
 \arguments{
-\item{study_table}{A tibble consisting of antigen receptor sequencing
-imported by the LymphoSeq2 function \code{\link[=readImmunoSeq]{readImmunoSeq()}}. "junction_aa",
-"duplicate_count", and "duplicate_frequency" are required columns. Note that
-clonality is usually calculated from productive junction sequences.
-Therefore, it is not recommended to run this function using a productive
-sequence list aggregated by amino acids.}
+\item{study_table}{A tibble of antigen receptor sequences from \code{\link[=readImmunoSeq]{readImmunoSeq()}}.
+Must contain "junction_aa", "duplicate_count", and "duplicate_frequency" columns.
+Use productive junction sequences (not aggregated by amino acid) for accurate
+clonality estimates.}
 
-\item{rarefy}{A Boolean value
+\item{rarefy}{Logical. Should diversity be normalized for sequencing depth?
 \itemize{
-\item \code{TRUE} : Rarefied diversity metrics are calculated by sampling down each
-repertoire in the input table down to the repertoire with the smallest
-number of sequences and calculating the diversity metrics on the sampled
-data. The process is repeated for the number of iterations specified by
-the user and the diversity metrics are averaged over the number of
-iterations. Default 100 (the default)
-\item \code{FALSE} (the default): Diversity metrics will be calculated considering
-the raw repertoire data for each of the samples
+\item \code{TRUE}: Apply rarefaction by subsampling all repertoires to \code{min_count}
+depth, repeating for \code{iterations}, and averaging the results. Use this when
+comparing samples with different sequencing depths.
+\item \code{FALSE} (default): Calculate raw diversity metrics without normalization.
 }}
 
-\item{iterations}{Number of iterations to run the sampled clonality metrics.}
+\item{iterations}{Number of bootstrap iterations for rarefaction (default 100).
+Higher values increase precision but take longer to compute.}
 
-\item{min_count}{The minimum depth to which each repertoire in the study must
-be sampled to. Default 1000 (the default)}
+\item{min_count}{Target sequencing depth for rarefaction (default 1000).
+Repertoires with fewer sequences than this will be excluded with a warning.}
 }
 \value{
-Returns a tibble giving the total number of sequences, number of
-unique productive sequences, number of genomes, clonality, Gini coefficient,
-Simpson index, inverse Simpson index, and the frequency of the top
-productive sequence for each repertoire_id.
+A tibble with one row per repertoire containing:
+\itemize{
+\item \code{total_sequences}: Number of total sequences
+\item \code{unique_productive_sequences}: Number of unique clones
+\item \code{total_count}: Sum of UMI/read counts
+\item \code{clonality}: Shannon clonality (0 = diverse, 1 = monoclonal)
+\item \code{gini_coefficient}: Gini coefficient (0 = even, 1 = skewed)
+\item \code{simpson_index}: Simpson's D (0 = diverse, 1 = monoclonal)
+\item \code{inverse_simpson}: Effective number of dominant clones
+\item \code{top_productive_sequence}: Frequency (\%) of most abundant clone
+\item \code{convergence}: Average nucleotide sequences per amino acid
+}
 }
 \description{
-\code{clonality()} Creates a tibble giving the total number of sequences, number
-of unique productive sequences, number of genomes, entropy, clonality, Gini
-coefficient, TCR/BCR convergence, and the frequency of the top productive
-sequences for any given sample.
+Quantify immune repertoire diversity using multiple complementary metrics
+including Shannon clonality, Gini coefficient, Simpson indices, and TCR/BCR
+convergence. Optionally correct for sequencing depth bias using rarefaction.
 }
 \details{
-Clonality is derived from the Shannon entropy, which is calculated
-from the frequencies of all productive sequences divided by the logarithm of
-the total number of unique productive sequences.  This normalized entropy
-value is then inverted (1 - normalized entropy) to produce the clonality
-metric.
+Diversity Metrics:
 
-The Gini coefficient is an alternative metric used to calculate repertoire
-diversity and is derived from the Lorenz curve.  The Lorenz curve is drawn
-such that x-axis represents the cumulative percentage of unique sequences and
-the y-axis represents the cumulative percentage of reads.  A line passing
-through the origin with a slope of 1 reflects equal frequencies of all
-clones.The Gini coefficient is the ratio of the area between the line of
-equality and the observed Lorenz curve over the total area under the line of
-equality.Both Gini coefficient and clonality are reported on a scale from 0
-to 1, where 0 indicates all sequences have the same frequency and 1 indicates
-therepertoire is dominated by a single sequence.
+Shannon Clonality - Measures evenness of clone distribution. Calculated as
+1 - (entropy / log(unique clones)). Values near 0 indicate diverse repertoires;
+near 1 indicate oligoclonal expansion.
 
-TCR/BCR convergence is defined as the average number of productive CDR3
-nucleotide sequences that form the same productive CDR3 amino acid sequence.
+Gini Coefficient - Borrowed from economics to measure inequality. Based on
+the Lorenz curve of cumulative clone frequencies. Ranges 0-1 where 0 is perfect
+equality and 1 is maximal inequality (single dominant clone).
 
-Sequencing depth and amount of input available can often confound diversity
-metrics. For example, a peripheral blood sample can appear to be more clonal
-than a tumor sample when it is not sequenced to adequate depth. To overcome
-this we can sample down the sample down all repertoires to the depth of the
-sample with the least number of sequences and then calculate the diversity
-metrics. Repeating this process multiple times and averaging the diversity
-metrics can give a more accurate representation of sample diversity and
-enable comparison of repertoire samples from different experiments and
-different tissue of origin
+Simpson Index - Probability that two randomly selected sequences belong to
+the same clone. Higher values indicate lower diversity.
+
+Inverse Simpson - Number of equally-abundant clones needed to achieve the
+observed diversity. More intuitive than Simpson's D (higher = more diverse).
+
+Rarefaction (rarefy = TRUE):
+
+When samples have different sequencing depths, raw diversity metrics are not
+comparable. Rarefaction corrects this by: (1) Subsampling all repertoires to
+the same depth (min_count), (2) Calculating diversity on the subsampled data,
+(3) Repeating steps 1-2 for iterations, and (4) Averaging the results.
+
+This allows fair comparison between a deeply-sequenced blood sample and a
+shallow tumor sample. Samples with fewer than min_count sequences are excluded.
 }
 \examples{
 file_path <- system.file("extdata", "TCRB_sequencing",

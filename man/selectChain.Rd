@@ -7,14 +7,12 @@
 selectChain(barcode_data, clone_data, chain = "TRA")
 }
 \arguments{
-\item{barcode_data}{A tibble that holds data for one barcode
-identifier}
+\item{barcode_data}{A tibble that holds data for one barcode identifier}
 
-\item{clone_data}{A tibble that holds data for one repertoire_id
-(one file)}
+\item{clone_data}{A tibble that holds data for one repertoire_id (one file)}
 
 \item{chain}{The chain to examine to select the most frequently
-occurring one. Values given can only be "TRA" or "TRB" to indicate
+occurring one. Values can be "TRA" or "TRB" to indicate
 alpha or beta chain respectively.}
 }
 \value{

@@ -7,10 +7,10 @@
 standardize10x(clone_file)
 }
 \arguments{
-\item{clone_file}{A single .tsv file from 10x Genomics}
+\item{clone_file}{A single file from 10x Genomics (AIRR .tsv or contig_annotations.csv)}
 }
 \value{
-A tibble standardized 10X data.
+A tibble standardized to AIRR format.
 }
 \description{
 Standardize 10X data inputs

@@ -2,27 +2,26 @@
 % Please edit documentation in R/clonality.R
 \name{iterativeSummary}
 \alias{iterativeSummary}
-\title{Uncount, sample and iteratively calculate repertoire summary statistics}
+\title{Calculate rarefied diversity metrics through repeated subsampling}
 \usage{
 iterativeSummary(study_table, iterations, min_count = 1000)
 }
 \arguments{
-\item{study_table}{A tibble consisting of antigen receptor sequencing
-imported by the LymphoSeq2 function \code{\link[=readImmunoSeq]{readImmunoSeq()}}. "junction_aa",
-"duplicate_count", and "duplicate_frequency" are required columns. Note that
-clonality is usually calculated from productive junction sequences.
-Therefore, it is not recommended to run this function using a productive
-sequence list aggregated by amino acids.}
+\item{study_table}{A tibble of antigen receptor sequences from \code{\link[=readImmunoSeq]{readImmunoSeq()}}.
+Must contain "junction_aa", "duplicate_count", and "duplicate_frequency" columns.
+Use productive junction sequences (not aggregated by amino acid) for accurate
+clonality estimates.}
 
-\item{iterations}{Number of iterations to run the sampled clonality metrics.}
+\item{iterations}{Number of bootstrap iterations for rarefaction (default 100).
+Higher values increase precision but take longer to compute.}
 
-\item{min_count}{The minimum depth to which each repertoire in the study must
-be sampled to. Default 1000 (the default)}
+\item{min_count}{Target sequencing depth for rarefaction (default 1000).
+Repertoires with fewer sequences than this will be excluded with a warning.}
 }
 \value{
-Tibble summarizing the sequence information for each repertoire_id
-normalized by depth of sequencing
+Tibble with diversity metrics averaged across bootstrap iterations
 }
 \description{
-Uncount, sample and iteratively calculate repertoire summary statistics
+Normalize diversity estimates across samples by subsampling to a common depth.
+This corrects for sequencing depth bias when comparing repertoires.
 }

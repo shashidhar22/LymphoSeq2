@@ -14,12 +14,12 @@ repertoire_ids in \code{\link[=productiveSeq]{productiveSeq()}} table to compare
 by the function \code{\link[=productiveSeq]{productiveSeq()}}.}
 }
 \value{
-Returns a a Venn diagram of the number of common sequences between
+Returns a ggplot2 Venn diagram of the number of common sequences between
 two or three repertoire_ids.
 }
 \description{
 Creates a Venn diagram comparing the number of common sequences in two or
-three repertoire_ids.
+three repertoire_ids using native ggplot2 implementation.
 }
 \examples{
 file_path <- system.file("extdata", "TCRB_sequencing",

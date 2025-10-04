@@ -35,13 +35,13 @@ intersecting sequences should be shown on the tops of the bars.Options
 include "yes" or "no".}
 }
 \value{
-Returns an UpSetR bar plot showing the number of intersecting
-sequences across multiple repertoire_ids.
+Returns a ggplot2 UpSet-style bar plot showing the number of
+intersecting sequences across multiple repertoire_ids.
 }
 \description{
-Creates an UpSetR bar plot showing the number of intersecting sequences
-across multiple repertoire_ids. This function is useful when more than 3
-repertoire_ids are being compared.
+Creates an UpSet-style bar plot showing the number of intersecting sequences
+across multiple repertoire_ids using native ggplot2 implementation. This
+function is useful when more than 3 repertoire_ids are being compared.
 }
 \examples{
 file_path <- system.file("extdata", "TCRB_sequencing",

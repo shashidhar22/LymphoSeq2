@@ -7,12 +7,10 @@
 summarySeq(study_table)
 }
 \arguments{
-\item{study_table}{A tibble consisting of antigen receptor sequencing
-imported by the LymphoSeq2 function \code{\link[=readImmunoSeq]{readImmunoSeq()}}. "junction_aa",
-"duplicate_count", and "duplicate_frequency" are required columns. Note that
-clonality is usually calculated from productive junction sequences.
-Therefore, it is not recommended to run this function using a productive
-sequence list aggregated by amino acids.}
+\item{study_table}{A tibble of antigen receptor sequences from \code{\link[=readImmunoSeq]{readImmunoSeq()}}.
+Must contain "junction_aa", "duplicate_count", and "duplicate_frequency" columns.
+Use productive junction sequences (not aggregated by amino acid) for accurate
+clonality estimates.}
 }
 \value{
 Tibble summarizing the sequence information for each repertoire_id

@@ -2,24 +2,47 @@
 % Please edit documentation in R/read10x.R
 \name{read10x}
 \alias{read10x}
-\title{Read 10x Genomics files}
+\title{Import 10x Genomics single-cell VDJ data}
 \usage{
 read10x(path, recursive = FALSE)
 }
 \arguments{
-\item{path}{Path to the directory containing .tsv files. Only
-files with the .tsv extension are imported.}
+\item{path}{Path to directory containing 10x files, or a vector of file paths.
+Accepts .tsv, .csv, .txt, or .tsv.gz formats.}
 
-\item{recursive}{A Boolean value
+\item{recursive}{Logical. Should subdirectories be searched for files?
 \itemize{
-\item \code{TRUE} : the function will recursively search directory for all .tsv files
-\item \code{FALSE} (the default): Open file using path
+\item \code{TRUE}: Recursively search all subdirectories
+\item \code{FALSE} (default): Only search the specified directory
 }}
 }
 \value{
-Returns a tibble with MiAIRR headers and repertoire_id
+A tibble with MiAIRR-formatted columns including:
+\itemize{
+\item \code{cell_id}: Cell barcode identifier
+\item \code{repertoire_id}: Sample name (from filename)
+\item \code{junction}, \code{junction_aa}: CDR3 nucleotide and amino acid sequences
+\item \code{v_call}, \code{d_call}, \code{j_call}: V(D)J gene assignments
+\item \code{duplicate_count}: UMI count for the sequence
+\item \code{productive}: Whether the sequence is in-frame and functional
+}
 }
 \description{
-Imports tab-separated value (.tsv) files exported by 10x Genomics
-and stores them as MiAIRR compliant tibbles.
+Load TCR or BCR sequencing data from 10x Genomics Cell Ranger VDJ output.
+Automatically detects file format (AIRR standard or contig_annotations.csv)
+and converts to MiAIRR-compliant format for use with LymphoSeq2.
+}
+\details{
+Supported file formats:
+AIRR format (\emph{_airr.tsv) - Standard AIRR rearrangement TSV from Cell Ranger.
+Contig annotations (}_contig_annotations.csv) - Legacy Cell Ranger CSV format.
+Legacy 10x - Older TSV formats (automatically detected and converted).
+
+Usage with single-cell data:
+After importing, use merge_chains() to pair alpha/beta chains from the same cell.
+For example: sc_data <- read10x("path/to/10x_output/") followed by
+paired <- merge_chains(sc_data, mode = "strict").
+
+File naming: The repertoire_id is extracted from the filename. For example,
+Sample1_airr.tsv becomes repertoire_id = "Sample1".
 }

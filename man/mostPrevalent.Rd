@@ -7,11 +7,9 @@
 mostPrevalent(barcode_data, clone_data)
 }
 \arguments{
-\item{barcode_data}{A tibble that holds data for one barcode
-identifier}
+\item{barcode_data}{A tibble that holds data for one barcode identifier}
 
-\item{clone_data}{A tibble that holds data for one repertoire_id
-(one file)}
+\item{clone_data}{A tibble that holds data for one repertoire_id (one file)}
 }
 \value{
 A tibble containing the most frequent alpha chain and
