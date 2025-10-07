@@ -35,15 +35,16 @@ intersecting sequences should be shown on the tops of the bars.Options
 include "yes" or "no".}
 }
 \value{
-Returns a ggplot2 UpSet-style bar plot showing the number of
+Returns an UpSetR plot showing the number of
 intersecting sequences across multiple repertoire_ids.
 }
 \description{
-Creates an UpSet-style bar plot showing the number of intersecting sequences
-across multiple repertoire_ids using native ggplot2 implementation. This
+Creates an UpSet plot showing the number of intersecting sequences
+across multiple repertoire_ids using the UpSetR package. This
 function is useful when more than 3 repertoire_ids are being compared.
 }
 \examples{
+\dontrun{
 file_path <- system.file("extdata", "TCRB_sequencing",
  package = "LymphoSeq2")
 study_table <- LymphoSeq2::readImmunoSeq(path = file_path, threads = 1)
@@ -54,6 +55,7 @@ LymphoSeq2::commonSeqsBar(amino_table, repertoire_ids = c(
   "TRB_CD4_949", "TRB_CD8_949",
   "TRB_Unsorted_949", "TRB_Unsorted_1320"
 ), color_sample = "TRB_CD8_949")
+}
 }
 \seealso{
 \code{\link[=productiveSeq]{productiveSeq()}}, \code{\link[=commonSeqs]{commonSeqs()}},
