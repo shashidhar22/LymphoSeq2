@@ -31,7 +31,6 @@ knitr::opts_chunk$set(
 library(LymphoSeq2)
 library(RColorBrewer)
 library(grDevices)
-library(tidyverse)
 library(vroom)
 
 # wordcloud2 is optional for visualizations
