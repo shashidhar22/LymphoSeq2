@@ -502,7 +502,7 @@ pheatmap::pheatmap(vGenes, scale = "row")
 ```{r geneFreqPlot}
 vGenes <- LymphoSeq2::geneFreq(nuc_table, locus = "V", family = TRUE)
 multicolors <- grDevices::colorRampPalette(rev(RColorBrewer::brewer.pal(9, "Set1")))(28)
-ggplot2::ggplot(vGenes, aes(x = repertoire_id, y = gene_frequency, fill = gene_name)) +
+ggplot2::ggplot(vGenes, ggplot2::aes(x = repertoire_id, y = gene_frequency, fill = gene_name)) +
   ggplot2::geom_bar(stat = "identity") +
   ggplot2::theme_minimal() +
   ggplot2::scale_y_continuous(expand = c(0, 0)) +
