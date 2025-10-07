@@ -141,5 +141,6 @@ prepDB <- function(db_path = NULL) {
   vdjdb <- dplyr::bind_rows(vdjdb_tra, vdjdb_trb)
   antigen_db <- dplyr::bind_rows(vdjdb, mcpas, iedb)
   date <- date()
-  usethis::use_data(antigen_db)
+  # Note: Run usethis::use_data(antigen_db) manually to update package data
+  return(antigen_db)
 }

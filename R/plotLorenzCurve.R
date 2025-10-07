@@ -72,11 +72,11 @@ lorenzCurve <- function(repertoire_ids, study_table) {
   getPalette <- grDevices::colorRampPalette(
     RColorBrewer::brewer.pal(9, "Set1")
   )
-  plot <- ggplot2::ggplot(lorenz, ggplot2::aes_string(
-    x = "p", y = "L",
-    color = "repertoire_id"
+  plot <- ggplot2::ggplot(lorenz, ggplot2::aes(
+    x = .data$p, y = .data$L,
+    color = .data$repertoire_id
   )) +
-    ggplot2::geom_line(size = 1) +
+    ggplot2::geom_line(linewidth = 1) +
     ggplot2::theme_minimal() +
     ggplot2::scale_color_manual(values = getPalette(
       length(repertoire_ids) + 1

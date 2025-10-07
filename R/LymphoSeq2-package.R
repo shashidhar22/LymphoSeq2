@@ -2,8 +2,8 @@
 "_PACKAGE"
 
 ## usethis namespace: start
-#' @import rlang
 #' @import data.table
+#' @importFrom rlang .data .env
 #' @importFrom glue glue
 #' @importFrom lifecycle deprecated
 ## usethis namespace: end

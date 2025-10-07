@@ -97,7 +97,12 @@ readImmunoSeq <- function(path,
 
   # Advanced dataset analysis for optimization
   total_size_gb <- sum(file_info[file_paths, "size"], na.rm = TRUE) / (1024^3)
-  largest_file_mb <- max(file_info[file_paths, "size"], na.rm = TRUE) / (1024^2)
+  file_sizes <- file_info[file_paths, "size"]
+  largest_file_mb <- if (length(file_sizes) > 0 && any(!is.na(file_sizes))) {
+    max(file_sizes, na.rm = TRUE) / (1024^2)
+  } else {
+    0
+  }
   available_memory_gb <- get_available_memory_gb()
 
   if (progress_detail != "none") {
@@ -232,7 +237,7 @@ readImmunoSeq <- function(path,
   return(result)
 }
 
-#' [getFileType()] retrieve the file type of the input TSV file
+#' getFileType - retrieve the file type of the input TSV file
 #' @keywords internal
 #' @param clone_file A .tsv file to identify the file type
 #' @return Returns "immunoSEQLegacy", "immunoSEQ", "10X", "BGI"
@@ -257,7 +262,7 @@ getFileType <- function(col_names) {
   return(file_type)
 }
 
-#' [getStandard()] Converts AIRR-Seq data into MiAIRR compatible format
+#' getStandard - Converts AIRR-Seq data into MiAIRR compatible format
 #' @keywords internal
 #' @param clone_file A .tsv file to read in and standardize its fields to be 
 #'  MiAIRR compliant.
@@ -391,7 +396,7 @@ getStandard <- function(clone_file, progress, threads) {
   return(clone_data)
 }
 
-#' [getAIRRFields()] Given the path to a single AIRRSeq clone file, determine
+#' getAIRRFields - Given the path to a single AIRRSeq clone file, determine
 #' the file type and returns a named vector that can be used to repair headers
 #' while reading input.
 #' @keywords internal
@@ -631,7 +636,7 @@ get_current_memory_mb <- function() {
   }
 }
 
-#' [getStandardOptimized()] Optimized version using data.table for better performance
+#' getStandardOptimized - Optimized version using data.table for better performance
 #' @keywords internal
 #' @param clone_file A .tsv file to read in and standardize its fields to be
 #'  MiAIRR compliant.
@@ -791,7 +796,7 @@ getStandardOptimized <- function(clone_file, progress, threads) {
   return(clone_data)
 }
 
-#' [getAIRRFieldsOptimized()] Optimized version using data.table
+#' getAIRRFieldsOptimized - Optimized version using data.table
 #' @keywords internal
 #' @param clone_file .tsv file containing results from AIRRSeq pipeline
 #' @param threads Number of threads for parallel processing
@@ -1133,27 +1138,8 @@ process_single_file_arrow <- function(file_path, fast_mode = FALSE,
     # Get file name for repertoire_id
     file_name <- tools::file_path_sans_ext(basename(file_path))
 
-    # Use Arrow for initial read with optimizations
-    dt_data <- tryCatch({
-      # Read with Arrow for better memory efficiency
-      arrow_table <- arrow::read_csv_arrow(
-        file_path,
-        skip_empty_rows = TRUE,
-        parse_options = arrow::CsvParseOptions(
-          delimiter = "\t",
-          quote_char = FALSE
-        )
-      )
-
-      # Convert to data.table
-      arrow_table |>
-        arrow::collect() |>
-        data.table::as.data.table()
-
-    }, error = function(e) {
-      # Fallback to data.table::fread
-      data.table::fread(file_path, showProgress = FALSE, nThread = 2)
-    })
+    # Use data.table::fread for fast, memory-efficient reading
+    dt_data <- data.table::fread(file_path, showProgress = FALSE, nThread = 2)
 
     # Apply sampling if requested
     if (sample_mode && nrow(dt_data) > sample_size) {

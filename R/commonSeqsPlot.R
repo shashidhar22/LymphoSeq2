@@ -46,9 +46,10 @@ commonSeqsPlot <- function(sample1, sample2, amino_table, show = "common") {
     )
     plot <- ggplot2::ggplot(
       data = common,
-      ggplot2::aes_string(
-        x = as.name(names(common)[2]),
-        y = as.name(names(common)[3]), label = "junction_aa"
+      ggplot2::aes(
+        x = .data[[names(common)[2]]],
+        y = .data[[names(common)[3]]],
+        label = .data$junction_aa
       )
     ) +
       ggplot2::geom_point() +
@@ -72,7 +73,8 @@ commonSeqsPlot <- function(sample1, sample2, amino_table, show = "common") {
       )
     plot <- ggplot2::ggplot(
       data = all,
-      ggplot2::aes_string(x = sample1, y = sample2, label = "junction_aa")
+      ggplot2::aes(x = .data[[sample1]], y = .data[[sample2]],
+                   label = .data$junction_aa)
     ) +
       ggplot2::geom_point() +
       ggplot2::theme_minimal() +

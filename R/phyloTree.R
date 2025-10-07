@@ -106,14 +106,14 @@ phyloTree <- function(study_table, repertoire_ids, type = "junction",
   )
   getPalette <- grDevices::colorRampPalette(RColorBrewer::brewer.pal(9, "Set1"))
   tree_plot <- ggtree::ggtree(tree, layout = layout) %<+% tree_annotation +
-    ggtree::geom_tippoint(ggplot2::aes_string(
-      color = "geneFamilies",
-      shape = "dominant"
+    ggtree::geom_tippoint(ggplot2::aes(
+      color = .data$geneFamilies,
+      shape = .data$dominant
     ), size = 3) +
     ggplot2::scale_color_manual(
       values = getPalette(length(unique(geneFamilies)))
     ) +
-    ggplot2::guides(shape = FALSE) +
+    ggplot2::guides(shape = "none") +
     ggplot2::theme(
       legend.position = "bottom",
       legend.key = ggplot2::element_rect(colour = "white")

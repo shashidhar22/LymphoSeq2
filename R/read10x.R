@@ -51,15 +51,15 @@ read10x <- function(path, recursive = FALSE) {
   file_info <- file.info(file_paths)
   non_empty_files <- rownames(file_info)[file_info$size > 0]
 
+  if (length(non_empty_files) == 0) {
+    stop("No valid files found to import.", call. = FALSE)
+  }
+
   if (length(file_paths) != length(non_empty_files)) {
     warning(
       "One or more files have no sequences and will be ignored.",
       call. = FALSE
     )
-  }
-
-  if (length(non_empty_files) == 0) {
-    stop("No valid files found to import.", call. = FALSE)
   }
 
   # Process files and combine
