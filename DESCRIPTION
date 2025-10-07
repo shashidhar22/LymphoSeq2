@@ -16,11 +16,9 @@ Depends: R (>= 4.1.0)
 Imports:
     Biostrings,
     circlize,
-    cli,
     data.table,
     dplyr,
     dtplyr,
-    forcats,
     future,
     furrr,
     ggalluvial,
@@ -28,14 +26,10 @@ Imports:
     ggplot2,
     ggtree,
     glue,
-    grid,
     igraph,
     lifecycle,
-    lubridate,
-    magrittr,
     msa,
     phangorn,
-    pheatmap,
     progress,
     purrr,
     readr,
@@ -44,14 +38,13 @@ Imports:
     stringdist,
     stringr,
     tibble,
-    tidyr,
-    vroom
+    tidyr
 License: Artistic-2.0
 LazyData: true
 LazyDataCompression: bzip2
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 VignetteBuilder: knitr, rmarkdown
 Suggests: arrow,
           grDevices,
