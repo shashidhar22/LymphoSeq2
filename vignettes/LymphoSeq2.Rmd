@@ -158,7 +158,7 @@ The `str_detect` function from `stringr` package can be used in conjunction with
 
 ```{r subSamplePattern}
 CMV <- study_table |>
-  dplyr::filter(str_detect(repertoire_id, "CMV"))
+  dplyr::filter(stringr::str_detect(repertoire_id, "CMV"))
 CMV
 ```
 
