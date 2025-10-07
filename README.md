@@ -29,7 +29,7 @@ package and install LymphoSeq2 from GitHub
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("shashidhar22/LymphoSeq2", build_vignettes = TRUE)
+devtools::install_github("shashidhar22/LymphoSeq2@v2.0.0", build_vignettes = TRUE)
 ```
 
 ## Getting started
