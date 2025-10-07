@@ -85,32 +85,64 @@ LymphoSeq2 supports 10X Genomics single-cell VDJ sequencing data, enabling analy
 
 ## Reading 10X Data
 
-```{r read10x, eval=FALSE}
-# Automatically detects AIRR format or contig_annotations.csv
-sc_data <- read10x("path/to/airr_rearrangement.tsv")
+```{r read10x}
+# Load example 10X dataset (contig_annotations.csv format)
+file_path_10x <- system.file("extdata", "10X_example", package = "LymphoSeq2")
+sc_data <- read10x(file_path_10x)
+sc_data
 ```
+
+The `read10x` function automatically detects whether the input is in AIRR format (`airr_rearrangement.tsv`) or 10X Genomics format (`contig_annotations.csv`).
 
 ## Merging Paired Chains
 
-```{r merge_chains, eval=FALSE}
-# Strict: only cells with exactly 1 TRA + 1 TRB
-paired <- merge_chains(sc_data, mode = "strict")
+Single-cell data contains separate entries for each TCR chain (TRA and TRB). We can merge these into paired observations:
 
-# Best: select most frequent chain when multiples exist
-paired <- merge_chains(sc_data, mode = "best")
+```{r merge_chains}
+# Strict mode: only cells with exactly 1 TRA + 1 TRB
+paired_strict <- merge_chains(sc_data, mode = "strict")
+cat("Strict mode yielded", nrow(paired_strict), "paired cells\n")
+paired_strict
+
+# Best mode: select most frequent chain when multiples exist
+paired_best <- merge_chains(sc_data, mode = "best")
+cat("Best mode yielded", nrow(paired_best), "paired cells\n")
+paired_best
 ```
+
+The merged data contains columns for both alpha and beta chains (e.g., `v_call_alpha`, `v_call_beta`, `junction_alpha`, `junction_beta`).
 
 ## Single-Cell Analysis
 
-```{r sc_analysis, eval=FALSE}
-# Works with all standard functions
-diversity <- clonality(paired)
-top_clones <- topSeqs(paired, top = 20)
+The merged paired-chain data works with all standard LymphoSeq2 functions:
 
-# Chain-specific gene usage
-alpha_v <- paired %>%
-  select(repertoire_id, duplicate_count, v_call = v_call_alpha) %>%
-  geneFreq(locus = "V")
+```{r sc_analysis}
+# Calculate clonality (diversity metrics)
+diversity_10x <- clonality(paired_best)
+diversity_10x
+
+# Get top clonotypes
+top_clones_10x <- topSeqs(paired_best, top = 10)
+top_clones_10x
+```
+
+You can also analyze chain-specific properties. For example, to examine V gene usage for the alpha chain:
+
+```{r chain_specific, eval=FALSE}
+# Create a table with alpha chain V gene info
+alpha_genes <- paired_best %>%
+  dplyr::select(repertoire_id, duplicate_count, v_call = v_call_alpha) %>%
+  dplyr::mutate(
+    v_family = stringr::str_extract(v_call, "^[^*]+"),
+    j_call = NA_character_,
+    d_call = NA_character_,
+    j_family = NA_character_,
+    d_family = NA_character_
+  )
+
+# Calculate gene frequencies
+alpha_v_freq <- geneFreq(alpha_genes, locus = "V", family = TRUE)
+alpha_v_freq
 ```
 
 # Subsetting Data
