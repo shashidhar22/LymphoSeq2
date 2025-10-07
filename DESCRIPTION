@@ -20,6 +20,7 @@ Imports:
     data.table,
     dplyr,
     dtplyr,
+    forcats,
     future,
     furrr,
     ggalluvial,
@@ -30,6 +31,7 @@ Imports:
     grid,
     igraph,
     lifecycle,
+    lubridate,
     magrittr,
     msa,
     phangorn,
@@ -43,10 +45,7 @@ Imports:
     stringr,
     tibble,
     tidyr,
-    vroom,
-    tidyverse
-Remotes: YuLab-SMU/ggtree,
-         YuLab-SMU/ggmsa
+    vroom
 License: Artistic-2.0
 LazyData: true
 LazyDataCompression: bzip2
@@ -56,6 +55,7 @@ RoxygenNote: 7.3.2
 VignetteBuilder: knitr, rmarkdown
 Suggests: arrow,
           grDevices,
+          iNEXT,
           knitr,
           phyloseq,
           RColorBrewer,
@@ -63,8 +63,10 @@ Suggests: arrow,
           testthat,
           UpSetR,
           wordcloud2
-biocViews: msa, 
-           vegan,
+biocViews: Biostrings,
+           ggmsa,
+           ggtree,
+           msa,
            phyloseq
 NeedsCompilation: no
 URL: https://github.com/shashidhar22/LymphoSeq2,
