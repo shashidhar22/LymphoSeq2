@@ -4,7 +4,7 @@
 \alias{plotRarefactionCurve}
 \title{Plot rarefaction and extrapolation curves for samples}
 \usage{
-plotRarefactionCurve(study_table)
+plotRarefactionCurve(study_table, endpoint = 1e+05)
 }
 \arguments{
 \item{study_table}{A tibble consisting antigen receptor sequencing
