@@ -16,21 +16,23 @@
 #' LymphoSeq2::plotRarefactionCurve(study_table)
 #'
 #' @export
-plotRarefactionCurve <- function(study_table) {
-  rarefaction_tables <- study_table |>
-    dplyr::group_by(repertoire_id) |>
-    dplyr::group_split() |>
-    purrr::map(runINext) |>
-    dplyr::bind_rows()
+plotRarefactionCurve <- function(study_table, endpoint = 100000) {
+  # Run iNEXT on all samples at once (no need to map)
+  rarefaction_tables <- runINext(study_table, endpoint = endpoint)
+
+  # Standardize method names for plotting
   rarefaction_tables <- rarefaction_tables |>
-    dplyr::mutate(method = dplyr::recode(method,
+    dplyr::mutate(method = dplyr::recode(tolower(Method),
       observed = "interpolated",
-      interpolated = "interpolated", extrapolated = "extrapolated"
+      rarefaction = "interpolated",
+      extrapolation = "extrapolated"
     ))
+
+  # Create plot
   rarefaction_curves <- ggplot2::ggplot(rarefaction_tables,
       ggplot2::aes(x = m, y = qD, fill = repertoire_id)) +
     ggplot2::geom_line(ggplot2::aes(linetype = method, color = repertoire_id),
-                       size = 1.5) +
+                       linewidth = 1.5) +
     ggplot2::geom_ribbon(ggplot2::aes(ymin = qD.LCL, ymax = qD.UCL),
                          alpha = 0.5) +
     ggplot2::scale_linetype_manual(

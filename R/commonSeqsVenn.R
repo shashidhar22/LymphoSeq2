@@ -103,7 +103,7 @@ draw_venn2_native <- function(seqs_list, labels) {
     label = labels
   )
 
-  # Create plot
+  # Create plot with expanded limits to prevent label clipping
   p <- ggplot2::ggplot() +
     ggplot2::geom_polygon(data = circle1, ggplot2::aes(x = x, y = y),
                          fill = "#3288bd", alpha = 0.5, color = "#3288bd", linewidth = 2) +
@@ -113,7 +113,7 @@ draw_venn2_native <- function(seqs_list, labels) {
                       size = 5, fontface = "bold") +
     ggplot2::geom_text(data = set_labels, ggplot2::aes(x = x, y = y, label = label),
                       size = 4, fontface = "bold") +
-    ggplot2::coord_fixed() +
+    ggplot2::coord_fixed(xlim = c(-2.5, 2.5), ylim = c(-1.5, 2)) +
     ggplot2::theme_void()
 
   return(p)
@@ -164,21 +164,21 @@ draw_venn3_native <- function(seqs_list, labels) {
     set = labels[3]
   )
 
-  # Label positions (approximate)
+  # Label positions - adjusted for better readability
   label_data <- data.frame(
-    x = c(1.2, -1.2, 0, 0.5, -0.5, 0, 0),
-    y = c(0.8, 0.8, -1.3, 0.2, 0.2, -0.3, 0),
+    x = c(1.3, -1.3, 0, 0.6, -0.6, 0, 0),
+    y = c(0.9, 0.9, -1.4, 0.25, 0.25, -0.35, 0.05),
     label = c(only1, only2, only3, n12_not3, n13_not2, n23_not1, n123)
   )
 
-  # Set labels
+  # Set labels - positioned further out to avoid overlap
   set_labels <- data.frame(
-    x = c(1.8, -1.8, 0),
-    y = c(1.2, 1.2, -1.8),
+    x = c(2.0, -2.0, 0),
+    y = c(1.4, 1.4, -2.0),
     label = labels
   )
 
-  # Create plot
+  # Create plot with expanded limits to prevent label clipping
   p <- ggplot2::ggplot() +
     ggplot2::geom_polygon(data = circle1, ggplot2::aes(x = x, y = y),
                          fill = "#3288bd", alpha = 0.4, color = "#3288bd", linewidth = 2) +
@@ -190,7 +190,7 @@ draw_venn3_native <- function(seqs_list, labels) {
                       size = 5, fontface = "bold") +
     ggplot2::geom_text(data = set_labels, ggplot2::aes(x = x, y = y, label = label),
                       size = 4, fontface = "bold") +
-    ggplot2::coord_fixed() +
+    ggplot2::coord_fixed(xlim = c(-3, 3), ylim = c(-2.5, 2)) +
     ggplot2::theme_void()
 
   return(p)
