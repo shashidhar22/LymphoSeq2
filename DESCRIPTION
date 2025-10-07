@@ -61,6 +61,7 @@ Suggests: arrow,
           RColorBrewer,
           rmarkdown,
           testthat,
+          UpSetR,
           wordcloud2
 biocViews: msa, 
            vegan,
