@@ -7,6 +7,8 @@
 #' @param study_table A tibble consisting antigen receptor sequencing
 #' data imported by the LymphoSeq2 function [readImmunoSeq()]. "junction_aa",
 #' "duplicate_count", and "duplicate_frequency" are required columns.
+#' @param endpoint An integer specifying the endpoint for rarefaction and
+#' extrapolation. Default is 100000.
 #' @seealso [LymphoSeq2::runINext()]
 #' @examples
 #' file_path <- system.file("extdata", "TCRB_sequencing",
