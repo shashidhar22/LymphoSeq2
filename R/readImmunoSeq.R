@@ -527,7 +527,7 @@ process_file_chunks <- function(file_paths, chunk_size, progress_bar,
   for (i in seq_along(file_chunks)) {
     if (progress_detail == "detailed") {
       current_memory <- get_current_memory_mb()
-      cat(sprintf("📦 Chunk %d/%d (Memory: %.1f MB)\n",
+      cat(sprintf("Chunk %d/%d (Memory: %.1f MB)\n",
                   i, length(file_chunks), current_memory))
     }
 
@@ -550,7 +550,7 @@ process_file_chunks <- function(file_paths, chunk_size, progress_bar,
   }
 
   if (progress_detail != "none") {
-    cat("🔗 Combining chunks...\n")
+    cat("Combining chunks...\n")
   }
 
   result <- data.table::rbindlist(chunk_results, use.names = TRUE, fill = TRUE)
@@ -1026,7 +1026,7 @@ process_with_arrow <- function(file_paths, threads, progress_detail, return_type
 
   # Efficient final combination using data.table
   if (progress_detail != "none") {
-    cat("🔗 Combining all results...\n")
+    cat("Combining all results...\n")
   }
 
   result_dt <- data.table::rbindlist(all_results, fill = TRUE)
@@ -1055,7 +1055,7 @@ process_with_arrow <- function(file_paths, threads, progress_detail, return_type
   }
 
   if (progress_detail != "none") {
-    cat(sprintf("\n✅ Arrow processing complete!\n"))
+    cat(sprintf("\nArrow processing complete!\n"))
     cat(sprintf("Total sequences loaded: %s\n",
                format(nrow(result_dt), big.mark = ",")))
     cat(sprintf("Final dataset size: %.2f GB in memory\n",
