@@ -29,7 +29,7 @@ package and install LymphoSeq2 from GitHub
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("shashidhar22/LymphoSeq2@v2.0.0", build_vignettes = TRUE)
+devtools::install_github("shashidhar22/LymphoSeq2", build_vignettes = TRUE)
 ```
 
 ## Getting started
@@ -40,7 +40,7 @@ MiXCR, Adaptive ImmunoSEQ, BGI IR-SEQ, and 10X Genomic single cell VDJ
 rearrangements.
 
 ``` r
-l> library(LymphoSeq2)
+> library(LymphoSeq2)
 
 Attaching package: ‘LymphoSeq2’
 
