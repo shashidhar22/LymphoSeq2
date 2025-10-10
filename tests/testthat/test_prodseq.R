@@ -69,6 +69,8 @@ test_that("Count of collapse amino acid sequences match", {
 
 
 test_that("Prevalence of amino acid sequences is correct", {
+  skip_if_not_installed("LymphoSeqDB")
+
   stable <- LymphoSeq2::readImmunoSeq("test_data", threads = 1) |>
     dplyr::filter(stringr::str_starts(repertoire_id, "015V"))
   ntable <- LymphoSeq2::productiveSeq(stable, aggregate = "junction_aa", prevalence = TRUE) %>%
@@ -79,7 +81,7 @@ test_that("Prevalence of amino acid sequences is correct", {
   junction_list <- ntable %>%
     dplyr::pull(junction_aa) %>%
     base::unique()
-  prevalenceTRB <- LymphoSeq2::prevalenceTRB %>%
+  prevalenceTRB <- LymphoSeqDB::prevalenceTRB %>%
     dplyr::rename(junction_aa = "aminoAcid") %>%
     dplyr::filter(junction_aa %in% junction_list) %>%
     dplyr::arrange(junction_aa)
