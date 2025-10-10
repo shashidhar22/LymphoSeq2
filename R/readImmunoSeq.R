@@ -55,7 +55,7 @@ readImmunoSeq <- function(path,
                           use_arrow = "auto",
                           sample_mode = FALSE,
                           sample_size = 1000000) {
-  Sys.setenv("VROOM_SHOW_PROGRESS" = "false")
+  #Sys.setenv("VROOM_SHOW_PROGRESS" = "false")
   if (floor(threads) == 0) {
     threads <- as.integer(1)
   }

@@ -140,10 +140,16 @@ aggregateSeq <- function(study_table, aggregate, prevalence, progress_bar) {
       )
   }
   if (prevalence) {
-    prev_table <- LymphoSeq2::prevalenceTRB
-    study_table <- dplyr::left_join(study_table, prev_table, 
-        by = c("junction_aa" = "aminoAcid")) |>
-      dplyr::mutate(prevalence = tidyr::replace_na(prevalence, 0))
+    if (requireNamespace("LymphoSeqDB", quietly = TRUE)) {
+      prev_table <- LymphoSeqDB::prevalenceTRB
+      study_table <- dplyr::left_join(study_table, prev_table,
+          by = c("junction_aa" = "aminoAcid")) |>
+        dplyr::mutate(prevalence = tidyr::replace_na(prevalence, 0))
+    } else {
+      warning("LymphoSeqDB not available. Install with: BiocManager::install('LymphoSeqDB')",
+              call. = FALSE)
+      study_table$prevalence <- NA_real_
+    }
   }
   return(study_table)
 }

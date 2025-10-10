@@ -39,17 +39,28 @@
 #' Prevalence TRB
 #'
 #' @description
+#' Access prevalence data from the LymphoSeqDB package.
 #' The database describes the frequency at which a CDR3 amino acid sequence was
-#' found in cohort of 55 PBMC samples from healthy individuals
-#' @format ## `prevalenceTRB`
-#' A tibble with 11,724,294 rows and 2 columns:
-#' \describe{
-#'   \item{prevalence}{Frequency of sequences in 55 healthy PBMC samples}
-#'   \item{aminoAcid}{T-cell receptor beta chain amino acid sequence}
+#' found in cohort of 55 PBMC samples from healthy individuals.
+#'
+#' @return A tibble with 11,724,294 rows and 2 columns (prevalence, aminoAcid)
+#' @details This function loads data from the LymphoSeqDB Bioconductor package.
+#' Install with: BiocManager::install("LymphoSeqDB")
+#' @examples
+#' \dontrun{
+#' prevalenceTRB <- getPrevalenceTRB()
 #' }
 #' @source
-#' TCR beta sequencing data from PBMCs of 55 healthy individuals
-"prevalenceTRB"
+#' TCR beta sequencing data from PBMCs of 55 healthy individuals.
+#' See: https://bioconductor.org/packages/LymphoSeqDB
+#' @export
+getPrevalenceTRB <- function() {
+  if (!requireNamespace("LymphoSeqDB", quietly = TRUE)) {
+    stop("Package 'LymphoSeqDB' is required. Install with: BiocManager::install('LymphoSeqDB')",
+         call. = FALSE)
+  }
+  LymphoSeqDB::prevalenceTRB
+}
 #' Published TRB
 #'
 #' @description

@@ -41,11 +41,16 @@ topFreq <- function(productive_table, frequency = 0.1) {
       numberSamples = length(duplicate_frequency > 0)
     ) |>
     dplyr::arrange(desc(numberSamples), desc(meanFrequency))
-  # data("prevalenceTRB")
-  # data("publishedTRB")
-  top_freq <- dplyr::left_join(top_freq, prevalenceTRB,
-      by = c("junction_aa" = "aminoAcid")) |>
-    dplyr::mutate(prevalence = tidyr::replace_na(0))
+
+  # Load prevalence data from LymphoSeqDB if available
+  if (requireNamespace("LymphoSeqDB", quietly = TRUE)) {
+    prevalenceTRB <- LymphoSeqDB::prevalenceTRB
+    top_freq <- dplyr::left_join(top_freq, prevalenceTRB,
+        by = c("junction_aa" = "aminoAcid")) |>
+      dplyr::mutate(prevalence = tidyr::replace_na(prevalence, 0))
+  } else {
+    top_freq$prevalence <- NA_real_
+  }
   antigen_table <- publishedTRB |>
     dplyr::as_tibble() |>
     dplyr::select(aminoAcid, antigen)
