@@ -22,13 +22,13 @@ Imports:
     future,
     furrr,
     ggalluvial,
-    ggmsa,
     ggplot2,
     ggtree,
     glue,
     igraph,
     lifecycle,
     msa,
+    magrittr,
     phangorn,
     progress,
     purrr,
@@ -47,6 +47,7 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
 VignetteBuilder: knitr
 Suggests: arrow,
+          ggmsa,
           grDevices,
           iNEXT,
           knitr,
@@ -59,7 +60,6 @@ Suggests: arrow,
           UpSetR,
           wordcloud2
 biocViews: Biostrings,
-           ggmsa,
            ggtree,
            msa,
            phyloseq
