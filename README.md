@@ -41,15 +41,6 @@ rearrangements.
 
 ``` r
 > library(LymphoSeq2)
-
-Attaching package: ‘LymphoSeq2’
-
-The following object is masked _by_ ‘.GlobalEnv’:
-
-    merge_chains
-
-Warning message:
-replacing previous import ‘data.table:::=’ by ‘rlang:::=’ when loading ‘LymphoSeq2’ 
 > study_files <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
 > study_table <- LymphoSeq2::readImmunoSeq(study_files)
 Dataset Analysis:
