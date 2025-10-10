@@ -39,6 +39,14 @@ jobs:
           http-user-agent: ${{ matrix.config.http-user-agent }}
           use-public-rspm: true
 
+      - name: Remove problematic optional packages (oldrel-1 only)
+        if: matrix.config.r == 'oldrel-1'
+        run: |
+          # ggmsa has dependency issues (ggalt not available) on oldrel-1
+          # It's optional and only used in plotAlignment()
+          sed -i.bak '/ggmsa,/d' DESCRIPTION || true
+        shell: bash
+
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: any::rcmdcheck
