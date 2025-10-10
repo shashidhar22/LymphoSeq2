@@ -12,6 +12,12 @@ output:
         theme: cosmo
         highlight: default
         df_print: paged
+    BiocStyle::html_document:
+        toc: true
+        toc_float: true
+        theme: cosmo
+        highlight: default
+        df_print: paged
 vignette: >
   %\VignetteIndexEntry{LymphoSeq2}
   %\VignetteEngine{knitr::rmarkdown}
