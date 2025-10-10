@@ -66,28 +66,19 @@
 <p>To install the latest version of LymphoSeq2 you can use the <code>devtools</code> package and install LymphoSeq2 from GitHub</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># install.packages("devtools")</span></span>
-<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"shashidhar22/LymphoSeq2@v2.0.0"</span>, build_vignettes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"shashidhar22/LymphoSeq2"</span>, build_vignettes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="getting-started">Getting started<a class="anchor" aria-label="anchor" href="#getting-started"></a>
 </h2>
 <p>To import AIRR-Seq data using <code>LymphoSeq2</code> we can use the <code>readImmunoSeq</code> function. Currently the function can import data from MiXCR, Adaptive ImmunoSEQ, BGI IR-SEQ, and 10X Genomic single cell VDJ rearrangements.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>l<span class="sc">&gt;</span> <span class="fu">library</span>(LymphoSeq2)</span>
-<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>Attaching package<span class="sc">:</span> ‘LymphoSeq2’</span>
-<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a></span>
-<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>The following object is masked _by_ ‘.GlobalEnv’<span class="sc">:</span></span>
-<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a></span>
-<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a>    merge_chains</span>
-<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a></span>
-<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a>Warning message<span class="sc">:</span></span>
-<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a>replacing previous import ‘data.table<span class="sc">:::</span><span class="er">=</span>’ by ‘rlang<span class="sc">:::</span><span class="er">=</span>’ when loading ‘LymphoSeq2’ </span>
-<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a><span class="sc">&gt;</span> study_files <span class="ot">&lt;-</span> <span class="fu">system.file</span>(<span class="st">"extdata"</span>, <span class="st">"TCRB_sequencing"</span>, <span class="at">package =</span> <span class="st">"LymphoSeq2"</span>)</span>
-<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a><span class="sc">&gt;</span> study_table <span class="ot">&lt;-</span> LymphoSeq2<span class="sc">::</span><span class="fu">readImmunoSeq</span>(study_files)</span>
-<span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a>Dataset Analysis<span class="sc">:</span></span>
-<span id="cb2-14"><a href="#cb2-14" tabindex="-1"></a>  Files<span class="sc">:</span> <span class="dv">10</span>, Total<span class="sc">:</span> <span class="fl">0.00</span> GB, Largest<span class="sc">:</span> <span class="fl">0.3</span> MB</span>
-<span id="cb2-15"><a href="#cb2-15" tabindex="-1"></a>  Available memory<span class="sc">:</span> <span class="fl">1.0</span> GB</span>
-<span id="cb2-16"><a href="#cb2-16" tabindex="-1"></a>Loading [<span class="sc">==</span><span class="er">==========================================================</span>] <span class="dv">10</span><span class="sc">/</span><span class="dv">10</span> <span class="fu">files</span> (<span class="dv">100</span>%) <span class="sc">|</span> ETA<span class="sc">:</span>  <span class="dv">0</span>s</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="sc">&gt;</span> <span class="fu">library</span>(LymphoSeq2)</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="sc">&gt;</span> study_files <span class="ot">&lt;-</span> <span class="fu">system.file</span>(<span class="st">"extdata"</span>, <span class="st">"TCRB_sequencing"</span>, <span class="at">package =</span> <span class="st">"LymphoSeq2"</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="sc">&gt;</span> study_table <span class="ot">&lt;-</span> LymphoSeq2<span class="sc">::</span><span class="fu">readImmunoSeq</span>(study_files)</span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a>Dataset Analysis<span class="sc">:</span></span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>  Files<span class="sc">:</span> <span class="dv">10</span>, Total<span class="sc">:</span> <span class="fl">0.00</span> GB, Largest<span class="sc">:</span> <span class="fl">0.3</span> MB</span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a>  Available memory<span class="sc">:</span> <span class="fl">1.0</span> GB</span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a>Loading [<span class="sc">==</span><span class="er">==========================================================</span>] <span class="dv">10</span><span class="sc">/</span><span class="dv">10</span> <span class="fu">files</span> (<span class="dv">100</span>%) <span class="sc">|</span> ETA<span class="sc">:</span>  <span class="dv">0</span>s</span></code></pre></div>
 <p>To get a quick summary of repertoire characteristics, use the <code>clonality</code> function. This will calculate many standard repertoire diversity metrics such <code>clonality</code>, <code>gini coefficient</code>, <code>convergence</code>, and <code>unique productive sequence</code> for each of the repertoires in the input dataset.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="sc">&gt;</span> summary_table <span class="ot">&lt;-</span> LymphoSeq2<span class="sc">::</span><span class="fu">clonality</span>(study_table)</span>
 <span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="sc">&gt;</span> summary_table</span>
