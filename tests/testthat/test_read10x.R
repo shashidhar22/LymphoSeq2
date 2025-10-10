@@ -52,14 +52,14 @@ test_that("read10x errors on empty file", {
 test_that("AIRR file has correct chain distribution", {
   data <- read10x("test_data/test_airr.tsv")
 
-  chain_counts <- data %>%
-    mutate(chain = ifelse(grepl("TRA", v_call), "TRA", "TRB")) %>%
-    count(cell_id, chain) %>%
+  chain_counts <- data |>
+    mutate(chain = ifelse(grepl("TRA", v_call), "TRA", "TRB")) |>
+    count(cell_id, chain) |>
     tidyr::pivot_wider(names_from = chain, values_from = n, values_fill = 0)
 
   # Check cells with exactly 1 TRA and 1 TRB
-  single_pair_cells <- chain_counts %>%
-    filter(TRA == 1, TRB == 1) %>%
+  single_pair_cells <- chain_counts |>
+    filter(TRA == 1, TRB == 1) |>
     nrow()
 
   expect_true(single_pair_cells >= 1)

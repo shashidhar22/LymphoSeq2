@@ -118,8 +118,8 @@ test_that("merged 10X data works with geneFreq()", {
   expect_true("gene_frequency" %in% colnames(v_freq))
 
   # Frequencies should sum to ~1 per repertoire
-  freq_sum <- v_freq %>%
-    group_by(repertoire_id) %>%
+  freq_sum <- v_freq |>
+    group_by(repertoire_id) |>
     summarise(total = sum(gene_frequency))
   expect_true(all(abs(freq_sum$total - 1) < 0.01))
 
@@ -136,8 +136,8 @@ test_that("duplicate_count uses minimum between chains", {
   expect_true(all(merged$duplicate_count > 0))
 
   # Frequency should sum to 1 per repertoire
-  freq_sum <- merged %>%
-    group_by(repertoire_id) %>%
+  freq_sum <- merged |>
+    group_by(repertoire_id) |>
     summarise(total = sum(duplicate_frequency))
 
   expect_true(all(abs(freq_sum$total - 1) < 0.01))
@@ -200,7 +200,7 @@ test_that("Chain-specific gene frequency can be calculated", {
   merged <- merge_chains(sc_data, mode = "best")
 
   # Can analyze alpha chain genes specifically
-  alpha_data <- merged %>%
+  alpha_data <- merged |>
     select(repertoire_id, duplicate_count,
            v_call = v_call_alpha,
            j_call = j_call_alpha,
@@ -212,7 +212,7 @@ test_that("Chain-specific gene frequency can be calculated", {
   expect_true(all(grepl("TRA", alpha_v_freq$gene_name)))
 
   # Can analyze beta chain genes specifically
-  beta_data <- merged %>%
+  beta_data <- merged |>
     select(repertoire_id, duplicate_count,
            v_call = v_call_beta,
            j_call = j_call_beta,

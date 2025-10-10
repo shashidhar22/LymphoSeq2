@@ -37,7 +37,7 @@ test_that("merge_chains with mode='strict' filters cells correctly", {
   expect_lt(nrow(result), nrow(data))
 
   # Each cell should have exactly one row (paired TRA and TRB)
-  cell_counts <- result %>%
+  cell_counts <- result |>
     count(cell_id)
 
   expect_true(all(cell_counts$n == 1))
@@ -76,7 +76,7 @@ test_that("merge_chains with mode='best' selects most frequent chains", {
   expect_lt(nrow(result), nrow(data))
 
   # Each cell should have exactly one row
-  cell_counts <- result %>%
+  cell_counts <- result |>
     count(cell_id)
 
   expect_true(all(cell_counts$n == 1))

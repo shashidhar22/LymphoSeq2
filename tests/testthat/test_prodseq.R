@@ -21,8 +21,8 @@ test_that("Gather productive aminoacid sequences", {
   expect_true(all(atable$reading_frame == "in-frame"))
 
   # Test 4: Frequencies should sum to 1 per repertoire
-  freq_sums <- atable %>%
-    dplyr::group_by(repertoire_id) %>%
+  freq_sums <- atable |>
+    dplyr::group_by(repertoire_id) |>
     dplyr::summarize(total_freq = sum(duplicate_frequency), .groups = "drop")
   expect_true(all(abs(freq_sums$total_freq - 1) < 1e-10))
 })
@@ -47,8 +47,8 @@ test_that("Gather productive nucleotide sequences", {
   expect_true(all(atable$reading_frame == "in-frame"))
 
   # Test 4: Frequencies should sum to 1 per repertoire
-  freq_sums <- atable %>%
-    dplyr::group_by(repertoire_id) %>%
+  freq_sums <- atable |>
+    dplyr::group_by(repertoire_id) |>
     dplyr::summarize(total_freq = sum(duplicate_frequency), .groups = "drop")
   expect_true(all(abs(freq_sums$total_freq - 1) < 1e-10))
 })
@@ -57,8 +57,8 @@ test_that("Gather productive nucleotide sequences", {
 test_that("Count of collapse amino acid sequences match", {
   stable <- LymphoSeq2::readImmunoSeq("test_data/015V06013979_CFAR.tsv", threads = 1)
   atable <- LymphoSeq2::productiveSeq(stable, aggregate = "junction_aa")
-  atable_filtered <- atable %>%
-    dplyr::filter(junction_aa %in% c("CASSIASAGGPDTQYF", "CASSMGQGATVGYTF")) %>%
+  atable_filtered <- atable |>
+    dplyr::filter(junction_aa %in% c("CASSIASAGGPDTQYF", "CASSMGQGATVGYTF")) |>
     dplyr::select(repertoire_id, junction_aa, duplicate_count)
 
   # Check that expected sequences exist with correct counts
@@ -73,17 +73,17 @@ test_that("Prevalence of amino acid sequences is correct", {
 
   stable <- LymphoSeq2::readImmunoSeq("test_data", threads = 1) |>
     dplyr::filter(stringr::str_starts(repertoire_id, "015V"))
-  ntable <- LymphoSeq2::productiveSeq(stable, aggregate = "junction_aa", prevalence = TRUE) %>%
-    dplyr::select(prevalence, junction_aa) %>%
-    dplyr::filter(prevalence != 0) %>%
-    dplyr::arrange(junction_aa) %>%
+  ntable <- LymphoSeq2::productiveSeq(stable, aggregate = "junction_aa", prevalence = TRUE) |>
+    dplyr::select(prevalence, junction_aa) |>
+    dplyr::filter(prevalence != 0) |>
+    dplyr::arrange(junction_aa) |>
     dplyr::distinct()
-  junction_list <- ntable %>%
-    dplyr::pull(junction_aa) %>%
+  junction_list <- ntable |>
+    dplyr::pull(junction_aa) |>
     base::unique()
-  prevalenceTRB <- LymphoSeqDB::prevalenceTRB %>%
-    dplyr::rename(junction_aa = "aminoAcid") %>%
-    dplyr::filter(junction_aa %in% junction_list) %>%
+  prevalenceTRB <- LymphoSeqDB::prevalenceTRB |>
+    dplyr::rename(junction_aa = "aminoAcid") |>
+    dplyr::filter(junction_aa %in% junction_list) |>
     dplyr::arrange(junction_aa)
   expect_true(isTRUE(all.equal(prevalenceTRB, ntable, check.attributes = FALSE)))
 })

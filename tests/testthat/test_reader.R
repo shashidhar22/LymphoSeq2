@@ -5,8 +5,8 @@ test_that("Reads a single AIRR file correctly", {
   stable <- LymphoSeq2::readImmunoSeq("test_data/015V12001549_CFAR.tsv", threads = 1)
   snuc <- base::length(base::unique(stable$junction))
   srow <- base::nrow(stable)
-  tot_freq <- stable %>%
-    dplyr::pull(duplicate_frequency) %>%
+  tot_freq <- stable |>
+    dplyr::pull(duplicate_frequency) |>
     base::sum()
   expect_equal(base::nrow(stable), 1000)
   expect_equal(snuc, srow)
@@ -23,13 +23,13 @@ test_that("Reads a list of AIRR file correctly", {
     tot_freq = c(1, 1),
     nrows = c(1000, 1000),
     nnuc = c(1000, 1000)
-  ) %>%
+  ) |>
     dplyr::mutate(
       nrows = base::as.integer(nrows),
       nnuc = base::as.integer(nnuc)
     )
-  stable <- stable %>%
-    dplyr::group_by(repertoire_id) %>%
+  stable <- stable |>
+    dplyr::group_by(repertoire_id) |>
     dplyr::summarize(
       tot_freq = base::sum(duplicate_frequency),
       nrows = dplyr::n(),
@@ -50,13 +50,13 @@ test_that("Reads AIRR files from a path correctly", {
     tot_freq = c(1, 1, 1, 1),
     nrows = c(1000, 1000, 1000, 1000),
     nnuc = c(1000, 1000, 1000, 1000)
-  ) %>%
+  ) |>
     dplyr::mutate(
       nrows = base::as.integer(nrows),
       nnuc = base::as.integer(nnuc)
     )
-  stable <- stable %>%
-    dplyr::group_by(repertoire_id) %>%
+  stable <- stable |>
+    dplyr::group_by(repertoire_id) |>
     dplyr::summarize(
       tot_freq = base::sum(duplicate_frequency),
       nrows = dplyr::n(),

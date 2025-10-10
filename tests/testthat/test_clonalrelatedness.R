@@ -16,7 +16,7 @@ test_that("Calculate clonal relatedness of all productive nucleotide sequences",
   stable <- LymphoSeq2::readImmunoSeq("test_data/", threads = 1) |>
     dplyr::filter(stringr::str_starts(repertoire_id, "015V"))
   ntable <- LymphoSeq2::productiveSeq(stable, aggregate = "junction")
-  ttable <- LymphoSeq2::clonalRelatedness(ntable) %>%
+  ttable <- LymphoSeq2::clonalRelatedness(ntable) |>
     dplyr::mutate(relatedness = base::round(relatedness, 3))
   ctable <- tibble::tibble(
     repertoire_id = c("015V06013979_CFAR", "015V12001549_CFAR", "015V12001685_CFAR_R", "015V12003105_CFAR"),
