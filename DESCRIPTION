@@ -12,7 +12,7 @@ Description: Analyze high-throughput sequencing of T and B cell receptor
     single-cell VDJ sequencing, BGI-IRSeq, and MiXCR processed data. Provides
     tools for diversity analysis, clonality metrics, gene usage visualization,
     and repertoire comparison.
-Depends: R (>= 4.1.0)
+Depends: R (>= 4.4.0)
 Imports:
     Biostrings,
     circlize,
