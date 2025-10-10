@@ -21,6 +21,12 @@
 #' LymphoSeq2::plotAlignment(msa)
 #' @export
 plotAlignment <- function(msa) {
+  if (!requireNamespace("ggmsa", quietly = TRUE)) {
+    stop("Package 'ggmsa' is required for this function. ",
+         "Install with: BiocManager::install('ggmsa')",
+         call. = FALSE)
+  }
+
   if (class(msa)[1] == "MsaDNAMultipleAlignment") {
     msa <- Biostrings::DNAMultipleAlignment(msa)
     names(msa@unmasked) <- paste(names(msa@unmasked),

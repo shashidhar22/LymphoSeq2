@@ -40,18 +40,15 @@ geneFreq <- function(nucleotide_table, locus = "VDJ", family = FALSE) {
         gene_type,
         base::paste("[", locus, base::tolower(locus), "]", sep = "")
       )) |>
-      dtplyr::lazy_dt()
-    gene_names <- gene_names |>
       dplyr::group_by(repertoire_id, gene_name) |>
       dplyr::summarize(
         duplicate_count = sum(duplicate_count),
-        gene_type = dplyr::first(gene_type)
+        gene_type = dplyr::first(gene_type),
+        .groups = "drop"
       ) |>
-      dplyr::ungroup() |>
       dplyr::group_by(repertoire_id, gene_type) |>
       dplyr::mutate(gene_frequency = duplicate_count / sum(duplicate_count)) |>
-      dplyr::ungroup() |>
-      dplyr::as_tibble()
+      dplyr::ungroup()
   } else {
     gene_names <- nucleotide_table |>
       dplyr::select(
@@ -66,18 +63,125 @@ geneFreq <- function(nucleotide_table, locus = "VDJ", family = FALSE) {
         gene_type,
         base::paste("[", locus, base::tolower(locus), "]", sep = "")
       )) |>
-      dtplyr::lazy_dt()
-    gene_names <- gene_names |>
       dplyr::group_by(repertoire_id, gene_name) |>
       dplyr::summarize(
         duplicate_count = sum(duplicate_count),
-        gene_type = dplyr::first(gene_type)
+        gene_type = dplyr::first(gene_type),
+        .groups = "drop"
       ) |>
-      dplyr::ungroup() |>
       dplyr::group_by(repertoire_id, gene_type) |>
       dplyr::mutate(gene_frequency = duplicate_count / sum(duplicate_count)) |>
-      dplyr::ungroup() |>
-      dplyr::as_tibble()
+      dplyr::ungroup()
   }
   return(gene_names)
+}
+
+#' Create word cloud visualization of gene frequencies
+#'
+#' Generate an interactive word cloud showing the relative frequencies of V, D, or J
+#' genes in a single repertoire. Gene names are sized proportionally to their frequency,
+#' making it easy to identify dominant gene usage patterns.
+#'
+#' @param gene_freq_table A tibble from [geneFreq()] containing gene frequency data
+#' @param repertoire_id Character string specifying which repertoire to visualize.
+#' Must match a repertoire_id in the gene_freq_table.
+#' @param colors Character vector of colors for the word cloud. Default uses a blue-red
+#' gradient. Can specify any valid R colors or use RColorBrewer palettes.
+#' @param shape Shape of the word cloud. Options: "circle" (default), "cardioid",
+#' "diamond", "triangle", "pentagon", "star". See wordcloud2 documentation for details.
+#' @param size Scaling factor for word sizes. Default is 1. Increase for larger words,
+#' decrease for smaller words.
+#'
+#' @return A wordcloud2 htmlwidget object showing gene frequencies. The size of each
+#' gene name corresponds to its frequency in the repertoire.
+#'
+#' @details
+#' This function creates an interactive word cloud where:
+#' - Gene name size reflects frequency (larger = more frequent)
+#' - Hover over genes to see exact frequencies
+#' - Color gradient helps distinguish different genes
+#'
+#' Word clouds are useful for:
+#' - Quick visual assessment of dominant gene usage
+#' - Identifying gene family bias in a repertoire
+#' - Comparing gene usage across samples (create multiple clouds)
+#'
+#' Note: The wordcloud2 package must be installed to use this function.
+#'
+#' @examples
+#' \dontrun{
+#' file_path <- system.file("extdata", "TCRB_sequencing",
+#'  package = "LymphoSeq2")
+#' study_table <- LymphoSeq2::readImmunoSeq(path = file_path, threads = 1)
+#' study_table <- LymphoSeq2::topSeqs(study_table, top = 100)
+#' nucleotide_table <- LymphoSeq2::productiveSeq(
+#'   study_table = study_table,
+#'   aggregate = "junction"
+#' )
+#'
+#' # Generate V gene frequencies
+#' v_genes <- LymphoSeq2::geneFreq(nucleotide_table, locus = "V", family = TRUE)
+#'
+#' # Create word cloud for one sample
+#' LymphoSeq2::geneWordCloud(v_genes, repertoire_id = "TRB_Unsorted_83")
+#'
+#' # Customize colors
+#' LymphoSeq2::geneWordCloud(v_genes,
+#'   repertoire_id = "TRB_Unsorted_83",
+#'   colors = c("darkgreen", "gold", "darkred"))
+#' }
+#'
+#' @seealso [geneFreq()], [chordDiagramVDJ()]
+#' @export
+geneWordCloud <- function(gene_freq_table,
+                          repertoire_id,
+                          colors = NULL,
+                          shape = "circle",
+                          size = 1) {
+
+  # Check if wordcloud2 is available
+  if (!requireNamespace("wordcloud2", quietly = TRUE)) {
+    stop("Package 'wordcloud2' is required for this function. ",
+         "Please install it with: install.packages('wordcloud2')",
+         call. = FALSE)
+  }
+
+  # Filter to the specified repertoire
+  repertoire_data <- gene_freq_table |>
+    dplyr::filter(repertoire_id == !!repertoire_id)
+
+  # Check if repertoire exists
+  if (nrow(repertoire_data) == 0) {
+    stop("Repertoire ID '", repertoire_id, "' not found in gene_freq_table. ",
+         "Available repertoires: ",
+         paste(unique(gene_freq_table$repertoire_id), collapse = ", "),
+         call. = FALSE)
+  }
+
+  # Prepare data for wordcloud2 (needs columns named 'word' and 'freq')
+  cloud_data <- repertoire_data |>
+    dplyr::select(gene_name, gene_frequency) |>
+    dplyr::arrange(dplyr::desc(gene_frequency))
+
+  # Set default color scheme if not provided
+  if (is.null(colors)) {
+    if (requireNamespace("RColorBrewer", quietly = TRUE)) {
+      colors <- grDevices::colorRampPalette(
+        rev(RColorBrewer::brewer.pal(11, "RdBu"))
+      )(256)
+    } else {
+      # Fallback colors if RColorBrewer not available
+      colors <- grDevices::colorRampPalette(
+        c("blue", "cyan", "yellow", "red")
+      )(256)
+    }
+  }
+
+  # Create word cloud
+  wordcloud2::wordcloud2(
+    data = cloud_data,
+    color = colors,
+    shape = shape,
+    size = size
+  )
 }

@@ -7,6 +7,8 @@
 #' @param study_table A tibble consisting antigen receptor sequencing
 #' data imported by the LymphoSeq2 function [readImmunoSeq()]. "junction_aa",
 #' "duplicate_count", and "duplicate_frequency" are required columns.
+#' @param endpoint An integer specifying the endpoint for rarefaction and
+#' extrapolation. Default is 100000.
 #' @seealso [LymphoSeq2::runINext()]
 #' @examples
 #' file_path <- system.file("extdata", "TCRB_sequencing",
@@ -16,21 +18,23 @@
 #' LymphoSeq2::plotRarefactionCurve(study_table)
 #'
 #' @export
-plotRarefactionCurve <- function(study_table) {
-  rarefaction_tables <- study_table |>
-    dplyr::group_by(repertoire_id) |>
-    dplyr::group_split() |>
-    purrr::map(runINext) |>
-    dplyr::bind_rows()
+plotRarefactionCurve <- function(study_table, endpoint = 100000) {
+  # Run iNEXT on all samples at once (no need to map)
+  rarefaction_tables <- runINext(study_table, endpoint = endpoint)
+
+  # Standardize method names for plotting
   rarefaction_tables <- rarefaction_tables |>
-    dplyr::mutate(Method = dplyr::recode(Method,
-      Observed = "Interpolated",
-      Rarefaction = "Interpolated", Extrapolation = "Extrapolated"
+    dplyr::mutate(method = dplyr::recode(tolower(Method),
+      observed = "interpolated",
+      rarefaction = "interpolated",
+      extrapolation = "extrapolated"
     ))
+
+  # Create plot
   rarefaction_curves <- ggplot2::ggplot(rarefaction_tables,
       ggplot2::aes(x = m, y = qD, fill = repertoire_id)) +
-    ggplot2::geom_line(ggplot2::aes(linetype = Method, color = repertoire_id),
-                       size = 1.5) +
+    ggplot2::geom_line(ggplot2::aes(linetype = method, color = repertoire_id),
+                       linewidth = 1.5) +
     ggplot2::geom_ribbon(ggplot2::aes(ymin = qD.LCL, ymax = qD.UCL),
                          alpha = 0.5) +
     ggplot2::scale_linetype_manual(

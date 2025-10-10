@@ -1,6 +1,5 @@
 context("Count k-mers in nucleotide sequence")
 library(LymphoSeq2)
-library(tidyverse)
 
 test_that("Number of k-mers are counted correctly", {
   junction <- "ATCGATCAC"

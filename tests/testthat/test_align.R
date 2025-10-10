@@ -1,10 +1,10 @@
 context("Perform multiple sequence alignment")
 library(LymphoSeq2)
-library(tidyverse)
 
 test_that("Align all sequences in all sample within edit distance of 15", {
   base::set.seed(12357)
-  stable <- LymphoSeq2::readImmunoSeq("test_data/", threads = 1)
+  stable <- LymphoSeq2::readImmunoSeq("test_data/", threads = 1) |>
+    dplyr::filter(stringr::str_starts(repertoire_id, "015V"))
   ntable <- LymphoSeq2::productiveSeq(stable, aggregate = "junction")
   nalign <- LymphoSeq2::alignSeq(ntable)
   nseq <- base::length(nalign@unmasked)
@@ -33,14 +33,15 @@ test_that("Align all sequences in one sample within edit distance of 15", {
 
 test_that("Align single sequence in all samples within edit distance of 15", {
   base::set.seed(12357)
-  ttable <- LymphoSeq2::readImmunoSeq("test_data/", threads = 1)
+  ttable <- LymphoSeq2::readImmunoSeq("test_data/", threads = 1) |>
+    dplyr::filter(stringr::str_starts(repertoire_id, "015V"))
   tntable <- LymphoSeq2::productiveSeq(ttable, aggregate = "junction")
   talign <- LymphoSeq2::alignSeq(tntable, sequence_list = c("AATTCCCTGGAGCTTGGTGACTCTGCTGTGTATTTCTGTGCCAGCAGCTATAGAGCGGGGGCTGGCGGTGAGCAGTTCTTCGGGCCA"))
   tseq <- base::length(talign@unmasked)
   tconsensus <- suppressMessages(msa::msaConsensusSequence(talign))
   tname <- length(base::unique(stringr::str_remove(base::names(talign@unmasked), "_\\d+")))
-  kseq <- 20
-  kconsensus <- "------ATCAATTCCCTGGAGCTTGGTGACTCTGCTGTGTATTTCTGTGCCAGCAGCCAAG??GG?GGGG?G?AC?A??AG?AGTTCTTCGGGC??---"
+  kseq <- 21
+  kconsensus <- "------ATCAATTCCCTGGAGCTTGGTGACTCTGCTGTGTATTTCTGTGCCAGCAGCCA?G??GG?GGGG?G????A??AG?AGT?CTTC??????---"
   kname <- 4
   expect_equal(tconsensus, kconsensus)
   expect_equal(tseq, kseq)

@@ -58,14 +58,13 @@ topSeqsPlot <- function(study_table, top = 10) {
     dplyr::arrange(Frequency) |>
     dplyr::select(repertoire_id) |>
     dplyr::pull()
-  ggplot2::ggplot(topfreq, ggplot2::aes_string(
-    x = "repertoire_id",
-    y = "Frequency",
-    fill = "Sequence",
-    label = "Frequency"
-  ),
-  text = "junction_aa"
-  ) +
+  ggplot2::ggplot(topfreq, ggplot2::aes(
+    x = .data$repertoire_id,
+    y = .data$Frequency,
+    fill = .data$Sequence,
+    label = .data$Frequency,
+    text = .data$junction_aa
+  )) +
     ggplot2::geom_bar(stat = "identity") +
     ggplot2::scale_x_discrete(limits = sample_order) +
     ggplot2::scale_fill_manual(values = getPalette(top + 1)) +

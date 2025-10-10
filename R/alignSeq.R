@@ -92,7 +92,7 @@ alignSeq <- function(study_table, repertoire_ids = NULL,
       search_table <- search_table |>
         dplyr::filter(!!base::as.symbol(type) %in% searchSequence) |>
         LymphoSeq2::topSeqs(top = top)
-      message(str_c("Only 150 sequences sampled equally from each search group",
+      message(stringr::str_c("Only 150 sequences sampled equally from each search group",
         "will be selected", sep = " "))
     }
   }

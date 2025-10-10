@@ -12,6 +12,12 @@ output:
         theme: cosmo
         highlight: default
         df_print: paged
+    BiocStyle::html_document:
+        toc: true
+        toc_float: true
+        theme: cosmo
+        highlight: default
+        df_print: paged
 vignette: >
   %\VignetteIndexEntry{LymphoSeq2}
   %\VignetteEngine{knitr::rmarkdown}
@@ -21,7 +27,9 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  cache = TRUE,
+  cache.path = "cache/"
 )
 ```
 
@@ -29,12 +37,19 @@ knitr::opts_chunk$set(
 library(LymphoSeq2)
 library(RColorBrewer)
 library(grDevices)
-library(wordcloud2)
-library(tidyverse)
 library(vroom)
+
+# wordcloud2 is optional for visualizations
+if (requireNamespace("wordcloud2", quietly = TRUE)) {
+  library(wordcloud2)
+  has_wordcloud2 <- TRUE
+} else {
+  has_wordcloud2 <- FALSE
+  message("Note: wordcloud2 package not available. Word cloud examples will be skipped.")
+}
 ```
 
-Adaptive Immune Receptor Repertoire Sequencing (AIRR-seq) provides a unique opportunity to interrogate the adaptive immune repertoire under various clinical conditions. The utility offered by this technology has quickly garnered interest from a community of clinicians and researchers investigating the immunological landscapes of a large spectrum of health and disease states. LymphoSeq2 is a toolkit that allows users to import, manipulate and visualize AIRR-Seq data from various AIRR-Seq assays such as Adaptive ImmunoSEQ and BGI-IRSeq, with support for 10X VDJ sequencing coming soon. The platform also supports the importing of AIRR-seq data processed using the MiXCR pipeline. The vignette highlights some of the key features of LymphoSeq2.
+Adaptive Immune Receptor Repertoire Sequencing (AIRR-seq) provides a unique opportunity to interrogate the adaptive immune repertoire under various clinical conditions. The utility offered by this technology has quickly garnered interest from a community of clinicians and researchers investigating the immunological landscapes of a large spectrum of health and disease states. LymphoSeq2 is a toolkit that allows users to import, manipulate and visualize AIRR-Seq data from various AIRR-Seq assays such as Adaptive ImmunoSEQ, BGI-IRSeq, and 10X VDJ sequencing. The platform also supports the importing of AIRR-seq data processed using the MiXCR pipeline. The vignette highlights some of the key features of LymphoSeq2.
 
 # Importing data
 
@@ -51,8 +66,8 @@ system.file("extdata", "IGH_sequencing", package = "LymphoSeq2") # For the IGH f
 
 ```{r readImmuno}
 study_files <- system.file("extdata", "TCRB_sequencing", package = "LymphoSeq2")
-study_table <- LymphoSeq2::readImmunoSeq(study_files, threads = 1) %>%
-  topSeqs(top = 100)
+study_table <- LymphoSeq2::readImmunoSeq(study_files, threads = 1) |>
+  topSeqs(top = 50)  # Reduced from 100 to speed up vignette building
 ```
 
 Looking at the `study_table` we see a tibble with 145 columns and 1000 rows
@@ -64,9 +79,75 @@ study_table
 Since the study table is a tibble, we can use tidyverse syntax to extract a list of sample names
 
 ```{r getSamplesNames}
-study_table %>%
-  dplyr::pull(repertoire_id) %>%
+study_table |>
+  dplyr::pull(repertoire_id) |>
   unique()
+```
+
+# Working with 10X Genomics Single-Cell Data
+
+LymphoSeq2 supports 10X Genomics single-cell VDJ sequencing data, enabling analysis of paired TCR chains from individual T cells.
+
+## Reading 10X Data
+
+```{r read10x}
+# Load example 10X dataset (contig_annotations.csv format)
+file_path_10x <- system.file("extdata", "10X_example", package = "LymphoSeq2")
+sc_data <- read10x(file_path_10x)
+sc_data
+```
+
+The `read10x` function automatically detects whether the input is in AIRR format (`airr_rearrangement.tsv`) or 10X Genomics format (`contig_annotations.csv`).
+
+## Merging Paired Chains
+
+Single-cell data contains separate entries for each TCR chain (TRA and TRB). We can merge these into paired observations:
+
+```{r merge_chains}
+# Strict mode: only cells with exactly 1 TRA + 1 TRB
+paired_strict <- merge_chains(sc_data, mode = "strict")
+cat("Strict mode yielded", nrow(paired_strict), "paired cells\n")
+paired_strict
+
+# Best mode: select most frequent chain when multiples exist
+paired_best <- merge_chains(sc_data, mode = "best")
+cat("Best mode yielded", nrow(paired_best), "paired cells\n")
+paired_best
+```
+
+The merged data contains columns for both alpha and beta chains (e.g., `v_call_alpha`, `v_call_beta`, `junction_alpha`, `junction_beta`).
+
+## Single-Cell Analysis
+
+The merged paired-chain data works with all standard LymphoSeq2 functions:
+
+```{r sc_analysis}
+# Calculate clonality (diversity metrics)
+diversity_10x <- clonality(paired_best)
+diversity_10x
+
+# Get top clonotypes
+top_clones_10x <- topSeqs(paired_best, top = 10)
+top_clones_10x
+```
+
+You can also analyze chain-specific properties. For example, to examine V gene usage for the alpha chain:
+
+```{r chain_specific, eval=FALSE}
+# Create a table with alpha chain V gene info
+alpha_genes <- paired_best |>
+  dplyr::select(repertoire_id, duplicate_count, v_call = v_call_alpha) |>
+  dplyr::mutate(
+    v_family = stringr::str_extract(v_call, "^[^*]+"),
+    j_call = NA_character_,
+    d_call = NA_character_,
+    j_family = NA_character_,
+    d_family = NA_character_
+  )
+
+# Calculate gene frequencies
+alpha_v_freq <- geneFreq(alpha_genes, locus = "V", family = TRUE)
+alpha_v_freq
 ```
 
 # Subsetting Data
@@ -74,7 +155,7 @@ study_table %>%
 The tibble structure of the TCR data allows for easy subsampling of data. To select the TCR sequences from any given samples in the dataset, the `filter` function from the `dplyr` package can be used.
 
 ```{r subSample}
-TRB_Unsorted_0 <- study_table %>%
+TRB_Unsorted_0 <- study_table |>
   dplyr::filter(repertoire_id == "TRB_Unsorted_0")
 TRB_Unsorted_0
 ```
@@ -82,8 +163,8 @@ TRB_Unsorted_0
 The `str_detect` function from `stringr` package can be used in conjunction with the `filter` to find samples using a pattern
 
 ```{r subSamplePattern}
-CMV <- study_table %>%
-  dplyr::filter(str_detect(repertoire_id, "CMV"))
+CMV <- study_table |>
+  dplyr::filter(stringr::str_detect(repertoire_id, "CMV"))
 CMV
 ```
 
@@ -102,7 +183,7 @@ study_table
 Now the metadata information can be used to further subset the data. For instance to select all "Unsorted" samples collected more than 300 days after bone marrow transplant, we would use the following code
 
 ```{r metaFilter}
-unsorted_300 <- study_table %>%
+unsorted_300 <- study_table |>
   dplyr::filter(day > 300 & phenotype == "Unsorted")
 unsorted_300
 ```
@@ -133,14 +214,14 @@ If the parameter prevalence is set to TRUE, then a new column is added to each o
 Notice in the example below that there are no amino acid sequences given in the first and fourth row of the study_table table for sample "TRB_Unsorted_949". This is because the nucleotide sequence is out of frame and does not produce a productively transcribed amino acid sequence. If an asterisk (\*) appears in the amino acid sequences, this would indicate an early stop codon.
 
 ```{r showUnprod}
-study_table %>%
+study_table |>
   dplyr::filter(repertoire_id == "TRB_Unsorted_0")
 ```
 
 After `productiveSeq` is run, the unproductive sequences are removed and the `duplicate_frequency` is recalculated for each sequence. If there were two identical amino acid sequences that differed in their nucleotide sequence, they would be combined and their counts added together.
 
 ```{r showProdAA}
-aa_table %>%
+aa_table |>
   dplyr::filter(repertoire_id == "TRB_Unsorted_0")
 ```
 
@@ -164,7 +245,7 @@ One of the drawbacks of the clonality metric is that it does not take into accou
 
 ```{r readIGH}
 IGH_path <- system.file("extdata", "IGH_sequencing", package = "LymphoSeq2")
-IGH_table <- LymphoSeq2::readImmunoSeq(path = IGH_path, threads = 1) %>%
+IGH_table <- LymphoSeq2::readImmunoSeq(path = IGH_path, threads = 1) |>
   LymphoSeq2::topSeqs(top = 100)
 LymphoSeq2::clonalRelatedness(study_table = IGH_table, edit_distance = 10)
 ```
@@ -216,7 +297,7 @@ LymphoSeq2::searchSeq(
 To search your entire list of data frames for a published amino acid CDR3 TCRB sequence with known antigen specificity, use the function `searchPublished`.
 
 ```{r searchPublished}
-LymphoSeq2::searchPublished(study_table = aa_table) %>%
+LymphoSeq2::searchPublished(study_table = aa_table) |>
   dplyr::filter(!is.na(PMID))
 ```
 
@@ -233,8 +314,8 @@ LymphoSeq2::searchDB(study_table = aa_table, dbname = "all", chain = "trb")
 Antigen receptor repertoire diversity can be characterized by a number such as clonality or Gini coefficient calculated by the `clonality` function. Alternatively, you can visualize the repertoire diversity by plotting the Lorenz curve for each sample as defined above. In this plot, the more diverse samples will appear near the dotted diagonal line (the line of equality) whereas the more clonal samples will appear to have a more bowed shape.
 
 ```{r plotLorenz}
-samples <- aa_table %>%
-  dplyr::pull(repertoire_id) %>%
+samples <- aa_table |>
+  dplyr::pull(repertoire_id) |>
   unique()
 LymphoSeq2::lorenzCurve(repertoire_ids = samples, study_table = aa_table)
 ```
@@ -370,8 +451,8 @@ LymphoSeq2::plotTrack(ctable, alist = c("CASSESAGSTGELFF", "CASSLAGDSQETQYF")) +
 Alternatively you can use the function `plotTrackSingular` to retrieve a list of alluvial diagrams each tracking one single amino acid from the clone track table. Considering that a plot is generated for each unique CDR3 sequence, we recommend running this feature on a clone track table derived from only the top sequences from each repertoire as described in the example above.
 
 ```{r plotSingular}
-lalluvial <- ctable %>%
-  LymphoSeq2::topSeqs(top = 1) %>%
+lalluvial <- ctable |>
+  LymphoSeq2::topSeqs(top = 1) |>
   LymphoSeq2::plotTrackSingular()
 lalluvial[[1]]
 ```
@@ -396,22 +477,18 @@ LymphoSeq2::chordDiagramVDJ(
 )
 ```
 
-You can also visualize the results of `geneFreq` as a heat map, word cloud, our cumulative frequency bar plot with the support of additional R packages as shown below.
+You can also visualize the results of `geneFreq` as a heat map, word cloud, or cumulative frequency bar plot with the support of additional R packages as shown below.
 
-```{r wordcloud}
+```{r wordcloud, eval=has_wordcloud2}
 vGenes <- LymphoSeq2::geneFreq(nuc_table, locus = "V", family = TRUE)
-RedBlue <- grDevices::colorRampPalette(rev(RColorBrewer::brewer.pal(11, "RdBu")))(256)
-vtable <- vGenes %>%
-  dplyr::filter(repertoire_id == "TRB_Unsorted_83") %>%
-  dplyr::select(gene_name, gene_frequency)
-wordcloud2::wordcloud2(
-  data = vtable,
-  color = RedBlue
+LymphoSeq2::geneWordCloud(
+  gene_freq_table = vGenes,
+  repertoire_id = "TRB_Unsorted_83"
 )
 ```
 
 ```{r heatmap}
-vGenes <- LymphoSeq2::geneFreq(nuc_table, locus = "V", family = TRUE) %>%
+vGenes <- LymphoSeq2::geneFreq(nuc_table, locus = "V", family = TRUE) |>
   tidyr::pivot_wider(
     id_cols = gene_name,
     names_from = repertoire_id,
@@ -419,10 +496,10 @@ vGenes <- LymphoSeq2::geneFreq(nuc_table, locus = "V", family = TRUE) %>%
     values_fn = sum,
     values_fill = 0
   )
-gene_names <- vGenes %>%
+gene_names <- vGenes |>
   dplyr::pull(gene_name)
-vGenes <- vGenes %>%
-  dplyr::select(-gene_name) %>%
+vGenes <- vGenes |>
+  dplyr::select(-gene_name) |>
   as.matrix()
 rownames(vGenes) <- gene_names
 pheatmap::pheatmap(vGenes, scale = "row")
@@ -431,7 +508,7 @@ pheatmap::pheatmap(vGenes, scale = "row")
 ```{r geneFreqPlot}
 vGenes <- LymphoSeq2::geneFreq(nuc_table, locus = "V", family = TRUE)
 multicolors <- grDevices::colorRampPalette(rev(RColorBrewer::brewer.pal(9, "Set1")))(28)
-ggplot2::ggplot(vGenes, aes(x = repertoire_id, y = gene_frequency, fill = gene_name)) +
+ggplot2::ggplot(vGenes, ggplot2::aes(x = repertoire_id, y = gene_frequency, fill = gene_name)) +
   ggplot2::geom_bar(stat = "identity") +
   ggplot2::theme_minimal() +
   ggplot2::scale_y_continuous(expand = c(0, 0)) +

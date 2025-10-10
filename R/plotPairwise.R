@@ -48,16 +48,16 @@ pairwisePlot <- function(matrix) {
       values_to = "score", values_drop_na = TRUE
     ) |>
     dplyr::arrange(repertoire_id, repertoire_id_y)
-  ggplot2::ggplot(data = matrix, ggplot2::aes_string(
-    x = "repertoire_id", y = "repertoire_id_y",
-    fill = "score"
+  ggplot2::ggplot(data = matrix, ggplot2::aes(
+    x = .data$repertoire_id, y = .data$repertoire_id_y,
+    fill = .data$score
   )) +
     ggplot2::geom_tile() +
     ggplot2::geom_text(
-      ggplot2::aes(repertoire_id, repertoire_id_y,
-        label = sprintf("%0.2f", round(score, digits = 2))
+      ggplot2::aes(.data$repertoire_id, .data$repertoire_id_y,
+        label = sprintf("%0.2f", round(.data$score, digits = 2))
       ),
-      color = "black", size = 4
+      color = "black", linewidth = 4
     ) +
     ggplot2::scale_fill_gradient(low = "#fee8c8", high = "#e34a33") +
     ggplot2::theme_classic() +

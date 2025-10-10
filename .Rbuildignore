@@ -5,3 +5,10 @@
 ^pkgdown$
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^\.claude$
+^\.vscode$
+^.*\.tgz$
+^.*\.png$
+^environment\.yml$
+^doc$
+^Meta$

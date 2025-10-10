@@ -4,12 +4,15 @@
 \alias{plotRarefactionCurve}
 \title{Plot rarefaction and extrapolation curves for samples}
 \usage{
-plotRarefactionCurve(study_table)
+plotRarefactionCurve(study_table, endpoint = 1e+05)
 }
 \arguments{
 \item{study_table}{A tibble consisting antigen receptor sequencing
 data imported by the LymphoSeq2 function \code{\link[=readImmunoSeq]{readImmunoSeq()}}. "junction_aa",
 "duplicate_count", and "duplicate_frequency" are required columns.}
+
+\item{endpoint}{An integer specifying the endpoint for rarefaction and
+extrapolation. Default is 100000.}
 }
 \description{
 Given a study table, for each sample plot rarefaction curves to estimate

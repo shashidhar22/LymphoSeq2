@@ -36,7 +36,7 @@ chordDiagramVDJ <- function(study_table,
   if (association == "VJ") {
     if (!base::all(c("v_family", "j_family") %in% base::colnames(study_table)))
     {
-      stop(str_c("The source data frame does not contain the required columns",
+      stop(stringr::str_c("The source data frame does not contain the required columns",
         "'v_family' and 'j_family'."), sep = " ")
     }
     vj <- study_table |>
@@ -68,7 +68,7 @@ chordDiagramVDJ <- function(study_table,
   if (association == "DJ") {
     if (!base::all(c("d_family", "j_family") %in% base::colnames(study_table)))
     {
-      stop(str_c("The source data frame does not contain the required columns",
+      stop(stringr::str_c("The source data frame does not contain the required columns",
         "'d_family' and 'j_family'."), sep = " ")
     }
     dj <- study_table |>

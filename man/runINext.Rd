@@ -2,30 +2,84 @@
 % Please edit documentation in R/runINext.R
 \name{runINext}
 \alias{runINext}
-\title{Run iNEXT on repertoire_ids}
+\title{Generate rarefaction curves for diversity estimation}
 \usage{
-runINext(sample_table)
+runINext(sample_table, q = 0, endpoint = 1e+05, nboot = 10, conf = 0.95)
 }
 \arguments{
-\item{sample_table}{A tibble consisting antigen receptor sequencing
-data imported by the LymphoSeq2 function readImmunoSeq. "junction_aa",
-"duplicate_count", and "duplicate_frequency" are required columns.}
+\item{sample_table}{A tibble from \code{\link[=readImmunoSeq]{readImmunoSeq()}} or \code{\link[=productiveSeq]{productiveSeq()}} containing
+"junction_aa", "duplicate_count", and "repertoire_id" columns. Can contain one or
+multiple repertoires.}
+
+\item{q}{Diversity order to calculate:
+\itemize{
+\item 0 (default): Species richness (number of unique clones)
+\item 1: Shannon diversity (accounts for evenness)
+\item 2: Simpson diversity (emphasizes abundant clones)
+}}
+
+\item{endpoint}{Maximum sequencing depth for extrapolation. Default is 100000.
+Set higher to predict diversity at deeper sequencing.}
+
+\item{nboot}{Number of bootstrap iterations for confidence intervals (default 10).
+Higher values give more precise estimates but take longer.}
+
+\item{conf}{Confidence level for intervals (default 0.95 for 95\% CI)}
+}
+\value{
+A tibble with rarefaction/extrapolation results:
+\itemize{
+\item \code{m}: Sample size (sequencing depth)
+\item \code{Method}: "Rarefaction", "Observed", or "Extrapolation"
+\item \code{Order.q}: Diversity order (same as \code{q} parameter)
+\item \code{qD}: Estimated diversity at depth \code{m}
+\item \code{qD.LCL}: Lower confidence limit
+\item \code{qD.UCL}: Upper confidence limit
+\item \code{SC}: Standard error from bootstrap
+\item \code{repertoire_id}: Sample identifier
+}
 }
 \description{
-Given a repertoire_id table, for each generate rarefaction curves to estimate
-repertoire diversity. The method used to generate the rarefaction curve
-is derived from Chao et al., (2014) using the iNEXT library
+Estimate repertoire diversity across different sequencing depths using
+rarefaction (interpolation) and extrapolation. This uses the iNEXT algorithm
+to help determine if sequencing depth is sufficient to capture repertoire diversity.
+}
+\details{
+This function wraps the iNEXT package (Chao et al. 2014) for rarefaction and
+extrapolation analysis. It converts the sample table into a matrix format where
+rows are unique sequences and columns are repertoires, then runs iNEXT on all
+samples simultaneously.
+
+Rarefaction vs Extrapolation:
+
+Rarefaction (m less than observed): Subsample sequences to depth m and count
+unique clones. Shows how diversity increases with sequencing depth. Useful to
+compare samples at equal depth.
+
+Extrapolation (m greater than observed): Predict diversity at deeper sequencing using
+Chao1 estimator for unseen species. Shows whether sequencing is complete
+(plateau) or more diversity remains (still increasing).
+
+How to interpret the curve:
+Plateau reached = Sequencing depth is sufficient, most clones captured.
+Still increasing steeply = Need deeper sequencing to capture full diversity.
+Comparing samples = Use rarefied diversity at same depth, not raw counts.
 }
 \examples{
+\dontrun{
 file_path <- system.file("extdata", "TCRB_sequencing",
  package = "LymphoSeq2")
-study_table <- LymphoSeq2::readImmunoSeq(path = file_path, threads = 1) |>
-  LymphoSeq2::topSeqs(top = 100)
+study_table <- LymphoSeq2::readImmunoSeq(path = file_path, threads = 1)
 amino_table <- LymphoSeq2::productiveSeq(study_table,
   aggregate = "junction_aa",
   prevalence = TRUE
 )
-amino_table <- amino_table |>
-  dplyr::filter(repertoire_id == "TRB_Unsorted_1320")
+# Run on all samples at once
 rarefaction_table <- LymphoSeq2::runINext(amino_table)
+}
+}
+\references{
+Chao, A., et al. (2014). Rarefaction and extrapolation with Hill numbers:
+a framework for sampling and estimation in species diversity studies.
+Ecological Monographs, 84(1), 45-67.
 }
