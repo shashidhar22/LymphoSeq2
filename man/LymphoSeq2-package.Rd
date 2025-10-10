@@ -20,7 +20,7 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Ravishankar Shashidhar \email{sravisha@fredhutch.org}
+\strong{Maintainer}: Ravishankar Shashidhar \email{shashidhar.r.shankar@gmail.com}
 
 Authors:
 \itemize{
